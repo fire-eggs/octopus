@@ -53,40 +53,46 @@ namespace BlueMirrorIndexer
         private DiscInDatabase getSelectedDisc() {
             if ((tvDatabaseFolderTree.SelectedNode != null) && (tvDatabaseFolderTree.SelectedNode.Tag is DiscInDatabase))
                 return tvDatabaseFolderTree.SelectedNode.Tag as DiscInDatabase;
-            else
-                return null;
+            return null;
         }
 
         private FolderInDatabase getSelectedFolder() {
             if ((tvDatabaseFolderTree.SelectedNode != null) && (tvDatabaseFolderTree.SelectedNode.Tag is FolderInDatabase))
                 return tvDatabaseFolderTree.SelectedNode.Tag as FolderInDatabase;
-            else
-                return null;
+            return null;
         }
 
         private CompressedFile getSelectedCompressedFile() {
             if ((tvDatabaseFolderTree.SelectedNode != null) && (tvDatabaseFolderTree.SelectedNode.Tag is CompressedFile))
                 return tvDatabaseFolderTree.SelectedNode.Tag as CompressedFile;
-            else
-                return null;
+            return null;
         }
 
         private FileInDatabase getSelectedFile() {
             if (lvDatabaseItems.SelectedItems.Count == 1)
                 return (lvDatabaseItems.SelectedItems[0].Tag as FileInDatabase);
-            else
-                return null;
+            return null;
         }
 
         #region Menu commands and events
 
-        private void cmReadCd_Click(object sender, EventArgs e) {
+#if false
+        private void cmReadCd_Click(object sender, EventArgs e)
+        {
             readVolume();
         }
 
-        private void cmChangeLabel2_Click(object sender, EventArgs e) {
+        private void cmChangeLabel2_Click(object sender, EventArgs e)
+        {
             cmVolumeFolderProperties_Click(sender, e);
         }
+
+        private void cmOptions_Click(object sender, EventArgs e)
+        {
+            // setOptionsDlg();
+        }
+
+#endif
 
         private void cmVolumeFolderProperties_Click(object sender, EventArgs e) {
             DiscInDatabase selectedDisc = getSelectedDisc();
@@ -185,10 +191,6 @@ namespace BlueMirrorIndexer
                     cmDeleteFileInfoPopup_Click(sender, e);
         }
 
-        private void cmOptions_Click(object sender, EventArgs e) {
-            // setOptionsDlg();
-        }
-
         private void cmHomePage_Click(object sender, EventArgs e) {
             Process navigate = new Process();
             navigate.StartInfo.FileName = "http://covalition.github.io/octopus/";
@@ -255,8 +257,7 @@ namespace BlueMirrorIndexer
         private ItemInDatabase getSelectedElementInFolder() {
             if (lvFolderElements.SelectedItems.Count == 1)
                 return (lvFolderElements.SelectedItems[0].Tag as ItemInDatabase);
-            else
-                return null;
+            return null;
         }
 
         private ItemInDatabase getSelectedItemInSearch() {
