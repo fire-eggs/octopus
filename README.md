@@ -1,5 +1,8 @@
-# Octopus.Covalition
-CD/DVD/HD Indexer
+CD/DVD/HD Indexer : A work-in-progress.
+
+1. Disk read is now extremely fast.
+1. Using SQLite as persistence is in-progress.
+
 
 ## Project Description ##
 
@@ -10,11 +13,7 @@ Former name: _Blue Mirror CD/DVD Indexer_.
 ### System Requirements ###
 
 * For use: .NET Framework 4.5
-* For development: Visual Studio 2015
-
-## Installation ##
-
-You can download and install this application from: https://github.com/covalition/octopus/releases
+* For development: Visual Studio 2013
 
 ## Screenshots ##
 
