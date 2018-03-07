@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -14,6 +12,9 @@ using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 using Igorary.Forms.Components;
 using Igorary.Utils.Extensions;
+
+// ReSharper disable InconsistentNaming
+
 
 namespace BlueMirrorIndexer
 {
@@ -151,16 +152,16 @@ namespace BlueMirrorIndexer
                 if (MessageBox.Show(String.Format(Properties.Resources.AreUSureToDeleteFile, getSelectedFile().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     deleteFileInfo(getSelectedFile());
             }
-            else if(lvDatabaseItems.SelectedItems.Count > 0)
+            else if (lvDatabaseItems.SelectedItems.Count > 0)
                 if (MessageBox.Show("Are you sure to delete selected file information?", ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     bool compressedFileDeleted = false;
-                    foreach(ListViewItem lvi in lvDatabaseItems.SelectedItems) {
+                    foreach (ListViewItem lvi in lvDatabaseItems.SelectedItems) {
                         FileInDatabase fid = lvi.Tag as FileInDatabase;
                         fid.RemoveFromDatabase();
                         if (fid is CompressedFile)
                             compressedFileDeleted = true;
                     }
-                    if(compressedFileDeleted)
+                    if (compressedFileDeleted)
                         updateTree();
                     else
                         updateList();
@@ -251,7 +252,7 @@ namespace BlueMirrorIndexer
             btnDelete.Enabled = cmDeleteFrm.Enabled = (tvDatabaseFolderTree.Focused && ((selectedDisc != null) || (selectedFolder != null))) || (lvDatabaseItems.Focused && filesSelected);
 
             cmMainRemoveFromFolder.Enabled = btnRemoveFromFolder.Enabled = lvFolderElements.Focused && (lvFolderElements.SelectedItems.Count > 0);
-             cmRemoveFromFolder.Enabled = cmItemPropertiesFromFolders.Enabled = cmFindInDatabaseFromFolders.Enabled = lvFolderElements.SelectedItems.Count > 0;
+            cmRemoveFromFolder.Enabled = cmItemPropertiesFromFolders.Enabled = cmFindInDatabaseFromFolders.Enabled = lvFolderElements.SelectedItems.Count > 0;
         }
 
         private ItemInDatabase getSelectedElementInFolder() {
@@ -338,7 +339,7 @@ namespace BlueMirrorIndexer
                         sbSize.Text = "";
                     }
             }
-            else if(tcMain.SelectedTab == tpSearch) {
+            else if (tcMain.SelectedTab == tpSearch) {
                 long sum = 0;
                 if (lvSearchResults.SelectedIndices.Count > 0) {
                     // selected items
@@ -374,7 +375,7 @@ namespace BlueMirrorIndexer
 
             lvSearchResults.ColumnOrderArray = Properties.Settings.Default.SearchResultsColumnOrder;
             lvSearchResults.ColumnWidthArray = Properties.Settings.Default.SearchResultsColumnWidth;
-            
+
             startRefreshDiscs();
             QueryCancelAutoPlay = Win32.RegisterWindowMessage("QueryCancelAutoPlay");
             ilTree.ColorDepth = ColorDepth.Depth32Bit; // nic nie daje na razie
@@ -663,7 +664,7 @@ namespace BlueMirrorIndexer
                         }
                         catch {
                             // jezeli wystapi³ blad podczas ReadFromDrive a jednoczeœnie przekopiowaliœmy z discToReplace foldery logiczne, to teraz wywal ze wszystkich folderów
-                            if(discToReplace != null)
+                            if (discToReplace != null)
                                 discToScan.RemoveFromLogicalFolders();
                             throw;
                         }
@@ -693,7 +694,7 @@ namespace BlueMirrorIndexer
             breakCalculating = false;
             ThreadStart calculateDelegate = new ThreadStart(calculateProgressInfo);
             Thread thread = new Thread(calculateDelegate);
-            thread.Start();            
+            thread.Start();
         }
 
         private void calculateProgressInfo() {
@@ -785,7 +786,7 @@ namespace BlueMirrorIndexer
         }
 
         #region Show properties
-        
+
         private bool showItemProperties(ItemInDatabase itemInDatabase) {
             bool result = itemInDatabase.EditPropertiesDlg();
             if (result) {
@@ -994,7 +995,9 @@ namespace BlueMirrorIndexer
         #endregion
 
         private void cmSave_Click(object sender, EventArgs e) {
-            fileOperations.Save();
+            // TODO KBR  fileOperations.Save();
+            serialize(null);
+            fileOperations.Modified = false; // TODO KBR hack
         }
 
         private void cmSaveAs_Click(object sender, EventArgs e) {
@@ -1371,7 +1374,7 @@ namespace BlueMirrorIndexer
             else
                 dragBoxFromMouseDown = Rectangle.Empty;
         }
-        
+
         private void lvLogicalFolderItems_MouseDown(object sender, MouseEventArgs e) {
             if (lvFolderElements.SelectedItems.Count > 0) {
                 itemsToDrag = new List<ItemInDatabase>();
@@ -1399,7 +1402,7 @@ namespace BlueMirrorIndexer
         private void lvSearchResults_MouseUp(object sender, MouseEventArgs e) {
             emptyRectangle();
         }
-        
+
         private void lvLogicalFolderItems_MouseUp(object sender, MouseEventArgs e) {
             emptyRectangle();
         }
@@ -1407,7 +1410,8 @@ namespace BlueMirrorIndexer
         private void startDragging(MouseEventArgs e, Control control) {
             if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right)) {
                 if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y)) {
-                    /* DragDropEffects dropEffect = */ control.DoDragDrop(itemsToDrag, DragDropEffects.All | DragDropEffects.Link);
+                    /* DragDropEffects dropEffect = */
+                    control.DoDragDrop(itemsToDrag, DragDropEffects.All | DragDropEffects.Link);
                 }
             }
         }
@@ -1423,7 +1427,7 @@ namespace BlueMirrorIndexer
         private void lvSearchResults_MouseMove(object sender, MouseEventArgs e) {
             startDragging(e, lvSearchResults);
         }
-        
+
         private void lvLogicalFolderItems_MouseMove(object sender, MouseEventArgs e) {
             startDragging(e, lvFolderElements);
         }
@@ -1463,7 +1467,7 @@ namespace BlueMirrorIndexer
                 if ((targetNode != null) && ((dragDropEffects == DragDropEffects.Copy) || (dragDropEffects == DragDropEffects.Link) || (dragDropEffects == DragDropEffects.All))) {
                     List<ItemInDatabase> items = (List<ItemInDatabase>)e.Data.GetData(typeof(List<ItemInDatabase>));
                     LogicalFolder logicalFolder = (LogicalFolder)targetNode.Tag;
-                    
+
                     if (dragDropEffects == DragDropEffects.All) {
                         cmDropFolderAsItems.Enabled = !logicalFolder.IsPartOfDvd();
                         pmDrop.Tag = new DropInfo(targetNode, items, logicalFolder);
@@ -1489,7 +1493,7 @@ namespace BlueMirrorIndexer
                     if (partOfDvd)
                         asName = logicalFolder.GetValidSubFolderName(item.Name);
                     logicalFolder.AddItemAsFolder(item as FolderInDatabase, asName);
-                    
+
                     rereadFolders = true;
                     fileOperations.Modified = true;
                 }
@@ -1531,7 +1535,7 @@ namespace BlueMirrorIndexer
         private void cmDropFoldersAsLogicalFolders_Click(object sender, EventArgs e) {
             startDroppingFromMenu(DragDropEffects.Copy);
         }
-        
+
         private void lvLogicalFolderItems_DragDrop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(typeof(List<ItemInDatabase>))) {
                 TreeNode targetNode = getSelectedLogicalFolderTvItem();
@@ -1580,7 +1584,7 @@ namespace BlueMirrorIndexer
         private void cmFindInDatabaseFromFolders_Click(object sender, EventArgs e) {
             if (lvFolderElements.SelectedIndices.Count == 1) {
                 ItemInDatabase itemInDatabase = getItemFromFolderElements();
-                if(itemInDatabase != null)
+                if (itemInDatabase != null)
                     findInTree(itemInDatabase);
             }
         }
@@ -1621,7 +1625,7 @@ namespace BlueMirrorIndexer
         }
 
         private void lvFolderElements_KeyDown(object sender, KeyEventArgs e) {
-            if(e.KeyCode == Keys.Delete)
+            if (e.KeyCode == Keys.Delete)
                 cmRemoveFromFolder_Click(sender, EventArgs.Empty);
         }
 
@@ -1705,7 +1709,7 @@ namespace BlueMirrorIndexer
         }
 
         private void copyFoldersAndFiles(IFolder newFolder, Octopus.CDIndex.FolderInDatabase octopusFolder) {
-            foreach(Octopus.CDIndex.FolderInDatabase octopusSubFolder in octopusFolder.Folders) {
+            foreach (Octopus.CDIndex.FolderInDatabase octopusSubFolder in octopusFolder.Folders) {
                 FolderInDatabase newSubFolder = new FolderInDatabase(newFolder);
                 copyProperties(newSubFolder, octopusSubFolder);
                 copyFoldersAndFiles(newSubFolder, octopusSubFolder);
@@ -1745,20 +1749,15 @@ namespace BlueMirrorIndexer
             Cursor oldCursor = Cursor;
             Cursor = Cursors.WaitCursor;
             try {
-                Stream stream = new FileStream(filePath, FileMode.Create);
-                try {
-                    IFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, Database);
-                }
-                finally {
-                    stream.Close();
-                }
+                // TODO KBR write to SQLite
+
+                SQLite.WriteToDb(Database);
             }
             finally {
                 Cursor = oldCursor;
             }
         }
-        
+
         private void fileOperations_ModifiedChanged(object sender, EventArgs e) {
             btnSave.Enabled = cmSave.Enabled = fileOperations.Modified;
             updateTitle();
@@ -1775,14 +1774,21 @@ namespace BlueMirrorIndexer
 
         private DlgProgress openProgressDialog = null;
 
-        long BIG_FILE_SIZE = 18000000;
-
         private VolumeDatabase deserialize(string filePath) {
             VolumeDatabase cid = null;
-            using (new HourGlass()) {
-                try {
+
+            // TODO KBR read from SQLite
+
+#if false
+        long BIG_FILE_SIZE = 18000000;
+
+            using (new HourGlass())
+            {
+                try
+                {
                     Stream stream = new FileStream(filePath, FileMode.Open);
-                    if (stream.Length > BIG_FILE_SIZE) {
+                    if (stream.Length > BIG_FILE_SIZE)
+                    {
                         StreamWithEvents streamWithEvents = new StreamWithEvents(stream);
                         streamWithEvents.ProgressChanged += new ProgressChangedEventHandler(streamWithEvents_ProgressChanged);
                         stream = streamWithEvents;
@@ -1790,16 +1796,20 @@ namespace BlueMirrorIndexer
                         openProgressDialog = new DlgProgress("Reading File...", "Reading: " + Path.GetFileName(filePath));
                         openProgressDialog.StartShowing(new TimeSpan(0, 0, 1));
                     }
-                    try {
+                    try
+                    {
                         IFormatter formatter = new BinaryFormatter();
                         formatter.Binder = new BMToCovDeserializationBinder();
                         cid = (VolumeDatabase)formatter.Deserialize(stream);
                     }
-                    finally {
-                        try {
+                    finally
+                    {
+                        try
+                        {
                             stream.Close();
                         }
-                        finally {
+                        finally
+                        {
                             Enabled = true;
                             closeOpenedProgressDialog();
                         }
@@ -1809,9 +1819,10 @@ namespace BlueMirrorIndexer
                     //Debug.WriteLine(e.Message);
                 }
             }
+#endif
             return cid;
         }
-        
+
         private void fileOperations_CurrentFilePathChanged(object sender, EventArgs e) {
             updateTitle();
         }
@@ -1825,6 +1836,6 @@ namespace BlueMirrorIndexer
         internal bool IsEmptyDatabase() {
             return Database.IsEmpty();
         }
-        
+
     }
 }
