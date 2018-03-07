@@ -1,15 +1,11 @@
+using Igorary.Forms;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using BlueMirror.Commons;
-using Igorary.Forms;
 
 namespace BlueMirrorIndexer {
 
