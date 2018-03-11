@@ -22,6 +22,12 @@ namespace BlueMirrorIndexer {
 	[Serializable]
     public class FolderInDatabase : ItemInDatabase, IFolder
     {
+        public int DbId { get; private set; }
+        public FolderInDatabase(int dbId, IFolder parent) : this(parent)
+        {
+            DbId = dbId; // TODO KBR for SQLite load
+        }
+
 
         FolderImpl folderImpl;
 
@@ -76,79 +82,94 @@ namespace BlueMirrorIndexer {
             public string cAlternateFileName;
         }
 
+        // TODO KBR remove runningFile*
+
         internal void ReadFromFolderKBR(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) 
 	    {
             IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
             WIN32_FIND_DATAW findData;
             IntPtr findHandle = INVALID_HANDLE_VALUE;
 
-            var info = new List<ItemInDatabase>();
             try
             {
                 findHandle = FindFirstFileW(folder + @"\*", out findData);
-                if (findHandle != INVALID_HANDLE_VALUE)
+                if (findHandle == INVALID_HANDLE_VALUE) 
+                    return;
+
+                do
                 {
+                    if (findData.cFileName == "." || findData.cFileName == "..") 
+                        continue;
 
-                    do
+                    string fullpath = folder + (folder.EndsWith("\\") ? "" : "\\") + findData.cFileName;
+
+                    if ((findData.dwFileAttributes & FileAttributes.Directory) != 0)
                     {
-                        if (findData.cFileName == "." || findData.cFileName == "..") continue;
+                        FolderInDatabase newFolder = new FolderInDatabase(this);
+                        newFolder.Name = findData.cFileName; //subFolder.Name;
+                        newFolder.Attributes = findData.dwFileAttributes; //subFolder.Attributes;
+                        string tmp = Path.GetExtension(fullpath);
+                        if (tmp.StartsWith("."))
+                            tmp = tmp.Substring(1);
+                        newFolder.Extension = tmp;//subFolder.Extension;
+                        newFolder.FullName = fullpath; //findData.cFileName; //subFolder.FullName;
+                        newFolder.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
+                        newFolder.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
+                        newFolder.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
 
-                        string fullpath = folder + (folder.EndsWith("\\") ? "" : "\\") + findData.cFileName;
+                        newFolder.ReadFromFolderKBR(fullpath, excludedFolders, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, null);
 
-                        if ((findData.dwFileAttributes & FileAttributes.Directory) != 0)
-                        {
-                            FolderInDatabase newFolder = new FolderInDatabase(this);
-                            newFolder.Name = findData.cFileName; //subFolder.Name;
-                            newFolder.Attributes = findData.dwFileAttributes; //subFolder.Attributes;
-                            newFolder.Extension = ""; //subFolder.Extension;
-                            newFolder.FullName = fullpath; //findData.cFileName; //subFolder.FullName;
-                            newFolder.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
-                            newFolder.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
-                            newFolder.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
-
-                            newFolder.ReadFromFolderKBR(fullpath, excludedFolders, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, null);
-
-                            folderImpl.AddToFolders(newFolder);
-                        }
-                        else
-                        {
-                            var newFile = new FileInDatabase(this);
-                            newFile.FullName = fullpath;
-
-                            newFile.Name = findData.cFileName;
-                            newFile.Attributes = findData.dwFileAttributes;
-                            newFile.Extension = ""; //fileInFolder.Extension;
-
-                            //newFile.IsReadOnly = fileInFolder.IsReadOnly;
-                            //newFile.Length = fileInFolder.Length;
-
-                            long highSize = (uint)findData.nFileSizeHigh;
-                            highSize = highSize << 32;
-                            highSize += (uint) findData.nFileSizeLow;
-                            newFile.Length = highSize; // TODO Length field needs to be unsigned?
-
-                            newFile.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
-                            newFile.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
-                            newFile.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
-
-                            folderImpl.AddToFiles(newFile);
-
-                            runningFileCount++;
-                            runningFileSize += newFile.Length;
-                            if (runningFileCount % 5 == 1 )
-                                dlgReadingProgress.SetReadingProgress(runningFileCount, runningFileSize, newFile.FullName, "Adding...");
-
-                        }
+                        AddToFolders(newFolder);
                     }
-                    while (FindNextFile(findHandle, out findData));
+                    else
+                    {
+                        var newFile = new FileInDatabase(this);
+                        newFile.FullName = fullpath;
 
+                        newFile.Name = findData.cFileName;
+                        newFile.Attributes = findData.dwFileAttributes;
+                        string tmp = Path.GetExtension(fullpath);
+                        if (tmp.StartsWith("."))
+                            tmp = tmp.Substring(1);
+                        newFile.Extension = tmp;//subFolder.Extension;
+
+                        //newFile.IsReadOnly = fileInFolder.IsReadOnly;
+
+                        long highSize = (uint)findData.nFileSizeHigh;
+                        highSize = highSize << 32;
+                        highSize += (uint) findData.nFileSizeLow;
+                        newFile.Length = highSize; // TODO Length field needs to be unsigned?
+
+                        newFile.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
+                        newFile.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
+                        newFile.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
+
+                        AddToFiles(newFile);
+
+                        runningFileCount++;
+                        runningFileSize += newFile.Length;
+                        if (runningFileCount % 5 == 1 )
+                            dlgReadingProgress.SetReadingProgress(runningFileCount, runningFileSize, newFile.FullName, "Adding...");
+
+                    }
                 }
+                while (FindNextFile(findHandle, out findData));
             }
             finally
             {
                 if (findHandle != INVALID_HANDLE_VALUE) FindClose(findHandle);
             }
 	        
+	    }
+
+	    public void AddToFiles(FileInDatabase fid)
+	    {
+	        folderImpl.AddToFiles(fid);
+	    }
+
+	    public void AddToFolders(FolderInDatabase newFolder)
+	    {
+            folderImpl.AddToFolders(newFolder);
 	    }
 
         internal void ReadFromFolder(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) {

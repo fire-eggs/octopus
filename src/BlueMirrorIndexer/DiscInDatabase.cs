@@ -9,53 +9,33 @@ namespace BlueMirrorIndexer
 {
 
     [Serializable]
-	public class DiscInDatabase : FolderInDatabase, IComparable<DiscInDatabase> {
-
-		public DiscInDatabase()
-			: base(null) {
-		}
-
-		string driveFormat;
-
-		public string DriveFormat {
-			get { return driveFormat; }
-			set { driveFormat = value; }
-		}
-
-		DriveType driveType = DriveType.Unknown;
-
-		public DriveType DriveType {
-			get { return driveType; }
-			set { driveType = value; }
-		}
-
-		long totalFreeSpace;
-
-		public long TotalFreeSpace {
-			get { return totalFreeSpace; }
-			set { totalFreeSpace = value; }
-		}
-
-		long totalSize;
-
-		public long TotalSize {
-			get { return totalSize; }
-			set { totalSize = value; }
-		}
-
-		string volumeLabel;
-
-		public string VolumeLabel {
-			get { return volumeLabel; }
-			set { volumeLabel = value; }
-		}
-
-        DateTime scanned = DateTime.Now;
-
-        public DateTime Scanned {
-            get { return scanned; }
-            set { scanned = value; }
+	public class DiscInDatabase : FolderInDatabase, IComparable<DiscInDatabase>
+    {
+        // for SQLite load
+        public DiscInDatabase(int dbid)
+            : base(dbid, null)
+        {
+            Scanned = DateTime.Now;
+            DriveType = DriveType.Unknown;
         }
+
+        public DiscInDatabase() : base(null)
+        {
+            Scanned = DateTime.Now;
+            DriveType = DriveType.Unknown;
+        }
+
+        public string DriveFormat { get; set; }
+
+        public DriveType DriveType { get; set; }
+
+        public long TotalFreeSpace { get; set; }
+
+        public long TotalSize { get; set; }
+
+        public string VolumeLabel { get; set; }
+
+        public DateTime Scanned { get; set; }
 
         [OptionalField]
         bool scannedCrc;
@@ -100,27 +80,13 @@ namespace BlueMirrorIndexer
             return res;
         }
 
-        string serialNumber;
+        public string SerialNumber { get; set; }
 
-        public string SerialNumber {
-            get { return serialNumber; }
-            set { serialNumber = value; }
-        }
+        public string PhysicalLocation { get; set; }
 
-        string physicalLocation;
+        public string FromDrive { get; set; }
 
-        public string PhysicalLocation {
-            get { return physicalLocation; }
-            set { physicalLocation = value; }
-        }
-
-        string fromDrive;
-
-        public string FromDrive {
-            get { return fromDrive; }
-        }
-
-		#region IComparable<DiscInDatabase> Members
+        #region IComparable<DiscInDatabase> Members
 
 		int IComparable<DiscInDatabase>.CompareTo(DiscInDatabase other) {
 			return (Name.CompareTo(other.Name));
@@ -151,23 +117,23 @@ namespace BlueMirrorIndexer
         internal void ReadFromDrive(string drive, List<string> elementsToRead, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace) {
             ReadFromFolderKBR(drive, elementsToRead, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, discToReplace);
             DriveInfo di = new DriveInfo(drive);
-            driveFormat = di.DriveFormat;
-            driveType = di.DriveType;
-            totalFreeSpace = di.TotalFreeSpace;
-            totalSize = di.TotalSize;
-            volumeLabel = di.VolumeLabel;
-            serialNumber = Win32.GetVolumeSerialNumber(drive);
+            DriveFormat = di.DriveFormat;
+            DriveType = di.DriveType;
+            TotalFreeSpace = di.TotalFreeSpace;
+            TotalSize = di.TotalSize;
+            VolumeLabel = di.VolumeLabel;
+            SerialNumber = Win32.GetVolumeSerialNumber(drive);
             scannedCrc = Properties.Settings.Default.ComputeCrc;
             scannedZip = Properties.Settings.Default.BrowseInsideCompressed;
             scannedFileVersion = Properties.Settings.Default.ReadFileInfo;
-            fromDrive = drive;
+            FromDrive = drive;
             if (discToReplace != null) {
                 if ((Keywords != string.Empty) && (discToReplace.Keywords != string.Empty))
                     Keywords = Keywords + ";";
                 Keywords = Keywords + discToReplace.Keywords;
-                if ((physicalLocation != string.Empty) && (discToReplace.physicalLocation != string.Empty))
-                    physicalLocation = physicalLocation + ";";
-                physicalLocation = physicalLocation + discToReplace.physicalLocation;
+                if ((PhysicalLocation != string.Empty) && (discToReplace.PhysicalLocation != string.Empty))
+                    PhysicalLocation = PhysicalLocation + ";";
+                PhysicalLocation = PhysicalLocation + discToReplace.PhysicalLocation;
                 foreach (LogicalFolder logicalFolder in discToReplace.LogicalFolders)
                     logicalFolder.AddItem(this);
             }

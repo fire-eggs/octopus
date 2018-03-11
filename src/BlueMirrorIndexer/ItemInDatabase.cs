@@ -9,91 +9,63 @@ namespace BlueMirrorIndexer {
     public abstract class ItemInDatabase
     {
 
-		public ItemInDatabase(IFolder parent) {
-			this.parent = parent;
+		public ItemInDatabase(IFolder parent)
+		{
+		    Length = 0;
+		    LastWriteTime = DateTime.Now;
+		    LastAccessTime = DateTime.Now;
+		    Keywords = "";
+		    Description = "";
+		    Name = "";
+		    CreationTime = DateTime.Now;
+		    Attributes = FileAttributes.Normal;
+		    FullName = "";
+		    this.parent = parent;
+		    FileDescription = "";
+		    FileVersion = "";
 		}
 
-		IFolder parent;
+	    IFolder parent;
 
         internal IFolder Parent {
 			get { return parent; }
 		}
 
-		private string keywords = "";
+	    public string Keywords { get; set; }
 
-		public string Keywords {
-			get { return keywords; }
-			set { keywords = value; }
-		}
+	    public string Description { get; set; }
 
-		string description = "";
+	    public string Name { get; set; }
 
-		public string Description {
-			get { return description; }
-			set { description = value; }
-		}
+	    public string FullName { get; set; }
 
-		string name = "";
+	    public FileAttributes Attributes { get; set; }
 
-		public string Name {
-			get { return name; }
-			set { name = value; }
-		}
+	    public DateTime CreationTime { get; set; }
 
-		string fullName = "";
-
-		public string FullName {
-			get { return fullName; }
-			set { fullName = value; }
-		}
-
-		FileAttributes attributes = FileAttributes.Normal;
-
-		public FileAttributes Attributes {
-			get { return attributes; }
-			set { attributes = value; }
-		}
-
-		DateTime creationTime = DateTime.Now;
-
-		public DateTime CreationTime {
-			get { return creationTime; }
-			set { creationTime = value; }
-		}
-
-		string extension = "";
+	    string extension = "";
 
 		public string Extension {
 			get { return extension; }
 			set { extension = value.ToLower(); }
 		}
 
-		DateTime lastAccessTime = DateTime.Now;
+	    public DateTime LastAccessTime { get; set; }
 
-		public DateTime LastAccessTime {
-			get { return lastAccessTime; }
-			set { lastAccessTime = value; }
-		}
+	    public DateTime LastWriteTime { get; set; }
 
-		DateTime lastWriteTime = DateTime.Now;
-
-		public DateTime LastWriteTime {
-			get { return lastWriteTime; }
-			set { lastWriteTime = value; }
-		}
-
-		public virtual string GetVolumeUserName() {
+	    public virtual string GetVolumeUserName() {
 			return (parent as ItemInDatabase).GetVolumeUserName();
 		}
 
-		public string GetPath() {
-			if ((parent != null) && !(parent is DiscInDatabase)) // inheritance
+		public string GetPath()
+		{
+		    if ((parent != null) && !(parent is DiscInDatabase)) // inheritance
                 return (parent as ItemInDatabase).GetPath() + (parent as ItemInDatabase).Name + "\\";
-			else
-				return "\\";
+		    return "\\";
 		}
 
-        protected virtual Form CreateDialog() {
+	    protected virtual Form CreateDialog() {
             return new DlgItemProperties(this);
         }
 
@@ -101,7 +73,7 @@ namespace BlueMirrorIndexer {
             return (CreateDialog().ShowDialog() == DialogResult.OK);
         }
 
-        public void WriteToStream(System.IO.StreamWriter sw) {
+        public void WriteToStream(StreamWriter sw) {
            sw.WriteLine(GetCsvLine());
         }
 
@@ -117,30 +89,15 @@ namespace BlueMirrorIndexer {
             pathList.Add(this);
         }
 
-        public abstract System.Windows.Forms.ListViewItem ToListViewItem();
+        public abstract ListViewItem ToListViewItem();
 
-        string fileVersion;
+	    public string FileVersion { get; set; }
 
-        public string FileVersion {
-            get { return fileVersion; }
-            set { fileVersion = value; }
-        }
+	    public string FileDescription { get; set; }
 
-        string fileDescription;
+	    public long Length { get; set; }
 
-        public string FileDescription {
-            get { return fileDescription; }
-            set { fileDescription = value; }
-        }
-
-        long length = 0;
-
-        public long Length {
-            get { return length; }
-            set { length = value; }
-        }
-
-        public virtual void RemoveFromDatabase() {
+	    public virtual void RemoveFromDatabase() {
             RemoveFromLogicalFolders();
         }
 

@@ -1774,10 +1774,11 @@ namespace BlueMirrorIndexer
 
         private DlgProgress openProgressDialog = null;
 
-        private VolumeDatabase deserialize(string filePath) {
-            VolumeDatabase cid = null;
-
+        private VolumeDatabase deserialize(string filePath)
+        {
             // TODO KBR read from SQLite
+            VolumeDatabase cid = SQLite.ReadFromDb(filePath);
+
 
 #if false
         long BIG_FILE_SIZE = 18000000;
