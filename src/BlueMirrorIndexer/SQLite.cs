@@ -54,6 +54,9 @@ namespace BlueMirrorIndexer
 [WriteT] TEXT
 )";
 
+        private const string FileDex = @"CREATE INDEX owner_dex1 ON Files(Owner)";
+        private const string FoldDex = @"CREATE INDEX owner_dex2 ON Folds(Owner)";
+
         public static void WriteToDb(VolumeDatabase mem)
         {
             // TODO KBR allow user to name file, location
@@ -74,6 +77,14 @@ namespace BlueMirrorIndexer
                 CreateTables(conn);
 
                 WriteData(conn, mem);
+
+                using (var cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = FileDex;
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = FoldDex;
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -176,34 +187,24 @@ namespace BlueMirrorIndexer
             {
                 foreach (var afile in files)
                 {
-                    //try
-                    //{
-                        cmd.CommandText = start;
-                        cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
-                        cmd.CommandText += "'" + afile.Extension + "',";
-                        cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
-                        cmd.CommandText += "'" + (int)afile.Attributes + "',";
-                        cmd.CommandText += "'" + afile.Length + "',";
-                        cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime() + "',";
-                        cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime() + "',";
-                        cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime() + "',";
-                        cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
-                        cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "',";
-                        cmd.CommandText += "'" + afile.FileDescription.Replace("'", "''") + "',";
-                        cmd.CommandText += "'" + afile.FileVersion.Replace("'", "''") + "'";
-                        cmd.CommandText += ")";
-                        cmd.ExecuteNonQuery();
-                    //}
-                    //catch (Exception)
-                    //{
-                    //}
-
+                    cmd.CommandText = start;
+                    cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + afile.Extension + "',";
+                    cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + (int)afile.Attributes + "',";
+                    cmd.CommandText += "'" + afile.Length + "',";
+                    cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime() + "',";
+                    cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime() + "',";
+                    cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime() + "',";
+                    cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + afile.FileDescription.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + afile.FileVersion.Replace("'", "''") + "'";
+                    cmd.CommandText += ")";
+                    cmd.ExecuteNonQuery();
                 }
-
-
             }
         }
-
 
         public static VolumeDatabase ReadFromDb(string dbpath)
         {
@@ -281,7 +282,7 @@ namespace BlueMirrorIndexer
                 tmp = rdr["WriteT"] as string;
                 afile.LastWriteTime = DateTime.Parse(tmp);
 
-                did.AddToFolders(afile);
+                ((IFolder)did).AddToFolders(afile);
             }
 
             foreach (var afold in ((IFolder) did).Folders)
@@ -299,9 +300,44 @@ namespace BlueMirrorIndexer
             SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-//string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
+
+                /*
+                [ID] INTEGER NOT NULL PRIMARY KEY,
+                [Owner] INTEGER NOT NULL,
+                [Name] TEXT,
+                [Ext] TEXT,
+                [FullName] TEXT,
+                [Attributes] INTEGER, // 5
+                [Length] INTEGER,
+                [CreateT] TEXT,
+                [AccessT] TEXT,
+                [WriteT] TEXT,
+                [Keywords] TEXT, // 10
+                [Desc] TEXT,
+                [FileDesc] TEXT,
+                [FileVers] TEXT
+                */
+                //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
 //               "Keywords, Desc, FileDesc, FileVers) VALUES ('" + owner + "',";
                 FileInDatabase afile = new FileInDatabase(did);
+                afile.Name = rdr.GetString(2);
+                afile.Extension = rdr.GetString(3);
+                afile.FullName = rdr.GetString(4);
+                afile.Attributes = (FileAttributes)rdr.GetInt64(5);
+                afile.Length = rdr.GetInt64(6);
+
+                string tmp = rdr.GetString(7);
+                afile.CreationTime = DateTime.Parse(tmp);
+                tmp = rdr.GetString(8);
+                afile.LastAccessTime = DateTime.Parse(tmp);
+                tmp = rdr.GetString(9);
+                afile.LastWriteTime = DateTime.Parse(tmp);
+
+                afile.Keywords = rdr.GetString(10);
+                afile.Description = rdr.GetString(11);
+                afile.FileDescription = rdr.GetString(12);
+                afile.FileVersion = rdr.GetString(13);
+#if false
                 afile.FullName = rdr["FullName"] as string;
                 afile.Extension = rdr["Ext"] as string;
                 afile.Name = rdr["Name"] as string;
@@ -319,8 +355,8 @@ namespace BlueMirrorIndexer
                 afile.Description = rdr["Desc"] as string;
                 afile.FileDescription = rdr["FileDesc"] as string;
                 afile.FileVersion = rdr["FileVers"] as string;
-
-                did.AddToFiles(afile);
+#endif
+                ((IFolder)did).AddToFiles(afile);
             }
         }
 
