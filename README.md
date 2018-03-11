@@ -1,7 +1,7 @@
 CD/DVD/HD Indexer : A work-in-progress.
 
-1. Disk read is now extremely fast.
-1. Using SQLite as persistence is in-progress.
+1. Disk read is now faster.
+1. Using SQLite as persistence is partially complete. Current speed to load is much faster! (Missing Logical Folders, Compressed files)
 
 
 ## Project Description ##
