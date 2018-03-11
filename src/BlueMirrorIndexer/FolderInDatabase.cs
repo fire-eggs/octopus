@@ -28,8 +28,7 @@ namespace BlueMirrorIndexer {
             DbId = dbId; // TODO KBR for SQLite load
         }
 
-
-        FolderImpl folderImpl;
+	    readonly FolderImpl folderImpl;
 
 		public FolderInDatabase(IFolder parent): base(parent) {
             folderImpl = new FolderImpl(this, 1);
@@ -56,122 +55,7 @@ namespace BlueMirrorIndexer {
             return lvi;
         }
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern IntPtr FindFirstFileW(string lpFileName, out WIN32_FIND_DATAW lpFindFileData);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool FindNextFile(IntPtr hFindFile, out WIN32_FIND_DATAW lpFindFileData);
-
-        [DllImport("kernel32.dll")]
-        public static extern bool FindClose(IntPtr hFindFile);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct WIN32_FIND_DATAW
-        {
-            public FileAttributes dwFileAttributes;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
-            public int nFileSizeHigh;
-            public int nFileSizeLow;
-            public int dwReserved0;
-            public int dwReserved1;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-            public string cFileName;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
-            public string cAlternateFileName;
-        }
-
-        // TODO KBR remove runningFile*
-
-        internal void ReadFromFolderKBR(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) 
-	    {
-            IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
-            WIN32_FIND_DATAW findData;
-            IntPtr findHandle = INVALID_HANDLE_VALUE;
-
-            try
-            {
-                findHandle = FindFirstFileW(folder + @"\*", out findData);
-                if (findHandle == INVALID_HANDLE_VALUE) 
-                    return;
-
-                do
-                {
-                    if (findData.cFileName == "." || findData.cFileName == "..") 
-                        continue;
-
-                    string fullpath = folder + (folder.EndsWith("\\") ? "" : "\\") + findData.cFileName;
-
-                    if ((findData.dwFileAttributes & FileAttributes.Directory) != 0)
-                    {
-                        FolderInDatabase newFolder = new FolderInDatabase(this);
-                        newFolder.Name = findData.cFileName; //subFolder.Name;
-                        newFolder.Attributes = findData.dwFileAttributes; //subFolder.Attributes;
-                        string tmp = Path.GetExtension(fullpath);
-                        if (tmp.StartsWith("."))
-                            tmp = tmp.Substring(1);
-                        newFolder.Extension = tmp;//subFolder.Extension;
-                        newFolder.FullName = fullpath; //findData.cFileName; //subFolder.FullName;
-                        newFolder.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
-                        newFolder.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
-                        newFolder.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
-
-                        newFolder.ReadFromFolderKBR(fullpath, excludedFolders, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, null);
-
-                        AddToFolders(newFolder);
-                    }
-                    else
-                    {
-                        var newFile = new FileInDatabase(this);
-                        newFile.FullName = fullpath;
-
-                        newFile.Name = findData.cFileName;
-                        newFile.Attributes = findData.dwFileAttributes;
-                        string tmp = Path.GetExtension(fullpath);
-                        if (tmp.StartsWith("."))
-                            tmp = tmp.Substring(1);
-                        newFile.Extension = tmp;//subFolder.Extension;
-
-                        //newFile.IsReadOnly = fileInFolder.IsReadOnly;
-
-                        long highSize = (uint)findData.nFileSizeHigh;
-                        highSize = highSize << 32;
-                        highSize += (uint) findData.nFileSizeLow;
-                        newFile.Length = highSize; // TODO Length field needs to be unsigned?
-
-                        newFile.CreationTime = findData.ftCreationTime.ToDateTime(); // subFolder.CreationTime;
-                        newFile.LastAccessTime = findData.ftLastAccessTime.ToDateTime(); //subFolder.LastAccessTime;
-                        newFile.LastWriteTime = findData.ftLastWriteTime.ToDateTime(); //subFolder.LastWriteTime;
-
-                        AddToFiles(newFile);
-
-                        runningFileCount++;
-                        runningFileSize += newFile.Length;
-                        if (runningFileCount % 5 == 1 )
-                            dlgReadingProgress.SetReadingProgress(runningFileCount, runningFileSize, newFile.FullName, "Adding...");
-
-                    }
-                }
-                while (FindNextFile(findHandle, out findData));
-            }
-            finally
-            {
-                if (findHandle != INVALID_HANDLE_VALUE) FindClose(findHandle);
-            }
-	        
-	    }
-
-	    public void AddToFiles(FileInDatabase fid)
-	    {
-	        folderImpl.AddToFiles(fid);
-	    }
-
-	    public void AddToFolders(FolderInDatabase newFolder)
-	    {
-            folderImpl.AddToFolders(newFolder);
-	    }
-
+#if false
         internal void ReadFromFolder(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) {
             try {
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(folder);
@@ -281,6 +165,7 @@ namespace BlueMirrorIndexer {
                 // eat the exception
             }
 		}
+#endif
 
         private FileInDatabase findFile(string fileName) {
             return folderImpl.FindFile(fileName);

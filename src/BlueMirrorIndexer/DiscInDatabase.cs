@@ -114,8 +114,11 @@ namespace BlueMirrorIndexer
             return Name;
         }
 
-        internal void ReadFromDrive(string drive, List<string> elementsToRead, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace) {
-            ReadFromFolderKBR(drive, elementsToRead, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, discToReplace);
+        internal void ReadFromDrive(string drive, List<string> excludedElements, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace)
+        {
+            var FR = new FolderReader(excludedElements, dlgReadingProgress, discToReplace);
+            FR.ReadFromFolder(drive, this);
+
             DriveInfo di = new DriveInfo(drive);
             DriveFormat = di.DriveFormat;
             DriveType = di.DriveType;

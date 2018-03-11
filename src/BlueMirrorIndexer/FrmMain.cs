@@ -649,16 +649,13 @@ namespace BlueMirrorIndexer
                 Enabled = false;
                 ProgressInfo = null;
                 startCalculatingProgressInfo(drive, excludedElements);
-                // bool useSize = Properties.Settings.Default.ComputeCrc || Properties.Settings.Default.BrowseInsideCompressed;
                 bool useSize = Properties.Settings.Default.ComputeCrc;
                 openProgressDialog = new DlgReadingProgress("Reading Volume...", null, useSize);
                 openProgressDialog.StartShowing(new TimeSpan(0, 0, 1));
                 try {
                     if (!excludedElements.Contains(drive.ToLower())) {
-                        long runningFileCount = 0;
-                        long runningFileSize = 0;
                         try {
-                            discToScan.ReadFromDrive(drive, excludedElements, ref runningFileCount, ref runningFileSize, useSize, openProgressDialog as DlgReadingProgress, discToReplace);
+                            discToScan.ReadFromDrive(drive, excludedElements, openProgressDialog as DlgReadingProgress, discToReplace);
                             openProgressDialog.SetProgress(100, "Adding: " + discToScan.VolumeLabel);
                             Database.AddDisc(discToScan);
                         }

@@ -97,6 +97,7 @@
     <Compile Include="Components\LogicalFoldersTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FolderReader.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="VolumeDatabase.cs" />
     <Compile Include="Components\FilesSearchCriteriaPanel.cs">
