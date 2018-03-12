@@ -1,12 +1,15 @@
-﻿using System;
+﻿/* 
+ * Copyright © 2018 by Kevin Routley.
+ * 
+ */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
-// TODO KBR most of ProcessFolder/ProcessFile is common
-// TODO KBR excluded folders
 // TODO KBR folder to replace
 
 namespace BlueMirrorIndexer
@@ -15,9 +18,9 @@ namespace BlueMirrorIndexer
     {
         private long _runningFileCount;
         private long _runningFileSize;
-        private List<string> _excludedFolders;
-        private DlgReadingProgress _dlgReadingProgress;
-        private FolderInDatabase _folderToReplace;
+        private readonly List<string> _excludedFolders;
+        private readonly DlgReadingProgress _dlgReadingProgress;
+        private FolderInDatabase _folderToReplace; // TODO KBR is this at the disc-only level??
 
         public FolderReader(List<string> excludedFolders, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace)
         {
@@ -73,50 +76,49 @@ namespace BlueMirrorIndexer
         internal long ProcessFile(FolderInDatabase owner, WIN32_FIND_DATAW findData, string fullpath)
         {
             var newFile = new FileInDatabase(owner);
-            newFile.FullName = fullpath;
 
-            newFile.Name = findData.cFileName;
-            newFile.Attributes = findData.dwFileAttributes;
-            string tmp = Path.GetExtension(fullpath);
-            if (tmp.StartsWith("."))
-                tmp = tmp.Substring(1);
-            newFile.Extension = tmp;
+            ProcessCommon(newFile, findData, fullpath);
 
-            //newFile.IsReadOnly = fileInFolder.IsReadOnly;
+            newFile.IsReadOnly = (findData.dwFileAttributes & FileAttributes.ReadOnly) != 0;
+
+            // TODO KBR compressed files
+            // TODO KBR calc CRC
 
             long highSize = (uint)findData.nFileSizeHigh;
             highSize = highSize << 32;
             highSize += (uint)findData.nFileSizeLow;
             newFile.Length = highSize; // TODO Length field needs to be unsigned?
 
-            newFile.CreationTime = findData.ftCreationTime.ToDateTime();
-            newFile.LastAccessTime = findData.ftLastAccessTime.ToDateTime();
-            newFile.LastWriteTime = findData.ftLastWriteTime.ToDateTime();
-
             ((IFolder)owner).AddToFiles(newFile);
-
             return newFile.Length;
         }
 
         internal void ProcessFolder(FolderInDatabase owner, WIN32_FIND_DATAW findData, string fullpath)
         {
+            if (_excludedFolders.Contains(fullpath.ToLower()))
+                return;
+
             FolderInDatabase newFolder = new FolderInDatabase(owner);
 
-            newFolder.Name = findData.cFileName;
-            newFolder.Attributes = findData.dwFileAttributes;
-            string tmp = Path.GetExtension(fullpath);
-            if (tmp.StartsWith("."))
-                tmp = tmp.Substring(1);
-            newFolder.Extension = tmp;
-
-            newFolder.FullName = fullpath;
-            newFolder.CreationTime = findData.ftCreationTime.ToDateTime();
-            newFolder.LastAccessTime = findData.ftLastAccessTime.ToDateTime();
-            newFolder.LastWriteTime = findData.ftLastWriteTime.ToDateTime();
-
+            ProcessCommon(newFolder, findData, fullpath);
             ((IFolder)owner).AddToFolders(newFolder);
 
             ReadFromFolder(fullpath, newFolder);
+        }
+
+        private void ProcessCommon(ItemInDatabase item, WIN32_FIND_DATAW findData, string fullpath)
+        {
+            item.Name = findData.cFileName;
+            item.Attributes = findData.dwFileAttributes;
+            string tmp = Path.GetExtension(fullpath);
+            if (tmp.StartsWith("."))
+                tmp = tmp.Substring(1);
+            item.Extension = tmp;
+
+            item.FullName = fullpath;
+            item.CreationTime = findData.ftCreationTime.ToDateTime();
+            item.LastAccessTime = findData.ftLastAccessTime.ToDateTime();
+            item.LastWriteTime = findData.ftLastWriteTime.ToDateTime();
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -147,3 +149,115 @@ namespace BlueMirrorIndexer
 
     }
 }
+
+/* Original read code for hystorical reference
+        internal void ReadFromFolder(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) {
+            try {
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(folder);
+                System.IO.DirectoryInfo[] subFolders = di.GetDirectories();
+                foreach (System.IO.DirectoryInfo subFolder in subFolders) {
+                    if (!excludedFolders.Contains(subFolder.FullName.ToLower())) {
+                        FolderInDatabase newFolder = new FolderInDatabase(this);
+                        newFolder.Name = subFolder.Name;
+                        newFolder.Attributes = subFolder.Attributes;
+                        newFolder.CreationTime = subFolder.CreationTime;
+                        newFolder.Extension = subFolder.Extension;
+                        newFolder.FullName = subFolder.FullName;
+                        newFolder.LastAccessTime = subFolder.LastAccessTime;
+                        newFolder.LastWriteTime = subFolder.LastWriteTime;
+                        FolderInDatabase subFolderToReplace;
+                        if (folderToReplace != null)
+                            subFolderToReplace = folderToReplace.findFolder(subFolder.Name);
+                        else
+                            subFolderToReplace = null;
+                        newFolder.ReadFromFolder(subFolder.FullName, excludedFolders, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, subFolderToReplace);
+                        if (subFolderToReplace != null) {
+                            newFolder.Keywords = subFolderToReplace.Keywords;
+                            foreach (LogicalFolder logicalFolder in subFolderToReplace.LogicalFolders)
+                                logicalFolder.AddItem(newFolder);
+                        }
+                        folderImpl.AddToFolders(newFolder);
+
+                        //FrmMain.dlgProgress.SetReadingProgress(0, "Adding: " + newFolder.FullName);
+                    }
+                }
+
+                System.IO.FileInfo[] filesInFolder = di.GetFiles();
+                foreach (System.IO.FileInfo fileInFolder in filesInFolder) {
+                    if (!excludedFolders.Contains(fileInFolder.FullName.ToLower())) {
+                        FileInDatabase newFile;
+                        FileInDatabase fileToReplace;
+                        if (folderToReplace != null)
+                            fileToReplace = folderToReplace.findFile(fileInFolder.Name);
+                        else
+                            fileToReplace = null;
+                        if (Properties.Settings.Default.BrowseInsideCompressed && (CompressedFile.IsCompressedFile(fileInFolder.Name))) {
+                            CompressedFile compressedFile = new CompressedFile(this);
+                            try {
+                                compressedFile.BrowseFiles(fileInFolder.FullName, fileToReplace as CompressedFile);
+                            }
+                            catch (Exception ex) {
+                                compressedFile.Comments = ex.Message;
+                            }
+                            // tu idzie jako katalog
+                            folderImpl.AddToFolders(compressedFile);
+
+                            // a teraz jako plik
+                            newFile = compressedFile;
+                        }
+                        else {
+                            newFile = new FileInDatabase(this);
+                            newFile.FullName = fileInFolder.FullName;
+                        }
+
+                        newFile.Name = fileInFolder.Name;
+                        newFile.Attributes = fileInFolder.Attributes;
+                        newFile.CreationTime = fileInFolder.CreationTime;
+                        newFile.Extension = fileInFolder.Extension;
+
+                        newFile.LastAccessTime = fileInFolder.LastAccessTime;
+                        newFile.LastWriteTime = fileInFolder.LastWriteTime;
+                        newFile.IsReadOnly = fileInFolder.IsReadOnly;
+                        newFile.Length = fileInFolder.Length;
+                        if (Properties.Settings.Default.ReadFileInfo) {
+                            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(fileInFolder.FullName);
+                            newFile.Comments = fvi.Comments;
+                            newFile.CompanyName = fvi.CompanyName;
+                            newFile.FileVersion = fvi.FileVersion;
+                            newFile.FileDescription = fvi.FileDescription;
+                            newFile.LegalCopyright = fvi.LegalCopyright;
+                            newFile.ProductName = fvi.ProductName;
+                        }
+
+                        if (Properties.Settings.Default.ComputeCrc) {
+                            Crc32 crc32 = new Crc32(dlgReadingProgress, runningFileCount, runningFileSize, newFile.FullName);
+                            try {
+                                using (FileStream inputStream = new FileStream(newFile.FullName, FileMode.Open, FileAccess.Read)) {
+                                    crc32.ComputeHash(inputStream);
+                                    newFile.Crc = crc32.CrcValue;
+                                }
+                            }
+                            catch (IOException) {
+                                // eat the exception
+                            }
+                        }
+
+                        if (fileToReplace != null) {
+                            newFile.Keywords = fileToReplace.Keywords;
+                            foreach (LogicalFolder logicalFolder in fileToReplace.LogicalFolders)
+                                logicalFolder.AddItem(newFile);
+                        }
+
+                        folderImpl.AddToFiles(newFile);
+
+                        runningFileCount++;
+                        runningFileSize += fileInFolder.Length;
+                        dlgReadingProgress.SetReadingProgress(runningFileCount, runningFileSize, newFile.FullName, "Adding...");
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException) {
+                // eat the exception
+            }
+		}
+ */

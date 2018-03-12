@@ -37,40 +37,28 @@ namespace BlueMirrorIndexer
 
         public DateTime Scanned { get; set; }
 
-        [OptionalField]
-        bool scannedCrc;
+        public int Flags { get; set; }
 
-        public bool ScannedCrc {
-            get { return scannedCrc; }
-            set { scannedCrc = value; }
+        private static int FLAG_CRC = 1;
+        private static int FLAG_ZIP = 2;
+
+        public bool ScannedCrc 
+        {
+            get { return (Flags & FLAG_CRC) == 1; }
+            set { Flags = Flags ^ (value ? FLAG_CRC : 0); }
         }
 
-        [OptionalField]
-        bool scannedZip;
-
-        public bool ScannedZip {
-            get { return scannedZip; }
-            set { scannedZip = value; }
-        }
-
-        [OptionalField]
-        bool scannedFileVersion;
-
-        public bool ScannedFileVersion {
-            get { return scannedFileVersion; }
-            set { scannedFileVersion = value; }
+        public bool ScannedZip
+        {
+            get { return (Flags & FLAG_ZIP) == 1; }
+            set { Flags = Flags ^ (value ? FLAG_ZIP : 0); }
         }
 
         public string GetOptionsDescription() {
             string res = string.Empty;
-            if (scannedCrc)
+            if (ScannedCrc)
                 res += "CRC";
-            if (scannedFileVersion) {
-                if (res != string.Empty)
-                    res += ", ";
-                res += "File versions";
-            }
-            if (scannedZip) {
+            if (ScannedZip) {
                 if (res != string.Empty)
                     res += ", ";
                 res += "Browsed compressed files";
@@ -126,9 +114,8 @@ namespace BlueMirrorIndexer
             TotalSize = di.TotalSize;
             VolumeLabel = di.VolumeLabel;
             SerialNumber = Win32.GetVolumeSerialNumber(drive);
-            scannedCrc = Properties.Settings.Default.ComputeCrc;
-            scannedZip = Properties.Settings.Default.BrowseInsideCompressed;
-            scannedFileVersion = Properties.Settings.Default.ReadFileInfo;
+            ScannedCrc = Properties.Settings.Default.ComputeCrc;
+            ScannedZip = Properties.Settings.Default.BrowseInsideCompressed;
             FromDrive = drive;
             if (discToReplace != null) {
                 if ((Keywords != string.Empty) && (discToReplace.Keywords != string.Empty))

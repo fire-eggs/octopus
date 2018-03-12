@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* 
+ * Copyright © 2018 by Kevin Routley.
+ * 
+ */
+using System;
 using System.Data.SQLite;
 using System.IO;
 
@@ -22,7 +26,11 @@ namespace BlueMirrorIndexer
 [ScanTime] TEXT,
 [Serial] TEXT,
 [PhysicalLocation] TEXT,
-[FromDrive] TEXT
+[FromDrive] TEXT,
+[Name] TEXT,
+[Keywords] TEXT,
+[Flags] INTEGER,
+[Desc] TEXT
 )
 ";
         private const string FileCreate = @"CREATE TABLE IF NOT EXISTS [Files] (
@@ -37,9 +45,7 @@ namespace BlueMirrorIndexer
 [AccessT] TEXT,
 [WriteT] TEXT,
 [Keywords] TEXT,
-[Desc] TEXT,
-[FileDesc] TEXT,
-[FileVers] TEXT
+[Desc] TEXT
 )";
 
         private const string FoldCreate = @"CREATE TABLE IF NOT EXISTS [Folds] (
@@ -121,7 +127,9 @@ namespace BlueMirrorIndexer
         {
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "insert into Discs (Format, Type, Free, Size, Label, ScanTime, Serial, PhysicalLocation, FromDrive) values (";
+                cmd.CommandText = "insert into Discs (Format, Type, Free, Size, Label, "+
+                                  "ScanTime, Serial, PhysicalLocation, FromDrive, Name, "+
+                                  "Keywords, Flags, Desc) values (";
                 cmd.CommandText += "'" + disc.DriveFormat + "',";
                 cmd.CommandText += "'" + (int)disc.DriveType + "',";
                 cmd.CommandText += "'" + disc.TotalFreeSpace + "',";
@@ -130,7 +138,11 @@ namespace BlueMirrorIndexer
                 cmd.CommandText += "'" + disc.Scanned.ToUniversalTime() + "',";
                 cmd.CommandText += "'" + disc.SerialNumber + "',";
                 cmd.CommandText += "'" + disc.PhysicalLocation + "',";
-                cmd.CommandText += "'" + disc.FromDrive + "'";
+                cmd.CommandText += "'" + disc.FromDrive + "',";
+                cmd.CommandText += "'" + disc.Name + "',";
+                cmd.CommandText += "'" + disc.Keywords.Replace("'", "''") + "',";
+                cmd.CommandText += "'" + disc.Flags + "',";
+                cmd.CommandText += "'" + disc.Description.Replace("'", "''") + "'";
                 cmd.CommandText += ")";
 
                 cmd.ExecuteNonQuery();
@@ -182,7 +194,7 @@ namespace BlueMirrorIndexer
         private static void WriteFiles(SQLiteConnection conn, int owner, FileInDatabase[] files)
         {
             string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," + 
-                           "Keywords, Desc, FileDesc, FileVers) VALUES ('"+owner+"',";
+                           "Keywords, Desc) VALUES ('"+owner+"',";
             using (var cmd = conn.CreateCommand())
             {
                 foreach (var afile in files)
@@ -197,9 +209,7 @@ namespace BlueMirrorIndexer
                     cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime() + "',";
                     cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime() + "',";
                     cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.FileDescription.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.FileVersion.Replace("'", "''") + "'";
+                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "'";
                     cmd.CommandText += ")";
                     cmd.ExecuteNonQuery();
                 }
@@ -238,7 +248,6 @@ namespace BlueMirrorIndexer
                 var dbid = (long)rdr["ID"]; // The top folder has this as the owner id
 
                 DiscInDatabase did = new DiscInDatabase(-(int)dbid);
-//"insert into Discs (Format, Type, Free, Size, Label, ScanTime, Serial, PhysicalLocation, FromDrive) values (";
 
                 did.DriveFormat = rdr["Format"] as string;
                 did.DriveType = (DriveType) ((long) rdr["Type"]);
@@ -248,6 +257,10 @@ namespace BlueMirrorIndexer
                 did.SerialNumber = rdr["Serial"] as string;
                 did.PhysicalLocation = rdr["PhysicalLocation"] as string;
                 did.FromDrive = rdr["FromDrive"] as string;
+                did.Name = rdr.GetString(10);
+                did.Keywords = rdr.GetString(11);
+                did.Flags = rdr.GetInt32(12);
+                did.Description = rdr.GetString(13);
 
                 mem.AddDisc(did);
             }
@@ -313,9 +326,7 @@ namespace BlueMirrorIndexer
                 [AccessT] TEXT,
                 [WriteT] TEXT,
                 [Keywords] TEXT, // 10
-                [Desc] TEXT,
-                [FileDesc] TEXT,
-                [FileVers] TEXT
+                [Desc] TEXT
                 */
                 //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
 //               "Keywords, Desc, FileDesc, FileVers) VALUES ('" + owner + "',";
@@ -335,27 +346,7 @@ namespace BlueMirrorIndexer
 
                 afile.Keywords = rdr.GetString(10);
                 afile.Description = rdr.GetString(11);
-                afile.FileDescription = rdr.GetString(12);
-                afile.FileVersion = rdr.GetString(13);
-#if false
-                afile.FullName = rdr["FullName"] as string;
-                afile.Extension = rdr["Ext"] as string;
-                afile.Name = rdr["Name"] as string;
-                afile.Attributes = (FileAttributes)((long)rdr["Attributes"]);
-                afile.Length = (long) rdr["Length"];
 
-                string tmp = rdr["CreateT"] as string;
-                afile.CreationTime = DateTime.Parse(tmp);
-                tmp = rdr["AccessT"] as string;
-                afile.LastAccessTime = DateTime.Parse(tmp);
-                tmp = rdr["WriteT"] as string;
-                afile.LastWriteTime = DateTime.Parse(tmp);
-
-                afile.Keywords = rdr["Keywords"] as string;
-                afile.Description = rdr["Desc"] as string;
-                afile.FileDescription = rdr["FileDesc"] as string;
-                afile.FileVersion = rdr["FileVers"] as string;
-#endif
                 ((IFolder)did).AddToFiles(afile);
             }
         }
