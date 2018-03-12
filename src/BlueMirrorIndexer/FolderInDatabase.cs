@@ -22,7 +22,6 @@ namespace BlueMirrorIndexer {
 	[Serializable]
     public class FolderInDatabase : ItemInDatabase, IFolder
     {
-        public int DbId { get; private set; }
         public FolderInDatabase(int dbId, IFolder parent) : this(parent)
         {
             DbId = dbId; // TODO KBR for SQLite load

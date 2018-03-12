@@ -398,6 +398,7 @@ namespace BlueMirrorIndexer
                 //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
 //               "Keywords, Desc, FileDesc, FileVers) VALUES ('" + owner + "',";
                 FileInDatabase afile = new FileInDatabase(did);
+                afile.DbId = rdr.GetInt32(0);
                 afile.Name = rdr.GetString(2);
                 afile.Extension = rdr.GetString(3);
                 afile.FullName = rdr.GetString(4);

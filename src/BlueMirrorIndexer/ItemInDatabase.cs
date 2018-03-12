@@ -8,6 +8,7 @@ namespace BlueMirrorIndexer {
 	[Serializable]
     public abstract class ItemInDatabase
     {
+        public int DbId { get; set; } // For SQLite restore
 
 		public ItemInDatabase(IFolder parent)
 		{
