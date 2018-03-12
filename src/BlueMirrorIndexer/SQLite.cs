@@ -60,6 +60,14 @@ namespace BlueMirrorIndexer
 [WriteT] TEXT
 )";
 
+        private const string LFoldCreate = @"CREATE TABLE IF NOT EXISTS [LFold] (
+[ID] INTEGER NOT NULL PRIMARY KEY,
+[Owner] INTEGER NOT NULL,
+[Name] TEXT,
+[Desc] TEXT,
+[Type] INTEGER
+)";
+
         private const string FileDex = @"CREATE INDEX owner_dex1 ON Files(Owner)";
         private const string FoldDex = @"CREATE INDEX owner_dex2 ON Folds(Owner)";
 
@@ -81,16 +89,8 @@ namespace BlueMirrorIndexer
             {
                 conn.Open();
                 CreateTables(conn);
-
                 WriteData(conn, mem);
-
-                using (var cmd = new SQLiteCommand(conn))
-                {
-                    cmd.CommandText = FileDex;
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = FoldDex;
-                    cmd.ExecuteNonQuery();
-                }
+                CreateIndices(conn);
             }
         }
 
@@ -98,6 +98,7 @@ namespace BlueMirrorIndexer
         {
             using (var cmd = new SQLiteCommand(conn))
             {
+                // discs
                 cmd.CommandText = DiscCreate;
                 cmd.ExecuteNonQuery();
 
@@ -107,6 +108,23 @@ namespace BlueMirrorIndexer
 
                 // files
                 cmd.CommandText = FileCreate;
+                cmd.ExecuteNonQuery();
+
+                // Logical Folders
+                cmd.CommandText = LFoldCreate;
+                cmd.ExecuteNonQuery();
+
+                // Logical Folder <> item mappings
+            }
+        }
+
+        private static void CreateIndices(SQLiteConnection conn)
+        {
+            using (var cmd = new SQLiteCommand(conn))
+            {
+                cmd.CommandText = FileDex;
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = FoldDex;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -120,6 +138,15 @@ namespace BlueMirrorIndexer
                     WriteDisc(conn, disc);
                     tx.Commit();
                 }
+            }
+
+            using (var tx = conn.BeginTransaction())
+            {
+                foreach (var lFold in mem.GetLogicalFolders())
+                {
+                    WriteLFold(conn, lFold);
+                }
+                tx.Commit();
             }
         }
 
@@ -216,6 +243,38 @@ namespace BlueMirrorIndexer
             }
         }
 
+        private static void WriteLFold(SQLiteConnection conn, LogicalFolder lfold, int parent=0)
+        {
+            using (var cmd = conn.CreateCommand())
+            {
+                /*
+            [ID] INTEGER NOT NULL PRIMARY KEY,
+            [Owner] INTEGER NOT NULL,
+            [Name] TEXT,
+            [Desc] TEXT,
+            [Type] INTEGER
+             */
+                cmd.CommandText = "INSERT INTO [LFold] (Owner, Name, Desc, Type) VALUES (";
+                cmd.CommandText += "'" + parent + "',";
+                cmd.CommandText += "'" + lfold.Name.Replace("'", "''") + "',";
+                cmd.CommandText += "'" + lfold.Description.Replace("'", "''") + "',";
+                cmd.CommandText += "'" + (int) lfold.FolderType + "')";
+
+                cmd.ExecuteNonQuery();
+
+                // pass disc id for folders
+                cmd.CommandText = "select last_insert_rowid()";
+                Int64 lastRowId64 = (Int64)cmd.ExecuteScalar();
+                int lastRowId = (int)lastRowId64;
+
+                foreach (var subFold in lfold.GetSubFolders())
+                {
+                    WriteLFold(conn, subFold, lastRowId);
+                }
+            }
+        }
+
+        #region Data Read
         public static VolumeDatabase ReadFromDb(string dbpath)
         {
             // TODO KBR allow user to name file, location
@@ -350,6 +409,7 @@ namespace BlueMirrorIndexer
                 ((IFolder)did).AddToFiles(afile);
             }
         }
+        #endregion
 
     }
 

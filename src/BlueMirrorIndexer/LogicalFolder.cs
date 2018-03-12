@@ -62,6 +62,11 @@ namespace BlueMirrorIndexer
 
         private List<LogicalFolder> subFolders = new List<LogicalFolder>();
 
+        public List<LogicalFolder> GetSubFolders()
+        {
+            return subFolders;
+        }
+
         private LogicalFolder parent;
 
         public LogicalFolder Parent {
@@ -151,7 +156,7 @@ namespace BlueMirrorIndexer
             set { maxSize = value; }
         }
 
-        string description;
+        string description = "";
 
         public string Description {
             get { return description; }
