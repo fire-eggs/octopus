@@ -3,8 +3,10 @@
  * 
  */
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 
 // ReSharper disable InconsistentNaming
 
@@ -129,6 +131,7 @@ namespace BlueMirrorIndexer
             }
         }
 
+        #region Write data
         private static void WriteData(SQLiteConnection conn, VolumeDatabase mem)
         {
             foreach (var disc in mem.GetDiscs())
@@ -274,6 +277,8 @@ namespace BlueMirrorIndexer
             }
         }
 
+#endregion
+
         #region Data Read
         public static VolumeDatabase ReadFromDb(string dbpath)
         {
@@ -329,6 +334,9 @@ namespace BlueMirrorIndexer
                 ReadFiles(conn, discInDatabase);
                 ReadFolders(conn, discInDatabase);
             }
+
+            ReadLogicalFolders(conn, mem);
+
             return mem;
         }
 
@@ -408,6 +416,46 @@ namespace BlueMirrorIndexer
 
                 ((IFolder)did).AddToFiles(afile);
             }
+        }
+
+        private static void ReadLogicalFolders(SQLiteConnection conn, VolumeDatabase mem)
+        {
+            var lFoldList = mem.GetLogicalFolders();
+
+            // Note: order by owner insures that sub-folders are after their parents and hookup works
+            string txt = "select * from LFold ORDER BY Owner";
+            SQLiteCommand cmd = new SQLiteCommand(txt, conn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+/*
+[ID] INTEGER NOT NULL PRIMARY KEY,
+[Owner] INTEGER NOT NULL,
+[Name] TEXT,
+[Desc] TEXT,
+[Type] INTEGER
+*/
+                LogicalFolder lfold = new LogicalFolder();
+                lfold.DbId = rdr.GetInt32(0);
+                lfold.Name = rdr.GetString(2);
+                lfold.Description = rdr.GetString(3);
+                lfold.FolderType = (LogicalFolderType) rdr.GetInt32(4);
+
+                int owner = rdr.GetInt32(1);
+                if ( owner != 0 )
+                    HookupParent(lfold, rdr.GetInt32(1), lFoldList);
+                else
+                    lFoldList.Add(lfold);
+            }
+        }
+
+        private static void HookupParent(LogicalFolder child, int ownerId, List<LogicalFolder> foldlist)
+        {
+            // Connect a sub-folder to its parent
+            var parent = foldlist.FirstOrDefault(f => f.DbId == ownerId);
+            if (parent == null)
+                return; // shouldn't happen!
+            parent.AddFolder(child);
         }
         #endregion
 

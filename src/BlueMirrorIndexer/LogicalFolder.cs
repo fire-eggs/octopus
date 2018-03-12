@@ -249,5 +249,7 @@ namespace BlueMirrorIndexer
             return newName;
         }
 
+        // For SQLite
+        public int DbId { get; set; }
     }
 }
