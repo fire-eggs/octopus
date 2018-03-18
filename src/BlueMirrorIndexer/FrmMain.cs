@@ -1774,8 +1774,17 @@ namespace BlueMirrorIndexer
         private VolumeDatabase deserialize(string filePath)
         {
             // TODO KBR read from SQLite
-            VolumeDatabase cid = SQLite.ReadFromDb(filePath);
-
+            Cursor oldCursor = Cursor;
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                VolumeDatabase cid = SQLite.ReadFromDb(filePath);
+                return cid;
+            }
+            finally
+            {
+                Cursor = oldCursor;
+            }
 
 #if false
         long BIG_FILE_SIZE = 18000000;
@@ -1818,7 +1827,6 @@ namespace BlueMirrorIndexer
                 }
             }
 #endif
-            return cid;
         }
 
         private void fileOperations_CurrentFilePathChanged(object sender, EventArgs e) {
