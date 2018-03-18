@@ -291,13 +291,17 @@ namespace BlueMirrorIndexer
             if (!File.Exists(dbFile))
                 return null;
 
+            VolumeDatabase mem;
             using (var conn = new SQLiteConnection(dbSrc))
             {
                 conn.Open();
-                VolumeDatabase mem = ReadData(conn);
-                return mem;
+                mem = ReadData(conn);
+                conn.Close();
             }
             // TODO KBR exception, e.g. not a valid db file
+
+            SQLiteConnection.ClearAllPools();
+            return mem;
         }
 
         private static VolumeDatabase ReadData(SQLiteConnection conn)
@@ -305,28 +309,32 @@ namespace BlueMirrorIndexer
             VolumeDatabase mem = new VolumeDatabase();
 
             string txt = "select * from Discs";
-            SQLiteCommand cmd = new SQLiteCommand(txt, conn);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (SQLiteCommand cmd = new SQLiteCommand(txt, conn))
             {
-                var dbid = (long)rdr["ID"]; // The top folder has this as the owner id
+                using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        var dbid = (long) rdr["ID"]; // The top folder has this as the owner id
 
-                DiscInDatabase did = new DiscInDatabase(-(int)dbid);
+                        DiscInDatabase did = new DiscInDatabase(-(int) dbid);
 
-                did.DriveFormat = rdr["Format"] as string;
-                did.DriveType = (DriveType) ((long) rdr["Type"]);
-                did.TotalFreeSpace = (long) rdr["Free"];
-                did.TotalSize = (long) rdr["Size"];
-                did.Scanned = DateTime.Parse((string) rdr["ScanTime"]);
-                did.SerialNumber = rdr["Serial"] as string;
-                did.PhysicalLocation = rdr["PhysicalLocation"] as string;
-                did.FromDrive = rdr["FromDrive"] as string;
-                did.Name = rdr.GetString(10);
-                did.Keywords = rdr.GetString(11);
-                did.Flags = rdr.GetInt32(12);
-                did.Description = rdr.GetString(13);
+                        did.DriveFormat = rdr["Format"] as string;
+                        did.DriveType = (DriveType) ((long) rdr["Type"]);
+                        did.TotalFreeSpace = (long) rdr["Free"];
+                        did.TotalSize = (long) rdr["Size"];
+                        did.Scanned = DateTime.Parse((string) rdr["ScanTime"]);
+                        did.SerialNumber = rdr["Serial"] as string;
+                        did.PhysicalLocation = rdr["PhysicalLocation"] as string;
+                        did.FromDrive = rdr["FromDrive"] as string;
+                        did.Name = rdr.GetString(10);
+                        did.Keywords = rdr.GetString(11);
+                        did.Flags = rdr.GetInt32(12);
+                        did.Description = rdr.GetString(13);
 
-                mem.AddDisc(did);
+                        mem.AddDisc(did);
+                    }
+                }
             }
 
             foreach (var discInDatabase in mem.GetDiscs())
@@ -343,26 +351,30 @@ namespace BlueMirrorIndexer
         private static void ReadFolders(SQLiteConnection conn, FolderInDatabase did)
         {
             string txt = "select * from Folds where Owner = " + did.DbId;
-            SQLiteCommand cmd = new SQLiteCommand(txt, conn);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (SQLiteCommand cmd = new SQLiteCommand(txt, conn))
             {
-//"insert into Folds (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT) VALUES ('" + owner + "',";
-                var dbid = (long)rdr["ID"]; // The top folder has this as the owner id
-                FolderInDatabase afile = new FolderInDatabase((int)dbid, did);
-                afile.FullName = rdr["FullName"] as string;
-                afile.Extension = rdr["Ext"] as string;
-                afile.Name = rdr["Name"] as string;
-                afile.Attributes = (FileAttributes)((long)rdr["Attributes"]);
+                using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        //"insert into Folds (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT) VALUES ('" + owner + "',";
+                        var dbid = (long) rdr["ID"]; // The top folder has this as the owner id
+                        FolderInDatabase afile = new FolderInDatabase((int) dbid, did);
+                        afile.FullName = rdr["FullName"] as string;
+                        afile.Extension = rdr["Ext"] as string;
+                        afile.Name = rdr["Name"] as string;
+                        afile.Attributes = (FileAttributes) ((long) rdr["Attributes"]);
 
-                string tmp = rdr["CreateT"] as string;
-                afile.CreationTime = DateTime.Parse(tmp);
-                tmp = rdr["AccessT"] as string;
-                afile.LastAccessTime = DateTime.Parse(tmp);
-                tmp = rdr["WriteT"] as string;
-                afile.LastWriteTime = DateTime.Parse(tmp);
+                        string tmp = rdr["CreateT"] as string;
+                        afile.CreationTime = DateTime.Parse(tmp);
+                        tmp = rdr["AccessT"] as string;
+                        afile.LastAccessTime = DateTime.Parse(tmp);
+                        tmp = rdr["WriteT"] as string;
+                        afile.LastWriteTime = DateTime.Parse(tmp);
 
-                ((IFolder)did).AddToFolders(afile);
+                        ((IFolder) did).AddToFolders(afile);
+                    }
+                }
             }
 
             foreach (var afold in ((IFolder) did).Folders)
@@ -376,12 +388,15 @@ namespace BlueMirrorIndexer
         private static void ReadFiles(SQLiteConnection conn, FolderInDatabase did)
         {
             string txt = "select * from Files where Owner = " + did.DbId;
-            SQLiteCommand cmd = new SQLiteCommand(txt, conn);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
 
-                /*
+            using (SQLiteCommand cmd = new SQLiteCommand(txt, conn))
+            {
+                using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+
+                        /*
                 [ID] INTEGER NOT NULL PRIMARY KEY,
                 [Owner] INTEGER NOT NULL,
                 [Name] TEXT,
@@ -395,27 +410,29 @@ namespace BlueMirrorIndexer
                 [Keywords] TEXT, // 10
                 [Desc] TEXT
                 */
-                //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
+                        //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
 //               "Keywords, Desc, FileDesc, FileVers) VALUES ('" + owner + "',";
-                FileInDatabase afile = new FileInDatabase(did);
-                afile.DbId = rdr.GetInt32(0);
-                afile.Name = rdr.GetString(2);
-                afile.Extension = rdr.GetString(3);
-                afile.FullName = rdr.GetString(4);
-                afile.Attributes = (FileAttributes)rdr.GetInt64(5);
-                afile.Length = rdr.GetInt64(6);
+                        FileInDatabase afile = new FileInDatabase(did);
+                        afile.DbId = rdr.GetInt32(0);
+                        afile.Name = rdr.GetString(2);
+                        afile.Extension = rdr.GetString(3);
+                        afile.FullName = rdr.GetString(4);
+                        afile.Attributes = (FileAttributes) rdr.GetInt64(5);
+                        afile.Length = rdr.GetInt64(6);
 
-                string tmp = rdr.GetString(7);
-                afile.CreationTime = DateTime.Parse(tmp);
-                tmp = rdr.GetString(8);
-                afile.LastAccessTime = DateTime.Parse(tmp);
-                tmp = rdr.GetString(9);
-                afile.LastWriteTime = DateTime.Parse(tmp);
+                        string tmp = rdr.GetString(7);
+                        afile.CreationTime = DateTime.Parse(tmp);
+                        tmp = rdr.GetString(8);
+                        afile.LastAccessTime = DateTime.Parse(tmp);
+                        tmp = rdr.GetString(9);
+                        afile.LastWriteTime = DateTime.Parse(tmp);
 
-                afile.Keywords = rdr.GetString(10);
-                afile.Description = rdr.GetString(11);
+                        afile.Keywords = rdr.GetString(10);
+                        afile.Description = rdr.GetString(11);
 
-                ((IFolder)did).AddToFiles(afile);
+                        ((IFolder) did).AddToFiles(afile);
+                    }
+                }
             }
         }
 
@@ -425,10 +442,13 @@ namespace BlueMirrorIndexer
 
             // Note: order by owner insures that sub-folders are after their parents and hookup works
             string txt = "select * from LFold ORDER BY Owner";
-            SQLiteCommand cmd = new SQLiteCommand(txt, conn);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (SQLiteCommand cmd = new SQLiteCommand(txt, conn))
             {
+
+                using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
 /*
 [ID] INTEGER NOT NULL PRIMARY KEY,
 [Owner] INTEGER NOT NULL,
@@ -436,17 +456,19 @@ namespace BlueMirrorIndexer
 [Desc] TEXT,
 [Type] INTEGER
 */
-                LogicalFolder lfold = new LogicalFolder();
-                lfold.DbId = rdr.GetInt32(0);
-                lfold.Name = rdr.GetString(2);
-                lfold.Description = rdr.GetString(3);
-                lfold.FolderType = (LogicalFolderType) rdr.GetInt32(4);
+                        LogicalFolder lfold = new LogicalFolder();
+                        lfold.DbId = rdr.GetInt32(0);
+                        lfold.Name = rdr.GetString(2);
+                        lfold.Description = rdr.GetString(3);
+                        lfold.FolderType = (LogicalFolderType) rdr.GetInt32(4);
 
-                int owner = rdr.GetInt32(1);
-                if ( owner != 0 )
-                    HookupParent(lfold, rdr.GetInt32(1), lFoldList);
-                else
-                    lFoldList.Add(lfold);
+                        int owner = rdr.GetInt32(1);
+                        if (owner != 0)
+                            HookupParent(lfold, rdr.GetInt32(1), lFoldList);
+                        else
+                            lFoldList.Add(lfold);
+                    }
+                }
             }
         }
 
