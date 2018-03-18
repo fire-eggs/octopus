@@ -17,12 +17,14 @@ namespace BlueMirrorIndexer
         {
             Scanned = DateTime.Now;
             DriveType = DriveType.Unknown;
+            VolumeLabel = "";
         }
 
         public DiscInDatabase() : base(null)
         {
             Scanned = DateTime.Now;
             DriveType = DriveType.Unknown;
+            VolumeLabel = "";
         }
 
         public string DriveFormat { get; set; }
@@ -112,7 +114,8 @@ namespace BlueMirrorIndexer
             DriveType = di.DriveType;
             TotalFreeSpace = di.TotalFreeSpace;
             TotalSize = di.TotalSize;
-            VolumeLabel = di.VolumeLabel;
+            if (!string.IsNullOrEmpty(di.VolumeLabel))
+                VolumeLabel = di.VolumeLabel;
             SerialNumber = Win32.GetVolumeSerialNumber(drive);
             ScannedCrc = Properties.Settings.Default.ComputeCrc;
             ScannedZip = Properties.Settings.Default.BrowseInsideCompressed;
