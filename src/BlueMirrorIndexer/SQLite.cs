@@ -164,10 +164,10 @@ namespace BlueMirrorIndexer
                 cmd.CommandText += "'" + (int)disc.DriveType + "',";
                 cmd.CommandText += "'" + disc.TotalFreeSpace + "',";
                 cmd.CommandText += "'" + disc.TotalSize + "',";
-                cmd.CommandText += "'" + disc.VolumeLabel + "',";
+                cmd.CommandText += "'" + disc.VolumeLabel.Replace("'", "''") + "',";
                 cmd.CommandText += "'" + disc.Scanned.ToUniversalTime() + "',";
                 cmd.CommandText += "'" + disc.SerialNumber + "',";
-                cmd.CommandText += "'" + disc.PhysicalLocation + "',";
+                cmd.CommandText += "'" + disc.PhysicalLocation.Replace("'", "''") + "',";
                 cmd.CommandText += "'" + disc.FromDrive + "',";
                 cmd.CommandText += "'" + disc.Name + "',";
                 cmd.CommandText += "'" + disc.Keywords.Replace("'", "''") + "',";
@@ -202,7 +202,7 @@ namespace BlueMirrorIndexer
 
                     cmd.CommandText = start;
                     cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Extension + "',";
+                    cmd.CommandText += "'" + afile.Extension.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + (int)afile.Attributes + "',";
                     cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime() + "',";
@@ -231,7 +231,7 @@ namespace BlueMirrorIndexer
                 {
                     cmd.CommandText = start;
                     cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Extension + "',";
+                    cmd.CommandText += "'" + afile.Extension.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + (int)afile.Attributes + "',";
                     cmd.CommandText += "'" + afile.Length + "',";
