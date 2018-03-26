@@ -43,9 +43,9 @@ namespace BlueMirrorIndexer
 [FullName] TEXT,
 [Attributes] INTEGER,
 [Length] INTEGER,
-[CreateT] TEXT,
-[AccessT] TEXT,
-[WriteT] TEXT,
+[CreateT] INTEGER,
+[AccessT] INTEGER,
+[WriteT] INTEGER,
 [Keywords] TEXT,
 [Desc] TEXT
 )";
@@ -235,9 +235,9 @@ namespace BlueMirrorIndexer
                     cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + (int)afile.Attributes + "',";
                     cmd.CommandText += "'" + afile.Length + "',";
-                    cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime() + "',";
-                    cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime() + "',";
-                    cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime() + "',";
+                    cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime().Ticks + "',";
+                    cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime().Ticks + "',";
+                    cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime().Ticks + "',";
                     cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "'";
                     cmd.CommandText += ")";
@@ -412,20 +412,25 @@ namespace BlueMirrorIndexer
                 */
                         //string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
 //               "Keywords, Desc, FileDesc, FileVers) VALUES ('" + owner + "',";
-                        FileInDatabase afile = new FileInDatabase(did);
+                        //afile.Parent = did;
+//                        FileInDatabase afile = new FileInDatabase(did);
+                        FileInDatabase afile = new FileInDatabase(did, rdr.GetString(3));
                         afile.DbId = rdr.GetInt32(0);
                         afile.Name = rdr.GetString(2);
-                        afile.Extension = rdr.GetString(3);
+                        //afile.Extension = rdr.GetString(3);
                         afile.FullName = rdr.GetString(4);
                         afile.Attributes = (FileAttributes) rdr.GetInt64(5);
                         afile.Length = rdr.GetInt64(6);
 
-                        string tmp = rdr.GetString(7);
-                        afile.CreationTime = DateTime.Parse(tmp);
-                        tmp = rdr.GetString(8);
-                        afile.LastAccessTime = DateTime.Parse(tmp);
-                        tmp = rdr.GetString(9);
-                        afile.LastWriteTime = DateTime.Parse(tmp);
+                        afile.CreationTime = new DateTime(rdr.GetInt64(7));
+                        //string tmp = rdr.GetString(7);
+                        //afile.CreationTime = DateTime.Parse(tmp);
+                        //tmp = rdr.GetString(8);
+                        afile.LastAccessTime = new DateTime(rdr.GetInt64(8));
+                        //afile.LastAccessTime = DateTime.Parse(tmp);
+                        //tmp = rdr.GetString(9);
+                        afile.LastWriteTime = new DateTime(rdr.GetInt64(9));
+                        //afile.LastWriteTime = DateTime.Parse(tmp);
 
                         afile.Keywords = rdr.GetString(10);
                         afile.Description = rdr.GetString(11);

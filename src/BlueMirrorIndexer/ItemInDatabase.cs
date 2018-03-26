@@ -10,26 +10,35 @@ namespace BlueMirrorIndexer {
     {
         public int DbId { get; set; } // For SQLite restore
 
+	    public ItemInDatabase(IFolder _parent, string ext)
+	    {
+	        // for sqlite restore
+	        parent = _parent;
+	        extension = ext;
+	    }
+
 		public ItemInDatabase(IFolder parent)
 		{
 		    Length = 0;
-		    LastWriteTime = DateTime.Now;
-		    LastAccessTime = DateTime.Now;
-		    Keywords = "";
-		    Description = "";
-		    Name = "";
-		    CreationTime = DateTime.Now;
-		    Attributes = FileAttributes.Normal;
-		    FullName = "";
-		    this.parent = parent;
-		    FileDescription = "";
-		    FileVersion = "";
+            this.parent = parent;
+            LastWriteTime = DateTime.Now;
+            LastAccessTime = DateTime.Now;
+            Keywords = "";
+            Description = "";
+            Name = "";
+            CreationTime = DateTime.Now;
+            Attributes = FileAttributes.Normal;
+            FullName = "";
+            FileDescription = "";
+            FileVersion = "";
+		    extension = "";
 		}
 
 	    IFolder parent;
 
         internal IFolder Parent {
 			get { return parent; }
+            set { parent = value; } // for sqlite
 		}
 
 	    public string Keywords { get; set; }
@@ -44,7 +53,7 @@ namespace BlueMirrorIndexer {
 
 	    public DateTime CreationTime { get; set; }
 
-	    string extension = "";
+	    string extension;
 
 		public string Extension {
 			get { return extension; }
@@ -104,10 +113,12 @@ namespace BlueMirrorIndexer {
 
         #region Logical Folders
 
-        List<LogicalFolder> logicalFolders = new List<LogicalFolder>();
+	    private List<LogicalFolder> logicalFolders; // = new List<LogicalFolder>();
 
         public List<LogicalFolder> LogicalFolders {
-            get { return logicalFolders; }
+            get { if (logicalFolders == null) logicalFolders = new List<LogicalFolder>();
+                return logicalFolders;
+            }
         }
 
         internal void ApplyFolders(LogicalFolder[] newLogicalFolders, bool clearOldFolders) {
