@@ -165,7 +165,7 @@ namespace BlueMirrorIndexer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Delete File....
+        ///   Looks up a localized string similar to &amp;De-list File....
         /// </summary>
         internal static string DeleteFile {
             get {
@@ -174,7 +174,7 @@ namespace BlueMirrorIndexer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Delete Folder....
+        ///   Looks up a localized string similar to &amp;De-list Folder....
         /// </summary>
         internal static string DeleteFolder {
             get {

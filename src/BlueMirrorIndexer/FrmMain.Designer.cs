@@ -154,6 +154,7 @@ namespace BlueMirrorIndexer
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cmExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -383,7 +384,8 @@ namespace BlueMirrorIndexer
             this.cmPropertiesFrm,
             this.cmDeleteFrm,
             this.cmFindInDatabaseFrm,
-            this.cmMainRemoveFromFolder});
+            this.cmMainRemoveFromFolder,
+            this.cmExplorer});
             this.itemToolStripMenuItem.Name = "itemToolStripMenuItem";
             resources.ApplyResources(this.itemToolStripMenuItem, "itemToolStripMenuItem");
             // 
@@ -1118,6 +1120,12 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
             // 
+            // cmExplorer
+            // 
+            this.cmExplorer.Name = "cmExplorer";
+            resources.ApplyResources(this.cmExplorer, "cmExplorer");
+            this.cmExplorer.Click += new System.EventHandler(this.cmExplorer_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1297,6 +1305,7 @@ namespace BlueMirrorIndexer
         private Igorary.Forms.Components.FileOperations fileOperations;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem cmExplorer;
 	}
 }
 

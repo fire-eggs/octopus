@@ -191,7 +191,7 @@
     <value>Drive {0} looks like a non-removeable media. Indexing process will take a large amount of time. Would you like to continue?</value>
   </data>
   <data name="DeleteFile" xml:space="preserve">
-    <value>&amp;Delete File...</value>
+    <value>&amp;De-list File...</value>
   </data>
   <data name="MergeWithFile" xml:space="preserve">
     <value>Merge With File</value>
@@ -251,7 +251,7 @@
     <value>..\Resources\folder_find.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DeleteFolder" xml:space="preserve">
-    <value>&amp;Delete Folder...</value>
+    <value>&amp;De-list Folder...</value>
   </data>
   <data name="Closing" xml:space="preserve">
     <value>Closing...</value>

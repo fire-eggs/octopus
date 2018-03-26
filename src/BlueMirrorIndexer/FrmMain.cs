@@ -1843,5 +1843,20 @@ namespace BlueMirrorIndexer
             return Database.IsEmpty();
         }
 
+        private void cmExplorer_Click(object sender, EventArgs e)
+        {
+            // Invoke windows explorer on the item.
+            // N.B. assumes menu is disabled when more than one item selected
+            var f = getSelectedFile();
+            if (f == null)
+                f = getSearchSelectedItem() as FileInDatabase;
+            if (f == null)
+                return;
+            var n = f.Name;
+            var p = f.FullName;
+
+            Process.Start("explorer.exe", "/select,\"" + p + "\"");
+        }
+
     }
 }

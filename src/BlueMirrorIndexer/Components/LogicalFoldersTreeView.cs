@@ -70,7 +70,7 @@ namespace BlueMirrorIndexer.Components
             this.cmDeleteFolder.Image = global::BlueMirrorIndexer.Properties.Resources.folder_delete;
             this.cmDeleteFolder.Name = "cmDeleteFolder";
             this.cmDeleteFolder.Size = new System.Drawing.Size(152, 22);
-            this.cmDeleteFolder.Text = "Delete Folder...";
+            this.cmDeleteFolder.Text = "De-list Folder...";
             this.cmDeleteFolder.Click += new System.EventHandler(this.cmDeleteFolder_Click);
             // 
             // LogicalFoldersTreeView
