@@ -9,6 +9,10 @@ namespace BlueMirrorIndexer
     [Serializable]
 	public class FileInDatabase : ItemInDatabase {
 
+        public FileInDatabase()
+        {
+        }
+
         public FileInDatabase(IFolder parent, string ext) : base(parent, ext)
         {
             // for sqlite load

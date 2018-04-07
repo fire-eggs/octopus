@@ -8,9 +8,8 @@ namespace BlueMirrorIndexer
     [Serializable]
     class FolderImpl
     {
-
-        ItemInDatabase owner;
-        int imageIndex;
+        readonly ItemInDatabase owner;
+        readonly int imageIndex;
         public FolderImpl(ItemInDatabase owner, int imageIndex) {
             this.owner = owner;
             this.imageIndex = imageIndex;

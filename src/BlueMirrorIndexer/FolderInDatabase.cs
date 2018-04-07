@@ -119,8 +119,9 @@ namespace BlueMirrorIndexer {
             folderImpl.RemoveFromFiles(file);
         }
 
-        void IFolder.AddToFiles(FileInDatabase file) {
+	    public void AddToFiles(FileInDatabase file) {
             folderImpl.AddToFiles(file);
+            file.Parent = this;
         }
 
         int IFolder.FileCount {

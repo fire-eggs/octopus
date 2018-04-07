@@ -10,11 +10,16 @@ namespace BlueMirrorIndexer {
     {
         public int DbId { get; set; } // For SQLite restore
 
+	    public ItemInDatabase()
+	    {
+	        
+	    }
+
 	    public ItemInDatabase(IFolder parent, string ext)
 	    {
 	        // for sqlite restore
 	        _parent = parent;
-	        extension = ext;
+	        Extension = ext;
 	    }
 
 		public ItemInDatabase(IFolder parent)
@@ -31,7 +36,7 @@ namespace BlueMirrorIndexer {
             FullName = "";
             FileDescription = "";
             FileVersion = "";
-		    extension = "";
+		    Extension = "";
 		}
 
 	    IFolder _parent;
@@ -53,11 +58,15 @@ namespace BlueMirrorIndexer {
 
 	    public DateTime CreationTime { get; set; }
 
-	    string extension;
+	    //string extension;
 
-		public string Extension {
-			get { return extension; }
-			set { extension = value.ToLower(); }
+        // TODO on volume read, set extension to lowercase before storing
+		public string Extension
+		{
+		    get;
+		    set;
+            //get { return extension; }
+            //set { extension = value.ToLower(); }
 		}
 
 	    public DateTime LastAccessTime { get; set; }
