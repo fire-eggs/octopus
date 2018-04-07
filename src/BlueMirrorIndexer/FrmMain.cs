@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,6 +13,9 @@ using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 using Igorary.Forms.Components;
 using Igorary.Utils.Extensions;
+
+using SizeCont = System.Tuple<BlueMirrorIndexer.IFolder, ulong>;
+
 
 // ReSharper disable InconsistentNaming
 
@@ -33,6 +37,8 @@ namespace BlueMirrorIndexer
             cmScanNewMedia.Checked = Properties.Settings.Default.ScanNewMedia;
             Text = string.Format("{0} {1}", ProductName, ProductVersion);
             btnSave.Enabled = cmSave.Enabled = false;
+
+            chartInit();
         }
 
         private void updateControls() {
@@ -681,6 +687,9 @@ namespace BlueMirrorIndexer
             finally {
                 Cursor.Current = c;
             }
+
+            Database.UpdateStats(); // TODO need a subscriber model for chart
+            folds = null;
         }
 
         string calculatingDrive;
@@ -1701,6 +1710,7 @@ namespace BlueMirrorIndexer
                     copyFoldersAndFiles(newDisc, octopusDisc);
                     Database.AddDisc(newDisc);
                 }
+                Database.UpdateStats();
                 updateControls();
             }
         }
@@ -1767,13 +1777,17 @@ namespace BlueMirrorIndexer
         private void fileOperations_OpenFromFile(object sender, OpenFromFileEventArgs e) {
             Database = deserialize(e.FilePath);
             e.FileValid = Database != null;
+            if (Database != null)
+            {
+                Database.UpdateStats(); // TODO switch to subscriber model
+                folds = null;
+            }
         }
 
         private DlgProgress openProgressDialog = null;
 
         private VolumeDatabase deserialize(string filePath)
         {
-            // TODO KBR read from SQLite
             Cursor oldCursor = Cursor;
             Cursor = Cursors.WaitCursor;
             try
@@ -1785,48 +1799,6 @@ namespace BlueMirrorIndexer
             {
                 Cursor = oldCursor;
             }
-
-#if false
-        long BIG_FILE_SIZE = 18000000;
-
-            using (new HourGlass())
-            {
-                try
-                {
-                    Stream stream = new FileStream(filePath, FileMode.Open);
-                    if (stream.Length > BIG_FILE_SIZE)
-                    {
-                        StreamWithEvents streamWithEvents = new StreamWithEvents(stream);
-                        streamWithEvents.ProgressChanged += new ProgressChangedEventHandler(streamWithEvents_ProgressChanged);
-                        stream = streamWithEvents;
-                        Enabled = false;
-                        openProgressDialog = new DlgProgress("Reading File...", "Reading: " + Path.GetFileName(filePath));
-                        openProgressDialog.StartShowing(new TimeSpan(0, 0, 1));
-                    }
-                    try
-                    {
-                        IFormatter formatter = new BinaryFormatter();
-                        formatter.Binder = new BMToCovDeserializationBinder();
-                        cid = (VolumeDatabase)formatter.Deserialize(stream);
-                    }
-                    finally
-                    {
-                        try
-                        {
-                            stream.Close();
-                        }
-                        finally
-                        {
-                            Enabled = true;
-                            closeOpenedProgressDialog();
-                        }
-                    }
-                }
-                catch /*(Exception e)*/ {
-                    //Debug.WriteLine(e.Message);
-                }
-            }
-#endif
         }
 
         private void fileOperations_CurrentFilePathChanged(object sender, EventArgs e) {
@@ -1847,15 +1819,97 @@ namespace BlueMirrorIndexer
         {
             // Invoke windows explorer on the item.
             // N.B. assumes menu is disabled when more than one item selected
-            var f = getSelectedFile();
+            var f = getSearchSelectedItem() as FileInDatabase; // look for search selection first
             if (f == null)
-                f = getSearchSelectedItem() as FileInDatabase;
+                f = getSelectedFile();
             if (f == null)
                 return;
             var n = f.Name;
             var p = f.FullName;
 
             Process.Start("explorer.exe", "/select,\"" + p + "\"");
+        }
+
+        private void chartInit()
+        {
+            //Control c = panel1 as Control;
+            //c.DoubleBuffered = true;
+
+            //panel1.SetStyle(ControlStyles.AllPaintingInWmPaint |
+            //          ControlStyles.Opaque |
+            //          ControlStyles.OptimizedDoubleBuffer |
+            //          ControlStyles.ResizeRedraw |
+            //          ControlStyles.Selectable |
+            //          ControlStyles.UserPaint, true);
+        }
+
+        private List<SizeCont> folds;
+        private List<SizeCont> sort;
+
+        private void CalcChart()
+        {
+            folds = new List<SizeCont>();
+            foreach (var discInDatabase in Database.GetDiscs())
+            {
+                foreach (var fold in ((IFolder)discInDatabase).Folders)
+                {
+                    SizeCont tup = new SizeCont(fold, fold.TotalSizeUsed);
+                    folds.Add(tup);
+                }
+            }
+            sort = folds.OrderByDescending(x => x.Item2).ToList();
+        }
+
+        const int rectH = 15; // TODO derive from font when text drawn
+        const int spacing = 3;
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            if (folds == null)
+                CalcChart();
+
+            if (folds.Count < 1)
+            {
+                e.Graphics.Clear(Color.Red);
+                return;
+            }
+
+            ulong first = sort[0].Item2;             //ulong superTotal = Database.TotalSizeUsed;
+
+            int y = spacing;
+            int maxW = panel1.Width - 6;
+            int dex = 0;
+
+            Brush textb = new SolidBrush(Color.CadetBlue);
+            Pen dPen = new Pen(Color.Blue);
+
+            var g = e.Graphics;
+            g.Clear(Color.Azure);
+            do
+            {
+                int w = (int)(maxW*((double)sort[dex].Item2/(double)first));
+                g.DrawRectangle(dPen, spacing, y, w, rectH);
+                
+                g.DrawString(sort[dex].Item1.Name, DefaultFont, textb, spacing, y);
+
+                y += rectH;
+                y += spacing;
+                dex++;
+            } 
+            while (y < panel1.Height && dex < sort.Count);
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (folds == null || folds.Count < 1)
+                return;
+
+            int dex = e.Y/(spacing + rectH);
+            if (dex >= folds.Count)
+                return;
+
+            IFolder fold = sort[dex].Item1;
+            MessageBox.Show(fold.FullName);
         }
 
     }

@@ -10,17 +10,17 @@ namespace BlueMirrorIndexer {
     {
         public int DbId { get; set; } // For SQLite restore
 
-	    public ItemInDatabase(IFolder _parent, string ext)
+	    public ItemInDatabase(IFolder parent, string ext)
 	    {
 	        // for sqlite restore
-	        parent = _parent;
+	        _parent = parent;
 	        extension = ext;
 	    }
 
 		public ItemInDatabase(IFolder parent)
 		{
 		    Length = 0;
-            this.parent = parent;
+            _parent = parent;
             LastWriteTime = DateTime.Now;
             LastAccessTime = DateTime.Now;
             Keywords = "";
@@ -34,11 +34,11 @@ namespace BlueMirrorIndexer {
 		    extension = "";
 		}
 
-	    IFolder parent;
+	    IFolder _parent;
 
         internal IFolder Parent {
-			get { return parent; }
-            set { parent = value; } // for sqlite
+			get { return _parent; }
+            set { _parent = value; } // for sqlite
 		}
 
 	    public string Keywords { get; set; }
@@ -65,13 +65,13 @@ namespace BlueMirrorIndexer {
 	    public DateTime LastWriteTime { get; set; }
 
 	    public virtual string GetVolumeUserName() {
-			return (parent as ItemInDatabase).GetVolumeUserName();
+			return (_parent as ItemInDatabase).GetVolumeUserName();
 		}
 
 		public string GetPath()
 		{
-		    if ((parent != null) && !(parent is DiscInDatabase)) // inheritance
-                return (parent as ItemInDatabase).GetPath() + (parent as ItemInDatabase).Name + "\\";
+		    if ((_parent != null) && !(_parent is DiscInDatabase)) // inheritance
+                return (_parent as ItemInDatabase).GetPath() + (_parent as ItemInDatabase).Name + "\\";
 		    return "\\";
 		}
 
@@ -94,8 +94,8 @@ namespace BlueMirrorIndexer {
         protected abstract string GetItemType();
 
         public void GetPath(List<ItemInDatabase> pathList) {
-            if (parent != null)
-                (parent as ItemInDatabase).GetPath(pathList);
+            if (_parent != null)
+                (_parent as ItemInDatabase).GetPath(pathList);
             pathList.Add(this);
         }
 
@@ -142,7 +142,10 @@ namespace BlueMirrorIndexer {
             }
         }
 
-        public virtual void RemoveFromLogicalFolders() {
+        public virtual void RemoveFromLogicalFolders()
+        {
+            if (logicalFolders == null)
+                return;
             List<LogicalFolder> listToDelete = new List<LogicalFolder>(logicalFolders);
             foreach (LogicalFolder lf in listToDelete)
                 lf.RemoveItem(this);

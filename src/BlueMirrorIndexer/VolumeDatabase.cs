@@ -99,5 +99,16 @@ namespace BlueMirrorIndexer
         internal bool IsEmpty() {
             return discs.Count == 0;
         }
+
+        public UInt64 TotalSizeUsed { get; set; }
+	    public void UpdateStats()
+	    {
+	        TotalSizeUsed = 0;
+	        foreach (var discInDatabase in discs)
+	        {
+	            discInDatabase.UpdateStats();
+	            TotalSizeUsed += discInDatabase.TotalSizeUsed;
+	        }
+	    }
     }
 }

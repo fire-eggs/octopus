@@ -1,9 +1,7 @@
 using Igorary.Forms;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -162,6 +160,19 @@ namespace BlueMirrorIndexer {
         }
 
         #endregion
+
+        public UInt64 TotalSizeUsed { get; set; }
+
+        public void UpdateStats()
+        {
+            TotalSizeUsed = 0;
+            TotalSizeUsed += (ulong)folderImpl.GetFilesSize();
+            foreach (var folder in folderImpl.Folders)
+            {
+                folder.UpdateStats();
+                TotalSizeUsed += folder.TotalSizeUsed;
+            }
+        }
 
     }
 

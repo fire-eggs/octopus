@@ -366,6 +366,13 @@ namespace BlueMirrorIndexer
             folderImpl.InsertFilesToList(regex, dateFrom, dateTo, sizeFrom, sizeTo,  keywordMatcher, list);
         }
 
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong TotalSizeUsed { get; set; }
+
         void IFolder.CopyToNode(TreeNode treeNode) {
             folderImpl.CopyToNode(treeNode);
         }

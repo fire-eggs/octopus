@@ -61,6 +61,7 @@ namespace BlueMirrorIndexer
             this.cmDeleteFrm = new System.Windows.Forms.ToolStripMenuItem();
             this.cmFindInDatabaseFrm = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMainRemoveFromFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmScanNewMedia = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,6 +135,10 @@ namespace BlueMirrorIndexer
             this.chSrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.filesSearchCriteriaPanel = new BlueMirrorIndexer.Components.FilesSearchCriteriaPanel();
+            this.tpChart = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.tcBottom = new System.Windows.Forms.TabControl();
             this.tpLogicalFolders = new System.Windows.Forms.TabPage();
             this.scFolders = new System.Windows.Forms.SplitContainer();
@@ -154,7 +159,6 @@ namespace BlueMirrorIndexer
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cmExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -176,6 +180,8 @@ namespace BlueMirrorIndexer
             this.scDatabase.SuspendLayout();
             this.tpSearch.SuspendLayout();
             this.searchBottomPanel.SuspendLayout();
+            this.tpChart.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.tcBottom.SuspendLayout();
             this.tpLogicalFolders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scFolders)).BeginInit();
@@ -416,6 +422,12 @@ namespace BlueMirrorIndexer
             this.cmMainRemoveFromFolder.Name = "cmMainRemoveFromFolder";
             resources.ApplyResources(this.cmMainRemoveFromFolder, "cmMainRemoveFromFolder");
             this.cmMainRemoveFromFolder.Click += new System.EventHandler(this.cmRemoveFromFolder_Click);
+            // 
+            // cmExplorer
+            // 
+            this.cmExplorer.Name = "cmExplorer";
+            resources.ApplyResources(this.cmExplorer, "cmExplorer");
+            this.cmExplorer.Click += new System.EventHandler(this.cmExplorer_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -736,6 +748,7 @@ namespace BlueMirrorIndexer
             // 
             this.tcMain.Controls.Add(this.tpDatabase);
             this.tcMain.Controls.Add(this.tpSearch);
+            this.tcMain.Controls.Add(this.tpChart);
             resources.ApplyResources(this.tcMain, "tcMain");
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
@@ -961,6 +974,32 @@ namespace BlueMirrorIndexer
             this.filesSearchCriteriaPanel.Name = "filesSearchCriteriaPanel";
             this.filesSearchCriteriaPanel.SearchBtnClicked += new BlueMirrorIndexer.Components.SearchEventHandler(this.filesSearchCriteriaPanel_SearchBtnClicked);
             // 
+            // tpChart
+            // 
+            this.tpChart.Controls.Add(this.tableLayoutPanel1);
+            resources.ApplyResources(this.tpChart, "tpChart");
+            this.tpChart.Name = "tpChart";
+            this.tpChart.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            // 
+            // panel1
+            // 
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
+            // 
+            // panel2
+            // 
+            resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Name = "panel2";
+            // 
             // tcBottom
             // 
             this.tcBottom.Controls.Add(this.tpLogicalFolders);
@@ -1120,12 +1159,6 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
             // 
-            // cmExplorer
-            // 
-            this.cmExplorer.Name = "cmExplorer";
-            resources.ApplyResources(this.cmExplorer, "cmExplorer");
-            this.cmExplorer.Click += new System.EventHandler(this.cmExplorer_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1165,6 +1198,8 @@ namespace BlueMirrorIndexer
             this.scDatabase.ResumeLayout(false);
             this.tpSearch.ResumeLayout(false);
             this.searchBottomPanel.ResumeLayout(false);
+            this.tpChart.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.tcBottom.ResumeLayout(false);
             this.tpLogicalFolders.ResumeLayout(false);
             this.scFolders.Panel1.ResumeLayout(false);
@@ -1306,6 +1341,10 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem cmExplorer;
+        private System.Windows.Forms.TabPage tpChart;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
 	}
 }
 

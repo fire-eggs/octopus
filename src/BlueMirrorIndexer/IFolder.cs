@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace BlueMirrorIndexer
 {
@@ -43,9 +42,9 @@ namespace BlueMirrorIndexer
 
         //string GetVolumeUserName();
 
-        //string Name {
-        //    get;
-        //}
+        string Name { get; }
+
+        string FullName { get; set; }
 
         void CopyToNode(TreeNode treeNode);
 
@@ -59,5 +58,8 @@ namespace BlueMirrorIndexer
         void InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<ItemInDatabase> list);
 
         //void RemoveFromAllLogicalFolders();
+
+        void UpdateStats();
+        UInt64 TotalSizeUsed { get; set; }
     }
 }
