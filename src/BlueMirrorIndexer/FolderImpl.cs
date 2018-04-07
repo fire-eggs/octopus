@@ -133,8 +133,10 @@ namespace BlueMirrorIndexer
 
         #endregion
 
-        public void CopyToNode(TreeNode treeNode) {
-            treeNode.Text = owner.Name;
+        public void CopyToNode(TreeNode treeNode)
+        {
+            FolderInDatabase fid0 = owner as FolderInDatabase;
+            treeNode.Text = string.Format("{0} ({1})", fid0.Name, FormatNice(fid0.TotalSizeUsed));
             treeNode.Tag = owner;
             treeNode.ImageIndex = imageIndex;
             treeNode.SelectedImageIndex = imageIndex;
@@ -144,5 +146,26 @@ namespace BlueMirrorIndexer
                 treeNode.Nodes.Add(tn);
             }
         }
+
+        private string FormatNice(ulong val)
+        {
+            if (val < 1024)
+                return FormatAsKb(val);
+            else
+                return FormatAsMb(val);
+        }
+
+        private string FormatAsKb(ulong val)
+        {
+            double val2 = val / 1024.0;
+            return string.Format("{0:0,0.##}K", val2);
+        }
+
+        private string FormatAsMb(ulong val)
+        {
+            double val2 = val / 1024.0 / 1024.0;
+            return string.Format("{0:0,0.##}M", val2);
+        }
+
     }
 }
