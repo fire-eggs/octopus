@@ -1889,14 +1889,23 @@ namespace BlueMirrorIndexer
             {
                 int w = (int)(maxW*((double)sort[dex].Item2/(double)first));
                 g.DrawRectangle(dPen, spacing, y, w, rectH);
-                
-                g.DrawString(sort[dex].Item1.Name, DefaultFont, textb, spacing, y);
+
+                var fold = sort[dex].Item1 as FolderInDatabase;
+                var disp = string.Format("{0}{1} - {2}", fold.GetVolumeUserName(), fold.Name, FormatAsMb(fold.TotalSizeUsed));
+
+                g.DrawString(disp, DefaultFont, textb, spacing, y);
 
                 y += rectH;
                 y += spacing;
                 dex++;
             } 
             while (y < panel1.Height && dex < sort.Count);
+        }
+
+        private string FormatAsMb(ulong val)
+        {
+            double val2 = val/1024.0/1024.0;
+            return string.Format("{0:0,0.##}M", val2);
         }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
@@ -1910,6 +1919,15 @@ namespace BlueMirrorIndexer
 
             IFolder fold = sort[dex].Item1;
             MessageBox.Show(fold.FullName);
+        }
+
+        private void findInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void showInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cmExplorer_Click(sender, e);
         }
 
     }

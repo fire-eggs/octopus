@@ -38,12 +38,11 @@ namespace BlueMirrorIndexer {
             lvi.ImageIndex = Win32.GetFolderIconIndex("", Win32.FileIconSize.Small);
             lvi.SubItems.Add(string.Empty);
             lvi.SubItems.Add(CreationTime.ToString("g"));
+            lvi.SubItems.Add(LastWriteTime.ToString("g"));
             lvi.SubItems.Add(Attributes.ToString());
 
             lvi.SubItems.Add(Keywords);
             lvi.SubItems.Add(Extension);
-            lvi.SubItems.Add(FileDescription);
-            lvi.SubItems.Add(FileVersion);
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());

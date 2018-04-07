@@ -77,6 +77,7 @@ namespace BlueMirrorIndexer
             this.cmItemPropertiesFromFolders = new System.Windows.Forms.ToolStripMenuItem();
             this.cmFindInDatabaseFromFolders = new System.Windows.Forms.ToolStripMenuItem();
             this.cmRemoveFromFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.findInWindowsExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pmDrop = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -112,11 +113,10 @@ namespace BlueMirrorIndexer
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDiFileVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDiVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDiPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDiCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -126,11 +126,10 @@ namespace BlueMirrorIndexer
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrAttributes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrKeywords = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrFileExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chSrFileDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chSrFileVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -159,6 +158,7 @@ namespace BlueMirrorIndexer
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.showInWindowsExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -226,7 +226,8 @@ namespace BlueMirrorIndexer
             this.pmList.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.pmList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmItemPropertiesFromList,
-            this.cmDeleteListItemPopup});
+            this.cmDeleteListItemPopup,
+            this.showInWindowsExplorerToolStripMenuItem});
             this.pmList.Name = "cmList";
             resources.ApplyResources(this.pmList, "pmList");
             // 
@@ -514,7 +515,8 @@ namespace BlueMirrorIndexer
             this.pmItems.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmItemPropertiesFromFolders,
             this.cmFindInDatabaseFromFolders,
-            this.cmRemoveFromFolder});
+            this.cmRemoveFromFolder,
+            this.findInWindowsExplorerToolStripMenuItem});
             this.pmItems.Name = "pmItems";
             resources.ApplyResources(this.pmItems, "pmItems");
             // 
@@ -538,6 +540,12 @@ namespace BlueMirrorIndexer
             this.cmRemoveFromFolder.Name = "cmRemoveFromFolder";
             resources.ApplyResources(this.cmRemoveFromFolder, "cmRemoveFromFolder");
             this.cmRemoveFromFolder.Click += new System.EventHandler(this.cmRemoveFromFolder_Click);
+            // 
+            // findInWindowsExplorerToolStripMenuItem
+            // 
+            this.findInWindowsExplorerToolStripMenuItem.Name = "findInWindowsExplorerToolStripMenuItem";
+            resources.ApplyResources(this.findInWindowsExplorerToolStripMenuItem, "findInWindowsExplorerToolStripMenuItem");
+            this.findInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.findInWindowsExplorerToolStripMenuItem_Click);
             // 
             // columnHeader16
             // 
@@ -798,11 +806,10 @@ namespace BlueMirrorIndexer
             this.columnHeader1,
             this.columnHeader4,
             this.columnHeader2,
+            this.columnHeader8,
             this.columnHeader3,
             this.columnHeader12,
             this.columnHeader13,
-            this.chDescription,
-            this.chDiFileVersion,
             this.chDiVolume,
             this.chDiPath,
             this.chDiCrc});
@@ -837,6 +844,10 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader2, "columnHeader2");
             // 
+            // columnHeader8
+            // 
+            resources.ApplyResources(this.columnHeader8, "columnHeader8");
+            // 
             // columnHeader3
             // 
             resources.ApplyResources(this.columnHeader3, "columnHeader3");
@@ -848,14 +859,6 @@ namespace BlueMirrorIndexer
             // columnHeader13
             // 
             resources.ApplyResources(this.columnHeader13, "columnHeader13");
-            // 
-            // chDescription
-            // 
-            resources.ApplyResources(this.chDescription, "chDescription");
-            // 
-            // chDiFileVersion
-            // 
-            resources.ApplyResources(this.chDiFileVersion, "chDiFileVersion");
             // 
             // chDiVolume
             // 
@@ -893,11 +896,10 @@ namespace BlueMirrorIndexer
             this.columnHeader5,
             this.columnHeader6,
             this.columnHeader7,
+            this.columnHeader9,
             this.chSrAttributes,
             this.chSrKeywords,
             this.chSrFileExtension,
-            this.chSrFileDescription,
-            this.chSrFileVersion,
             this.chSrVolume,
             this.chSrPath,
             this.chSrCrc});
@@ -936,6 +938,10 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader7, "columnHeader7");
             // 
+            // columnHeader9
+            // 
+            resources.ApplyResources(this.columnHeader9, "columnHeader9");
+            // 
             // chSrAttributes
             // 
             resources.ApplyResources(this.chSrAttributes, "chSrAttributes");
@@ -947,14 +953,6 @@ namespace BlueMirrorIndexer
             // chSrFileExtension
             // 
             resources.ApplyResources(this.chSrFileExtension, "chSrFileExtension");
-            // 
-            // chSrFileDescription
-            // 
-            resources.ApplyResources(this.chSrFileDescription, "chSrFileDescription");
-            // 
-            // chSrFileVersion
-            // 
-            resources.ApplyResources(this.chSrFileVersion, "chSrFileVersion");
             // 
             // chSrVolume
             // 
@@ -997,6 +995,7 @@ namespace BlueMirrorIndexer
             // 
             // panel2
             // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             resources.ApplyResources(this.panel2, "panel2");
             this.panel2.Name = "panel2";
             // 
@@ -1159,6 +1158,12 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
             // 
+            // showInWindowsExplorerToolStripMenuItem
+            // 
+            this.showInWindowsExplorerToolStripMenuItem.Name = "showInWindowsExplorerToolStripMenuItem";
+            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem, "showInWindowsExplorerToolStripMenuItem");
+            this.showInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1249,8 +1254,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.ToolStripMenuItem cmFindInDatabase;
         private System.Windows.Forms.ColumnHeader columnHeader13;
         private System.Windows.Forms.ColumnHeader chSrFileExtension;
-        private System.Windows.Forms.ColumnHeader chDescription;
-        private System.Windows.Forms.ColumnHeader chDiFileVersion;
         private System.Windows.Forms.ColumnHeader chSrCrc;
         private System.Windows.Forms.NotifyIcon niBackgroundProcess;
         private System.Windows.Forms.ToolStripMenuItem cmRestoreWindow;
@@ -1287,8 +1290,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.ColumnHeader columnHeader26;
         private System.Windows.Forms.ColumnHeader columnHeader27;
         private System.Windows.Forms.ColumnHeader columnHeader28;
-        private System.Windows.Forms.ColumnHeader chSrFileDescription;
-        private System.Windows.Forms.ColumnHeader chSrFileVersion;
         private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cmNew;
@@ -1345,6 +1346,10 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.ToolStripMenuItem findInWindowsExplorerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem;
 	}
 }
 
