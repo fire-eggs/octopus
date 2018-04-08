@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using Igorary.Forms;
@@ -76,6 +78,8 @@ namespace BlueMirrorIndexer
 
         public string FromDrive { get; set; }
 
+        public uint ClusterSize { get; set; }
+
         #region IComparable<DiscInDatabase> Members
 
 		int IComparable<DiscInDatabase>.CompareTo(DiscInDatabase other) {
@@ -104,6 +108,23 @@ namespace BlueMirrorIndexer
             return Name;
         }
 
+        // TODO move to DiscReader
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern bool GetDiskFreeSpace(string lpRootPathName,
+           out uint lpSectorsPerCluster,
+           out uint lpBytesPerSector,
+           out uint lpNumberOfFreeClusters,
+           out uint lpTotalNumberOfClusters);
+
+        internal uint GetClusterSize(string drive)
+        {
+            uint sectorsPerCluster;
+            uint bytesPerSector;
+            uint junk1, junk2;
+            GetDiskFreeSpace(drive, out sectorsPerCluster, out bytesPerSector, out junk1, out junk2);
+            return sectorsPerCluster* bytesPerSector;
+        }
+
         internal void ReadFromDrive(string drive, List<string> excludedElements, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace)
         {
             var FR = new FolderReader(excludedElements, dlgReadingProgress, discToReplace);
@@ -120,6 +141,9 @@ namespace BlueMirrorIndexer
             ScannedCrc = Properties.Settings.Default.ComputeCrc;
             ScannedZip = Properties.Settings.Default.BrowseInsideCompressed;
             FromDrive = drive;
+
+            ClusterSize = GetClusterSize(drive);
+
             if (discToReplace != null) {
                 if ((Keywords != string.Empty) && (discToReplace.Keywords != string.Empty))
                     Keywords = Keywords + ";";

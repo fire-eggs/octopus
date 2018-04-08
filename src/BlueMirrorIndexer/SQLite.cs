@@ -33,9 +33,9 @@ namespace BlueMirrorIndexer
 [Name] TEXT,
 [Keywords] TEXT,
 [Flags] INTEGER,
-[Desc] TEXT
-)
-";
+[Desc] TEXT,
+[ClusterSize] INTEGER
+)";
         private const string FileCreate = @"CREATE TABLE IF NOT EXISTS [Files] (
 [ID] INTEGER NOT NULL PRIMARY KEY,
 [Owner] INTEGER NOT NULL,
@@ -160,7 +160,7 @@ namespace BlueMirrorIndexer
             {
                 cmd.CommandText = "insert into Discs (Format, Type, Free, Size, Label, "+
                                   "ScanTime, Serial, PhysicalLocation, FromDrive, Name, "+
-                                  "Keywords, Flags, Desc) values (";
+                                  "Keywords, Flags, Desc, ClusterSize) values (";
                 cmd.CommandText += "'" + disc.DriveFormat + "',";
                 cmd.CommandText += "'" + (int)disc.DriveType + "',";
                 cmd.CommandText += "'" + disc.TotalFreeSpace + "',";
@@ -173,7 +173,8 @@ namespace BlueMirrorIndexer
                 cmd.CommandText += "'" + disc.Name + "',";
                 cmd.CommandText += "'" + disc.Keywords.Replace("'", "''") + "',";
                 cmd.CommandText += "'" + disc.Flags + "',";
-                cmd.CommandText += "'" + disc.Description.Replace("'", "''") + "'";
+                cmd.CommandText += "'" + disc.Description.Replace("'", "''") + "',";
+                cmd.CommandText += "'" + disc.ClusterSize + "'";
                 cmd.CommandText += ")";
 
                 cmd.ExecuteNonQuery();
@@ -299,7 +300,8 @@ namespace BlueMirrorIndexer
                 mem = ReadData(conn);
 
                 // Cleanup
-                _readFoldCmd.Dispose();
+                if (_readFoldCmd != null)
+                    _readFoldCmd.Dispose();
                 _foldHash = null;
 
                 conn.Close();
@@ -340,6 +342,7 @@ namespace BlueMirrorIndexer
                         did.Keywords = rdr.GetString(11);
                         did.Flags = rdr.GetInt32(12);
                         did.Description = rdr.GetString(13);
+                        did.ClusterSize = (uint)rdr.GetInt32(14);
 
                         mem.AddDisc(did);
                         _foldHash.Add(-(int)dbid, did);
