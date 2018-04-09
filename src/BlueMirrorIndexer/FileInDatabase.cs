@@ -22,55 +22,17 @@ namespace BlueMirrorIndexer
 			: base(parent) {
 		}
 
-		bool isReadOnly = false;
-
-		public bool IsReadOnly {
-			get { return isReadOnly; }
-			set { isReadOnly = value; }
-		}
+		public bool IsReadOnly { get; set; }
 
         protected override string GetItemType() {
             return "File";
         }
 
         internal override string GetCsvLine() {
-            return base.GetCsvLine() + "," + Length.ToString();
+            return base.GetCsvLine() + "," + Length;
         }
 
-        string comments;
-
-        public string Comments {
-            get { return comments; }
-            set { comments = value; }
-        }
-
-        string companyName;
-
-        public string CompanyName {
-            get { return companyName; }
-            set { companyName = value; }
-        }
-
-        string legalCopyright;
-
-        public string LegalCopyright {
-            get { return legalCopyright; }
-            set { legalCopyright = value; }
-        }
-
-        string productName;
-
-        public string ProductName {
-            get { return productName; }
-            set { productName = value; }
-        }
-
-        uint crc = 0;
-
-        public uint Crc {
-            get { return crc; }
-            set { crc = value; }
-        }
+        public ulong Hash { get; set; }
 
         public string NameLengthKey {
             get {
@@ -78,6 +40,7 @@ namespace BlueMirrorIndexer
             }
         }
 
+        // KBR TODO duplicated code?
         public override ListViewItem ToListViewItem() {
             ListViewItem lvi = new ListViewItem();
             lvi.Text = Name;
@@ -93,8 +56,8 @@ namespace BlueMirrorIndexer
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());
-            if(crc != 0)
-                lvi.SubItems.Add(crc.ToString("X"));
+            if(Hash != 0)
+                lvi.SubItems.Add(Hash.ToString("X"));
             else
                 lvi.SubItems.Add(string.Empty);
             return lvi;

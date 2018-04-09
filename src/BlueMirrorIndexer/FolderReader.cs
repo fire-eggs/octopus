@@ -7,10 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 // ReSharper disable InconsistentNaming
 
-// TODO KBR folder to replace
+// TODO KBR folder to replace?
+// TODO KBR why is 'ComputeCRC' in default settings rather than some per-volume tracking?
+// TODO KBR CRC was used for compatibility with ZIP files!
 
 namespace BlueMirrorIndexer
 {
@@ -30,6 +33,11 @@ namespace BlueMirrorIndexer
 
             _runningFileCount = 0;
             _runningFileSize = 0;
+
+            if (Properties.Settings.Default.ComputeCrc)
+            {
+                _md5 = new MD5CryptoServiceProvider();
+            }
         }
 
         public void ReadFromFolder(string folder, FolderInDatabase owner)
@@ -73,6 +81,11 @@ namespace BlueMirrorIndexer
 
         static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
+        private MD5CryptoServiceProvider _md5;
+
+        // Arbitrary threshold: don't calculate hash for files larger than 250M
+        private const uint M250 = 250*1024*1024;
+
         internal long ProcessFile(FolderInDatabase owner, WIN32_FIND_DATAW findData, string fullpath)
         {
             var newFile = new FileInDatabase(owner);
@@ -81,13 +94,29 @@ namespace BlueMirrorIndexer
 
             newFile.IsReadOnly = (findData.dwFileAttributes & FileAttributes.ReadOnly) != 0;
 
-            // TODO KBR compressed files
-            // TODO KBR calc CRC
-
             long highSize = (uint)findData.nFileSizeHigh;
             highSize = highSize << 32;
             highSize += (uint)findData.nFileSizeLow;
-            newFile.Length = highSize; // TODO Length field needs to be unsigned?
+            newFile.Length = highSize;
+
+            if (Properties.Settings.Default.ComputeCrc &&
+                highSize < M250)
+            {
+                try
+                {
+                    var buf = File.ReadAllBytes(fullpath);
+                    var hash = _md5.ComputeHash(buf);
+                    UInt64 hash2 = BitConverter.ToUInt64(hash, 0);
+                    newFile.Hash = hash2;
+                }
+                catch (Exception)
+                {
+                    // File might be locked
+                }
+            }
+
+            // TODO KBR compressed files
+
 
             ((IFolder)owner).AddToFiles(newFile);
             return newFile.Length;

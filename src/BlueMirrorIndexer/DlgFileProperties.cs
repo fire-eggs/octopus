@@ -9,8 +9,8 @@ namespace BlueMirrorIndexer
         public DlgFileProperties(FileInDatabase fileInDatabase)
             : base(fileInDatabase) {
             InitializeComponent();
-            if (fileInDatabase.Crc != 0)
-                llCrc.Text = fileInDatabase.Crc.ToString("X");
+            if (fileInDatabase.Hash != 0)
+                llCrc.Text = fileInDatabase.Hash.ToString("X");
             else
                 llCrc.Text = "(not computed)";
             llFileSize.Text = fileInDatabase.Length.ToKBAndB();

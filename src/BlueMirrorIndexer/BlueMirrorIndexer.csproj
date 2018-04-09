@@ -104,7 +104,6 @@
     </Compile>
     <Compile Include="Components\SearchEventArgs.cs" />
     <Compile Include="CompressedFile.cs" />
-    <Compile Include="Crc32.cs" />
     <Compile Include="DatabaseItemComparer.cs" />
     <Compile Include="DiscInDatabase.cs" />
     <Compile Include="DlgAbout.cs">

@@ -48,7 +48,8 @@ namespace BlueMirrorIndexer
 [AccessT] INTEGER,
 [WriteT] INTEGER,
 [Keywords] TEXT,
-[Desc] TEXT
+[Desc] TEXT,
+[Hash] INTEGER
 )";
 
         private const string FoldCreate = @"CREATE TABLE IF NOT EXISTS [Folds] (
@@ -226,7 +227,7 @@ namespace BlueMirrorIndexer
         private static void WriteFiles(SQLiteConnection conn, int owner, FileInDatabase[] files)
         {
             string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," + 
-                           "Keywords, Desc) VALUES ('"+owner+"',";
+                           "Keywords, Desc, Hash) VALUES ('"+owner+"',";
             using (var cmd = conn.CreateCommand())
             {
                 foreach (var afile in files)
@@ -241,7 +242,8 @@ namespace BlueMirrorIndexer
                     cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime().Ticks + "',";
                     cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime().Ticks + "',";
                     cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "'";
+                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "',";
+                    cmd.CommandText += "'" + afile.Hash + "'";
                     cmd.CommandText += ")";
                     cmd.ExecuteNonQuery();
                 }
@@ -451,7 +453,8 @@ namespace BlueMirrorIndexer
     [AccessT] TEXT,
     [WriteT] TEXT,
     [Keywords] TEXT, // 10
-    [Desc] TEXT
+    [Desc] TEXT,
+    [Hash]
     */
             FileInDatabase afile = new FileInDatabase();
             afile.DbId = rdr.GetInt32(0);
@@ -468,6 +471,7 @@ namespace BlueMirrorIndexer
 
             afile.Keywords = rdr.GetString(10);
             afile.Description = rdr.GetString(11);
+            afile.Hash = (ulong) rdr.GetInt64(12);
             return afile;
         }
 

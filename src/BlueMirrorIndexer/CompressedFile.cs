@@ -138,7 +138,7 @@ namespace BlueMirrorIndexer
                     FileInDatabase file = new FileInDatabase(searchInFolder);
                     if (rarEntry.FileAttributes > 0)
                         file.Attributes = (FileAttributes)rarEntry.FileAttributes;
-                    file.Crc = (uint)rarEntry.FileCRC;
+                    file.Hash = (ulong) rarEntry.FileCRC;
                     file.CreationTime = rarEntry.FileTime;
                     file.Name = pathParts[i];
                     file.Length = rarEntry.UnpackedSize;
@@ -161,7 +161,7 @@ namespace BlueMirrorIndexer
                     FileInDatabase file = new FileInDatabase(searchInFolder);
                     file.Description = zipEntry.Comment;
                     if (zipEntry.HasCrc)
-                        file.Crc = (uint)zipEntry.Crc;
+                        file.Hash = (ulong) zipEntry.Crc;
                     file.CreationTime = zipEntry.DateTime;
                     //if (zipEntry.ExternalFileAttributes < 1)
                     //    file.Attributes = FileAttributes.Normal;
@@ -282,6 +282,7 @@ namespace BlueMirrorIndexer
             return "Compressed file";
         }
 
+        // KBR TODO duplicated code?
         public override ListViewItem ToListViewItem() {
             ListViewItem lvi = new ListViewItem();
             lvi.Text = Name;
@@ -301,8 +302,8 @@ namespace BlueMirrorIndexer
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());
-            if (Crc != 0)
-                lvi.SubItems.Add(Crc.ToString("X"));
+            if (Hash != 0)
+                lvi.SubItems.Add(Hash.ToString("X"));
             else
                 lvi.SubItems.Add(string.Empty);
             return lvi;

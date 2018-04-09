@@ -844,11 +844,12 @@ namespace BlueMirrorIndexer
                     foundFilesCrc.Sort(new FileComparer(true));
                     FileComparer noCrcComparer = new FileComparer(false);
                     foundFilesNoCrc.Sort(noCrcComparer);
-                    FileInDatabase lastFile = null; uint lastCrc = 0;
+                    FileInDatabase lastFile = null; ulong lastCrc = 0;
                     foreach (FileInDatabase file in foundFilesCrc) {
-                        if (file.Crc != 0) {
-                            if (lastCrc != file.Crc) {
-                                lastCrc = file.Crc;
+                        if (file.Hash != 0) {
+                            if (lastCrc != file.Hash)
+                            {
+                                lastCrc = file.Hash;
                                 lastFile = file;
                             }
                             else {

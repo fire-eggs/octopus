@@ -1,26 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 
 namespace BlueMirrorIndexer
 {
     class FileComparer : IComparer<FileInDatabase>
     {
-
-        bool crcComparing;
+        readonly bool _crcComparing;
 
         public FileComparer(bool crcComparing) {
-            this.crcComparing = crcComparing;
+            _crcComparing = crcComparing;
         }
 
         #region IComparer<FileInDatabase> Members
 
         public int Compare(FileInDatabase x, FileInDatabase y) {
-            if (crcComparing)
-                return x.Crc.CompareTo(y.Crc);
-            else
-                return x.NameLengthKey.CompareTo(y.NameLengthKey);
+            if (_crcComparing)
+                return x.Hash.CompareTo(y.Hash);
+            return String.Compare(x.NameLengthKey, y.NameLengthKey, System.StringComparison.Ordinal);
         }
 
         #endregion
