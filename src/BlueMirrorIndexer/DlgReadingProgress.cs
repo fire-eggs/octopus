@@ -1,11 +1,5 @@
+using Igorary.Utils.Utils.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Igorary.Utils.Extensions;
 
 namespace BlueMirrorIndexer
 {
@@ -15,7 +9,7 @@ namespace BlueMirrorIndexer
             InitializeComponent();
         }
 
-        bool useSize;
+        readonly bool useSize;
         public DlgReadingProgress(string title, string currentStatus, bool useSize)
             : base(title, currentStatus) {
             InitializeComponent();
@@ -50,15 +44,10 @@ namespace BlueMirrorIndexer
         }
 
         protected override bool Paused {
-            //get {
-            //    return base.Paused;
-            //}
-            set {
+            set
+            {
                 base.Paused = value;
-                if (Paused)
-                    btnPause.Text = "Resume";
-                else
-                    btnPause.Text = "Pause";
+                btnPause.Text = Paused ? "Resume" : "Pause";
             }
         }
 

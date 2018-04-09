@@ -694,7 +694,7 @@ namespace Schematrix
 			}
 		}
 
-		private DateTime FromMSDOSTime(uint dosTime)
+		private static DateTime FromMSDOSTime(uint dosTime)
 		{
 			int day=0;
 			int month=0;

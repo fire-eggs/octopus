@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace BlueMirrorIndexer
 {
     [Serializable]
-    class FolderImpl
+    public class FolderImpl
     {
         readonly ItemInDatabase owner;
         readonly int imageIndex;
@@ -147,21 +147,20 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private string FormatNice(ulong val)
+        private static string FormatNice(ulong val)
         {
             if (val < 1024)
                 return FormatAsKb(val);
-            else
-                return FormatAsMb(val);
+            return FormatAsMb(val);
         }
 
-        private string FormatAsKb(ulong val)
+        private static string FormatAsKb(ulong val)
         {
             double val2 = val / 1024.0;
             return string.Format("{0:0,0.##}K", val2);
         }
 
-        private string FormatAsMb(ulong val)
+        private static string FormatAsMb(ulong val)
         {
             double val2 = val / 1024.0 / 1024.0;
             return string.Format("{0:0,0.##}M", val2);

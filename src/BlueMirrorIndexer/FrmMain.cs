@@ -12,13 +12,11 @@ using System.Windows.Forms;
 using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 using Igorary.Forms.Components;
-using Igorary.Utils.Extensions;
+using Igorary.Utils.Utils.Extensions;
 
 using SizeCont = System.Tuple<BlueMirrorIndexer.IFolder, ulong>;
 
-
 // ReSharper disable InconsistentNaming
-
 
 namespace BlueMirrorIndexer
 {
@@ -198,22 +196,17 @@ namespace BlueMirrorIndexer
                     cmDeleteFileInfoPopup_Click(sender, e);
         }
 
-        private void cmHomePage_Click(object sender, EventArgs e) {
-            Process navigate = new Process();
-            navigate.StartInfo.FileName = "http://covalition.github.io/octopus/";
-            navigate.Start();
+        private void cmHomePage_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://covalition.github.io/octopus/");
         }
 
         private void cmFeatureRequests_Click(object sender, EventArgs e) {
-            Process navigate = new Process();
-            navigate.StartInfo.FileName = "https://github.com/covalition/octopus/issues";
-            navigate.Start();
+            Process.Start("https://github.com/fire-eggs/octopus/issues");
         }
 
         private void cmWhatsNew_Click(object sender, EventArgs e) {
-            Process navigate = new Process();
-            navigate.StartInfo.FileName = "https://github.com/covalition/octopus/commits/master";
-            navigate.Start();
+            Process.Start("https://github.com/fire-eggs/octopus/commits/master");
         }
 
         #endregion
@@ -458,7 +451,7 @@ namespace BlueMirrorIndexer
                 Properties.Settings.Default.Save();
             }
             catch (Exception ex) {
-                MessageBox.Show(string.Format("Error occurred during saving canfiguration: {0}", ex.Message), ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error occurred during saving configuration: {0}", ex.Message), ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -588,7 +581,7 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private void saveAsCsv(string filePath) {
+        private static void saveAsCsv(string filePath) {
             try {
                 Database.SaveAsCsv(filePath);
             }
@@ -687,9 +680,6 @@ namespace BlueMirrorIndexer
             finally {
                 Cursor.Current = c;
             }
-
-            Database.UpdateStats(); // TODO need a subscriber model for chart
-            folds = null;
         }
 
         string calculatingDrive;
@@ -752,9 +742,18 @@ namespace BlueMirrorIndexer
 
         #region Database related
 
-        private void sortByLabels() {
+        private void sortByLabels() 
+        {
+            // TODO KBR needs better name. invoked after read-volume completed.
+
+
+            Database.UpdateStats(); // TODO KBR need a subscriber model for chart
+            folds = null;
+
+
             Database.SortDiscs();
             updateTree();
+
         }
 
         private void deleteCdInfo(DiscInDatabase cdInDatabase) {
@@ -887,7 +886,7 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private void insertSimilarToList(FileInDatabase file, List<FileInDatabase> foundFilesNoCrc, List<ItemInDatabase> list, FileComparer noCrcComparer) {
+        private static void insertSimilarToList(FileInDatabase file, List<FileInDatabase> foundFilesNoCrc, List<ItemInDatabase> list, FileComparer noCrcComparer) {
             int index = -1;
             do {
                 index = foundFilesNoCrc.BinarySearch(file, noCrcComparer);
@@ -1015,7 +1014,7 @@ namespace BlueMirrorIndexer
             fileOperations.New();
         }
 
-        private void createNewVolumeDatabase() {
+        private static void createNewVolumeDatabase() {
             Database = new VolumeDatabase(true);
         }
 
@@ -1028,17 +1027,21 @@ namespace BlueMirrorIndexer
         #region Merge File
 
         private void mergeFile() {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = Properties.Resources.MergeWithFile;
-            ofd.DefaultExt = DEF_EXT;
-            ofd.Filter = Properties.Resources.IndexerFilesFilter;
-            if (ofd.ShowDialog() == DialogResult.OK) {
-                VolumeDatabase cid = deserialize(ofd.FileName);
-                if (cid != null) {
-                    Database.MergeWith(cid);
-                    updateTree();
-                    UpdateCommands();
-                    fileOperations.Modified = true;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = Properties.Resources.MergeWithFile;
+                ofd.DefaultExt = DEF_EXT;
+                ofd.Filter = Properties.Resources.IndexerFilesFilter;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    VolumeDatabase cid = deserialize(ofd.FileName);
+                    if (cid != null)
+                    {
+                        Database.MergeWith(cid);
+                        updateTree();
+                        UpdateCommands();
+                        fileOperations.Modified = true;
+                    }
                 }
             }
         }
@@ -1461,7 +1464,7 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private bool onlyFiles(List<ItemInDatabase> list) {
+        private static bool onlyFiles(List<ItemInDatabase> list) {
             foreach (ItemInDatabase item in list)
                 if (item is IFolder)
                     return false;
@@ -1670,17 +1673,23 @@ namespace BlueMirrorIndexer
 
         private void cmImportFrom1_Click(object sender, EventArgs e) {
             if (fileOperations.SaveWithAsk()) {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Title = Properties.Resources.OpenFile;
-                ofd.DefaultExt = "octopus";
-                ofd.Filter = "Octopus (Blue Mirror 1.x) Database|*.octopus";
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    try {
-                        importFrom1(ofd.FileName);
-                        fileOperations.Modified = true;
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show(string.Format("Error occurred while importing: {0}", ex.Message), ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (OpenFileDialog ofd = new OpenFileDialog())
+                {
+                    ofd.Title = Properties.Resources.OpenFile;
+                    ofd.DefaultExt = "octopus";
+                    ofd.Filter = "Octopus (Blue Mirror 1.x) Database|*.octopus";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            importFrom1(ofd.FileName);
+                            fileOperations.Modified = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(string.Format("Error occurred while importing: {0}", ex.Message),
+                                ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -1825,7 +1834,6 @@ namespace BlueMirrorIndexer
                 f = getSelectedFile();
             if (f == null)
                 return;
-            var n = f.Name;
             var p = f.FullName;
 
             Process.Start("explorer.exe", "/select,\"" + p + "\"");

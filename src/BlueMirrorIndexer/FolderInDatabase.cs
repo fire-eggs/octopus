@@ -87,26 +87,36 @@ namespace BlueMirrorIndexer {
         }
 
         internal void CopyAdditionalInfo(FolderInDatabase folderToReplace) {
-            foreach (FolderInDatabase folder in folderImpl.Folders) {
-                FolderInDatabase subFolderToReplace = folderToReplace.findFolder(folder.Name);
-                if (subFolderToReplace != null) {
-                    folder.CopyAdditionalInfo(subFolderToReplace);
-                }
-            }
-            foreach (FileInDatabase file in folderImpl.Files) {
-                FileInDatabase fileToReplace = folderToReplace.findFile(file.Name);
-                if (fileToReplace != null) {
-                    file.Keywords = fileToReplace.Keywords;
-                    foreach (LogicalFolder logicalFolder in fileToReplace.LogicalFolders)
-                        logicalFolder.AddItem(file);
-                }
-            }
+            CopyFolderInfo(folderImpl, folderToReplace);
             Keywords = folderToReplace.Keywords;
             foreach (LogicalFolder logicalFolder in folderToReplace.LogicalFolders)
                 logicalFolder.AddItem(this);
         }
 
-        #region IFolder Members
+	    public static void CopyFolderInfo(FolderImpl folderImpl, FolderInDatabase folderToReplace)
+	    {
+            // TODO KBR duplicated in CompressedFile but problems with class structure
+	        foreach (FolderInDatabase folder in folderImpl.Folders)
+	        {
+	            FolderInDatabase subFolderToReplace = folderToReplace.findFolder(folder.Name);
+	            if (subFolderToReplace != null)
+	            {
+	                folder.CopyAdditionalInfo(subFolderToReplace);
+	            }
+	        }
+	        foreach (FileInDatabase file in folderImpl.Files)
+	        {
+	            FileInDatabase fileToReplace = folderToReplace.findFile(file.Name);
+	            if (fileToReplace != null)
+	            {
+	                file.Keywords = fileToReplace.Keywords;
+	                foreach (LogicalFolder logicalFolder in fileToReplace.LogicalFolders)
+	                    logicalFolder.AddItem(file);
+	            }
+	        }
+	    }
+
+	    #region IFolder Members
 
         FileInDatabase[] IFolder.Files {
             get {

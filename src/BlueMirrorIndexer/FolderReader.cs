@@ -135,7 +135,7 @@ namespace BlueMirrorIndexer
             ReadFromFolder(fullpath, newFolder);
         }
 
-        private void ProcessCommon(ItemInDatabase item, WIN32_FIND_DATAW findData, string fullpath)
+        private static void ProcessCommon(ItemInDatabase item, WIN32_FIND_DATAW findData, string fullpath)
         {
             item.Name = findData.cFileName;
             item.Attributes = findData.dwFileAttributes;

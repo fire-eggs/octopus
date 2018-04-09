@@ -9,6 +9,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using Igorary.Forms;
 using Igorary.Utils.Extensions;
+using Igorary.Utils.Utils.Extensions;
 using Schematrix;
 
 namespace BlueMirrorIndexer
@@ -40,26 +41,34 @@ namespace BlueMirrorIndexer
             this.FullName = fullName;
             string ext = Path.GetExtension(fullName.ToLower());
             if ((ext == EXT_ZIP) || (ext == EXT_JAR)) {
-                ZipFile zipFile = new ZipFile(fullName);
-                foreach (ZipEntry zipEntry in zipFile) {
-                    if (zipEntry.IsDirectory) {
-                        addDirectory(zipEntry);
-                    }
-                    else
-                        if (zipEntry.IsFile) {
+                using (ZipFile zipFile = new ZipFile(fullName))
+                {
+                    foreach (ZipEntry zipEntry in zipFile)
+                    {
+                        if (zipEntry.IsDirectory)
+                        {
+                            addDirectory(zipEntry);
+                        }
+                        else if (zipEntry.IsFile)
+                        {
                             addFile(zipEntry);
                         }
+                    }
                 }
             }
             else if ((ext == ".gz") || (ext == ".gzip")) { // tar+gzip
-                using (Stream inStream = new GZipInputStream(File.OpenRead(fullName))) {
+                using (var f = File.OpenRead(fullName))
+                using (Stream inStream = new GZipInputStream(f)) 
+                {
                     TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
                     tarArchive.ProgressMessageEvent += new ProgressMessageHandler(tarArchive_ProgressMessageEvent);
                     tarArchive.ListContents();
                 }
             }
             else if ((ext == ".bz2") || (ext == ".bzip2")) { // tar+bz
-                using (Stream inStream = new BZip2InputStream(File.OpenRead(fullName))) {
+                using (var f = File.OpenRead(fullName))
+                using (Stream inStream = new BZip2InputStream(f))
+                {
                     TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
                     tarArchive.ProgressMessageEvent += new ProgressMessageHandler(tarArchive_ProgressMessageEvent);
                     tarArchive.ListContents();
@@ -77,7 +86,10 @@ namespace BlueMirrorIndexer
         }
 
         private void copyAdditionalInfo(CompressedFile compressedFileToReplace) {
-            if (compressedFileToReplace != null) {
+            if (compressedFileToReplace != null)
+            {
+                //FolderInDatabase.CopyFolderInfo(folderImpl, compressedFileToReplace as FolderInDatabase);
+
                 foreach (FolderInDatabase folder in folderImpl.Folders) {
                     FolderInDatabase folderToReplace = compressedFileToReplace.findFolder(folder.Name);
                     if (folderToReplace != null) {

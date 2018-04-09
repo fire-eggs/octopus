@@ -12,14 +12,13 @@ namespace BlueMirrorIndexer
 {
     public partial class DlgProgress : Form
     {
-
-        DateTime started;
+        readonly DateTime started;
         public DlgProgress() {
             InitializeComponent();
             started = DateTime.Now;
         }
 
-        string title;
+        readonly string title;
         public DlgProgress(string title, string currentStatus)
             : this() {
             this.title = title;

@@ -1,5 +1,5 @@
 using Igorary.Forms;
-using Igorary.Utils.Extensions;
+using Igorary.Utils.Utils.Extensions;
 
 namespace BlueMirrorIndexer
 {

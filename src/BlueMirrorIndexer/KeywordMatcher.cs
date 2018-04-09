@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Igorary.Utils.Extensions;
+using Igorary.Utils.Utils.Extensions;
 
 namespace BlueMirrorIndexer
 {

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Igorary.Forms;
 using Igorary.Forms.Forms;
 using Igorary.Utils.Extensions;
+using Igorary.Utils.Utils.Extensions;
 
 namespace BlueMirrorIndexer
 {
