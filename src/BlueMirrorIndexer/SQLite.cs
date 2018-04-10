@@ -49,7 +49,7 @@ namespace BlueMirrorIndexer
 [WriteT] INTEGER,
 [Keywords] TEXT,
 [Desc] TEXT,
-[Hash] INTEGER
+[Hash] TEXT
 )";
 
         private const string FoldCreate = @"CREATE TABLE IF NOT EXISTS [Folds] (
@@ -471,7 +471,8 @@ namespace BlueMirrorIndexer
 
             afile.Keywords = rdr.GetString(10);
             afile.Description = rdr.GetString(11);
-            afile.Hash = (ulong) rdr.GetInt64(12);
+            string tmp = rdr.GetString(12); // SQLite doesn't support unsigned
+            afile.Hash = UInt64.Parse(tmp);
             return afile;
         }
 
