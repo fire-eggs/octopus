@@ -81,24 +81,6 @@ namespace BlueMirrorIndexer
 
         #region Menu commands and events
 
-#if false
-        private void cmReadCd_Click(object sender, EventArgs e)
-        {
-            readVolume();
-        }
-
-        private void cmChangeLabel2_Click(object sender, EventArgs e)
-        {
-            cmVolumeFolderProperties_Click(sender, e);
-        }
-
-        private void cmOptions_Click(object sender, EventArgs e)
-        {
-            // setOptionsDlg();
-        }
-
-#endif
-
         private void cmVolumeFolderProperties_Click(object sender, EventArgs e) {
             DiscInDatabase selectedDisc = getSelectedDisc();
             if (selectedDisc != null) {
