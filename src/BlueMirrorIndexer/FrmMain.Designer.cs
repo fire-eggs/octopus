@@ -48,7 +48,6 @@ namespace BlueMirrorIndexer
             this.mergeWithFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmSave = new System.Windows.Forms.ToolStripMenuItem();
             this.cmSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmImportFrom1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cmExport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cmExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -295,7 +294,6 @@ namespace BlueMirrorIndexer
             this.mergeWithFileToolStripMenuItem,
             this.cmSave,
             this.cmSaveAs,
-            this.cmImportFrom1,
             this.cmExport,
             this.toolStripSeparator1,
             this.cmExit});
@@ -334,13 +332,6 @@ namespace BlueMirrorIndexer
             this.cmSaveAs.Name = "cmSaveAs";
             resources.ApplyResources(this.cmSaveAs, "cmSaveAs");
             this.cmSaveAs.Click += new System.EventHandler(this.cmSaveAs_Click);
-            // 
-            // cmImportFrom1
-            // 
-            this.cmImportFrom1.Image = global::BlueMirrorIndexer.Properties.Resources.database_go;
-            this.cmImportFrom1.Name = "cmImportFrom1";
-            resources.ApplyResources(this.cmImportFrom1, "cmImportFrom1");
-            this.cmImportFrom1.Click += new System.EventHandler(this.cmImportFrom1_Click);
             // 
             // cmExport
             // 
@@ -1337,7 +1328,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.ToolStripButton btnDeleteFolder;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton btnWhatsNew;
-        private System.Windows.Forms.ToolStripMenuItem cmImportFrom1;
         private Igorary.Forms.Components.FileOperations fileOperations;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
