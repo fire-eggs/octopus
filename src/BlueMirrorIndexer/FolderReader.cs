@@ -150,8 +150,12 @@ namespace BlueMirrorIndexer
             item.Name = findData.cFileName;
             item.Attributes = findData.dwFileAttributes;
             string tmp = Path.GetExtension(fullpath);
-            if (tmp.StartsWith("."))
-                tmp = tmp.Substring(1);
+            if (!string.IsNullOrEmpty(tmp))
+            {
+                tmp = tmp.ToLower();
+                if (tmp.StartsWith("."))
+                    tmp = tmp.Substring(1);
+            }
             item.Extension = tmp;
 
             item.FullName = fullpath;
