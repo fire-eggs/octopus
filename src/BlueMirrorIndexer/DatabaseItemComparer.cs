@@ -27,13 +27,14 @@ namespace BlueMirrorIndexer
             int res;
             switch (col) {
                 case 0:
-                case 3:
-                case 4: res = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text); break;
+                case 4:
+                case 6: 
+                    res = String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text); 
+                    break;
                 case 1: res = item(x).Length > item(y).Length ? 1 : (item(x).Length == item(y).Length ? 0 : -1); break;
                 case 2: res = item(x).CreationTime > item(y).CreationTime ? 1 : (item(x).CreationTime == item(y).CreationTime ? 0 : -1); break;
+                case 3: res = item(x).LastWriteTime > item(y).LastWriteTime ? 1 : (item(x).LastWriteTime == item(y).LastWriteTime ? 0 : -1); break;
                 case 5: res = item(x).Extension.CompareTo(item(y).Extension); break;
-                case 6: res = string.Compare(item(x).FileDescription, item(y).FileDescription); break;
-                case 7: res = string.Compare(item(x).FileVersion, item(y).FileVersion); break;
                 default: res = 0; break;
             }
             if (!ascending)
