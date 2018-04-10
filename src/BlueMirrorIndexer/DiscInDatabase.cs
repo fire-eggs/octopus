@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Serialization;
 using System.Windows.Forms;
 using Igorary.Forms;
 
@@ -108,20 +105,12 @@ namespace BlueMirrorIndexer
             return Name;
         }
 
-        // TODO move to DiscReader
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern bool GetDiskFreeSpace(string lpRootPathName,
-           out uint lpSectorsPerCluster,
-           out uint lpBytesPerSector,
-           out uint lpNumberOfFreeClusters,
-           out uint lpTotalNumberOfClusters);
-
         internal uint GetClusterSize(string drive)
         {
             uint sectorsPerCluster;
             uint bytesPerSector;
             uint junk1, junk2;
-            GetDiskFreeSpace(drive, out sectorsPerCluster, out bytesPerSector, out junk1, out junk2);
+            Win32.GetDiskFreeSpace(drive, out sectorsPerCluster, out bytesPerSector, out junk1, out junk2);
             return sectorsPerCluster* bytesPerSector;
         }
 

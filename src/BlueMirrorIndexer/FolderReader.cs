@@ -6,8 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using Igorary.Forms;
 
 // ReSharper disable InconsistentNaming
 
@@ -17,6 +17,16 @@ using System.Security.Cryptography;
 
 namespace BlueMirrorIndexer
 {
+    public static class FILETIMEExtensions
+    {
+        public static DateTime ToDateTime(this System.Runtime.InteropServices.ComTypes.FILETIME filetime)
+        {
+            long highBits = filetime.dwHighDateTime;
+            highBits = highBits << 32;
+            return DateTime.FromFileTimeUtc(highBits + (long)filetime.dwLowDateTime);
+        }
+    }
+
     public class FolderReader
     {
         private long _runningFileCount;
@@ -45,8 +55,8 @@ namespace BlueMirrorIndexer
             IntPtr findHandle = INVALID_HANDLE_VALUE;
             try
             {
-                WIN32_FIND_DATAW findData;
-                findHandle = FindFirstFileW(folder + @"\*", out findData);
+                Win32.WIN32_FIND_DATAW findData;
+                findHandle = Win32.FindFirstFileW(folder + @"\*", out findData);
                 if (findHandle == INVALID_HANDLE_VALUE)
                     return;
 
@@ -71,11 +81,11 @@ namespace BlueMirrorIndexer
 
                     }
                 }
-                while (FindNextFile(findHandle, out findData));
+                while (Win32.FindNextFile(findHandle, out findData));
             }
             finally
             {
-                if (findHandle != INVALID_HANDLE_VALUE) FindClose(findHandle);
+                if (findHandle != INVALID_HANDLE_VALUE) Win32.FindClose(findHandle);
             }
         }
 
@@ -86,7 +96,7 @@ namespace BlueMirrorIndexer
         // Arbitrary threshold: don't calculate hash for files larger than 250M
         private const uint M250 = 250*1024*1024;
 
-        internal long ProcessFile(FolderInDatabase owner, WIN32_FIND_DATAW findData, string fullpath)
+        internal long ProcessFile(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
             var newFile = new FileInDatabase(owner);
 
@@ -122,7 +132,7 @@ namespace BlueMirrorIndexer
             return newFile.Length;
         }
 
-        internal void ProcessFolder(FolderInDatabase owner, WIN32_FIND_DATAW findData, string fullpath)
+        internal void ProcessFolder(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
             if (_excludedFolders.Contains(fullpath.ToLower()))
                 return;
@@ -135,7 +145,7 @@ namespace BlueMirrorIndexer
             ReadFromFolder(fullpath, newFolder);
         }
 
-        private static void ProcessCommon(ItemInDatabase item, WIN32_FIND_DATAW findData, string fullpath)
+        private static void ProcessCommon(ItemInDatabase item, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
             item.Name = findData.cFileName;
             item.Attributes = findData.dwFileAttributes;
@@ -149,33 +159,6 @@ namespace BlueMirrorIndexer
             item.LastAccessTime = findData.ftLastAccessTime.ToDateTime();
             item.LastWriteTime = findData.ftLastWriteTime.ToDateTime();
         }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern IntPtr FindFirstFileW(string lpFileName, out WIN32_FIND_DATAW lpFindFileData);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool FindNextFile(IntPtr hFindFile, out WIN32_FIND_DATAW lpFindFileData);
-
-        [DllImport("kernel32.dll")]
-        public static extern bool FindClose(IntPtr hFindFile);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct WIN32_FIND_DATAW
-        {
-            public FileAttributes dwFileAttributes;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
-            internal System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
-            public int nFileSizeHigh;
-            public int nFileSizeLow;
-            public int dwReserved0;
-            public int dwReserved1;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-            public string cFileName;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
-            public string cAlternateFileName;
-        }
-
     }
 }
 
