@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using BlueMirrorIndexer.Components;
+using BlueMirrorIndexer.Properties;
 using Igorary.Forms;
 using Igorary.Forms.Components;
 using Igorary.Utils.Utils.Extensions;
@@ -28,11 +29,11 @@ namespace BlueMirrorIndexer
 
         public FrmMain() {
             InitializeComponent();
-            if (!Properties.Settings.Default.Updated) {
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.Updated = true;
+            if (!Settings.Default.Updated) {
+                Settings.Default.Upgrade();
+                Settings.Default.Updated = true;
             }
-            cmScanNewMedia.Checked = Properties.Settings.Default.ScanNewMedia;
+            cmScanNewMedia.Checked = Settings.Default.ScanNewMedia;
             Text = string.Format("{0} {1}", ProductName, ProductVersion);
             btnSave.Enabled = cmSave.Enabled = false;
 
@@ -103,19 +104,19 @@ namespace BlueMirrorIndexer
 
         private void cmDeleteTreeItemPopup_Click(object sender, EventArgs e) {
             if (getSelectedDisc() != null) {
-                if (MessageBox.Show(String.Format(Properties.Resources.AreUSureToDeleteVolume, getSelectedDisc().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (MessageBox.Show(String.Format(Resources.AreUSureToDeleteVolume, getSelectedDisc().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     deleteCdInfo(getSelectedDisc());
                 }
             }
             else if (getSelectedFolder() != null) {
-                if (MessageBox.Show(String.Format(Properties.Resources.AreUSureToDeleteFolder, getSelectedFolder().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (MessageBox.Show(String.Format(Resources.AreUSureToDeleteFolder, getSelectedFolder().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     deleteFolderInfo(getSelectedFolder());
                 }
             }
             else {
                 CompressedFile compressedFile = getSelectedCompressedFile();
                 if (compressedFile != null) {
-                    if (MessageBox.Show(String.Format(Properties.Resources.AreUSureToDeleteFile, compressedFile.Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                    if (MessageBox.Show(String.Format(Resources.AreUSureToDeleteFile, compressedFile.Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                         deleteCompressedFile(compressedFile);
                     }
                 }
@@ -135,7 +136,7 @@ namespace BlueMirrorIndexer
 
         private void cmDeleteFileInfoPopup_Click(object sender, EventArgs e) {
             if (getSelectedFile() != null) {
-                if (MessageBox.Show(String.Format(Properties.Resources.AreUSureToDeleteFile, getSelectedFile().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(String.Format(Resources.AreUSureToDeleteFile, getSelectedFile().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     deleteFileInfo(getSelectedFile());
             }
             else if (lvDatabaseItems.SelectedItems.Count > 0)
@@ -203,17 +204,17 @@ namespace BlueMirrorIndexer
             ItemInDatabase selectedItemInSearch = getSelectedItemInSearch();
             ItemInDatabase selectedElementInFolders = getSelectedElementInFolder();
             if (selectedDisc != null) {
-                cmDeleteTreeItemPopup.Text = Properties.Resources.DeleteVolume;
-                cmTreeItemPropertiesPopup.Text = Properties.Resources.VolumeProperties;
+                cmDeleteTreeItemPopup.Text = Resources.DeleteVolume;
+                cmTreeItemPropertiesPopup.Text = Resources.VolumeProperties;
             }
             else if (selectedFolder != null) {
-                cmDeleteTreeItemPopup.Text = Properties.Resources.DeleteFolder;
-                cmTreeItemPropertiesPopup.Text = Properties.Resources.FolderProperties;
+                cmDeleteTreeItemPopup.Text = Resources.DeleteFolder;
+                cmTreeItemPropertiesPopup.Text = Resources.FolderProperties;
             }
             else
                 if (selectedCompressedFile != null) {
-                    cmDeleteTreeItemPopup.Text = Properties.Resources.DeleteFile;
-                    cmTreeItemPropertiesPopup.Text = Properties.Resources.FileProperties;
+                    cmDeleteTreeItemPopup.Text = Resources.DeleteFile;
+                    cmTreeItemPropertiesPopup.Text = Resources.FileProperties;
                 }
                 else {
                     // unknown item
@@ -264,7 +265,7 @@ namespace BlueMirrorIndexer
                             ListViewItem lvi = fileid.ToListViewItem();
                             lvDatabaseItems.Items.Add(lvi);
                         }
-                        Win32.UpdateSystemImageList(lvDatabaseItems.SmallImageList, Win32.FileIconSize.Small, false, Properties.Resources.delete);
+                        Win32.UpdateSystemImageList(lvDatabaseItems.SmallImageList, Win32.FileIconSize.Small, false, Resources.delete);
                     }
                     finally {
                         lvDatabaseItems.EndUpdate();
@@ -300,23 +301,23 @@ namespace BlueMirrorIndexer
             if (tcMain.SelectedTab == tpDatabase) {
                 if (lvDatabaseItems.SelectedItems.Count > 0) {
                     // selected items
-                    sbFiles.Text = Properties.Resources.SelectedFiles + ": " + lvDatabaseItems.SelectedItems.Count.ToString();
+                    sbFiles.Text = Resources.SelectedFiles + ": " + lvDatabaseItems.SelectedItems.Count;
                     long sum = 0;
                     foreach (ListViewItem lvi in lvDatabaseItems.SelectedItems)
                         sum += (lvi.Tag as FileInDatabase).Length;
-                    sbSize.Text = Properties.Resources.Size + ": " + sum.ToKB();
+                    sbSize.Text = Resources.Size + ": " + sum.ToKB();
                 }
                 else
                     if (tvDatabaseFolderTree.SelectedNode != null) {
                         // none is selected
                         IFolder fid = (IFolder)tvDatabaseFolderTree.SelectedNode.Tag;
                         if (fid != null) {
-                            sbFiles.Text = Properties.Resources.Files + ": " + fid.FileCount.ToString();
-                            sbSize.Text = Properties.Resources.Size + ": " + fid.GetFilesSize().ToKB();
+                            sbFiles.Text = Resources.Files + ": " + fid.FileCount;
+                            sbSize.Text = Resources.Size + ": " + fid.GetFilesSize().ToKB();
                         }
                     }
                     else {
-                        sbFiles.Text = Properties.Resources.NoFiles;
+                        sbFiles.Text = Resources.NoFiles;
                         sbSize.Text = "";
                     }
             }
@@ -324,19 +325,19 @@ namespace BlueMirrorIndexer
                 long sum = 0;
                 if (lvSearchResults.SelectedIndices.Count > 0) {
                     // selected items
-                    sbFiles.Text = Properties.Resources.SelectedFiles + ": " + lvSearchResults.SelectedIndices.Count.ToString();
+                    sbFiles.Text = Resources.SelectedFiles + ": " + lvSearchResults.SelectedIndices.Count;
 
                     foreach (int index in lvSearchResults.SelectedIndices) {
                         sum += searchResultList[index].Length;
                     }
                 }
                 else {
-                    sbFiles.Text = Properties.Resources.Files + ": " + searchResultList.Count.ToString();
+                    sbFiles.Text = Resources.Files + ": " + searchResultList.Count;
                     foreach (ItemInDatabase iid in searchResultList)
                         if (iid is FileInDatabase)
                             sum += (iid as FileInDatabase).Length;
                 }
-                sbSize.Text = Properties.Resources.Size + ": " + sum.ToKB();
+                sbSize.Text = Resources.Size + ": " + sum.ToKB();
             }
         }
 
@@ -348,14 +349,14 @@ namespace BlueMirrorIndexer
         private void FrmMain_Load(object sender, EventArgs e) {
             updateVolumeButtons();
 
-            lvDatabaseItems.ColumnOrderArray = Properties.Settings.Default.DatabaseItemsColumnOrder;
-            lvDatabaseItems.ColumnWidthArray = Properties.Settings.Default.DatabaseItemsColumnWidth;
+            lvDatabaseItems.ColumnOrderArray = Settings.Default.DatabaseItemsColumnOrder;
+            lvDatabaseItems.ColumnWidthArray = Settings.Default.DatabaseItemsColumnWidth;
 
-            lvFolderElements.ColumnOrderArray = Properties.Settings.Default.FolderElementsColumnOrder;
-            lvFolderElements.ColumnWidthArray = Properties.Settings.Default.FolderElementsColumnWidth;
+            lvFolderElements.ColumnOrderArray = Settings.Default.FolderElementsColumnOrder;
+            lvFolderElements.ColumnWidthArray = Settings.Default.FolderElementsColumnWidth;
 
-            lvSearchResults.ColumnOrderArray = Properties.Settings.Default.SearchResultsColumnOrder;
-            lvSearchResults.ColumnWidthArray = Properties.Settings.Default.SearchResultsColumnWidth;
+            lvSearchResults.ColumnOrderArray = Settings.Default.SearchResultsColumnOrder;
+            lvSearchResults.ColumnWidthArray = Settings.Default.SearchResultsColumnWidth;
 
             startRefreshDiscs();
             QueryCancelAutoPlay = Win32.RegisterWindowMessage("QueryCancelAutoPlay");
@@ -363,7 +364,7 @@ namespace BlueMirrorIndexer
             ilTree.Images.Add(Win32.GetFileIconAsImage("test.zip", Win32.FileIconSize.Small));
 
             Application.DoEvents();
-            string lastOpenedFile = Properties.Settings.Default.LastOpenedFile;
+            string lastOpenedFile = Settings.Default.LastOpenedFile;
             fileOperations.OpenFile(lastOpenedFile);
         }
 
@@ -376,8 +377,8 @@ namespace BlueMirrorIndexer
                 bi2.Text = bi1.Text = di.Name;
                 bi2.Image = bi1.Image = Win32.GetFileIconAsImage(di.Name, Win32.FileIconSize.Small);
                 bi2.Tag = bi1.Tag = di.Name;
-                bi1.Click += new EventHandler(cmReadVolume_Click);
-                bi2.Click += new EventHandler(cmReadVolume_Click);
+                bi1.Click += cmReadVolume_Click;
+                bi2.Click += cmReadVolume_Click;
                 bi2.ToolTipText = bi1.ToolTipText = string.Format("Read from {0}", di.Name);
                 try {
                     bi1.Name = createReadVolumeBtnName(di.Name);
@@ -395,7 +396,7 @@ namespace BlueMirrorIndexer
         }
 
         internal void UpdateReadVolumeButton() {
-            string drive = Properties.Settings.Default.LastDrive;
+            string drive = Settings.Default.LastDrive;
             if ((cmReadVolume.Tag == null) || (drive.ToUpper() != cmReadVolume.Tag.ToString().ToUpper())) {
                 btnReadVolume.ToolTipText = cmReadVolume.Text = string.Format("Read {0}...", drive);
                 btnReadVolume.Image = cmReadVolume.Image = Win32.GetFileIconAsImage(drive, Win32.FileIconSize.Small);
@@ -410,7 +411,7 @@ namespace BlueMirrorIndexer
         private void readVolumeFromToolStripItemTag(ToolStripItem buttonItem) {
             if ((buttonItem.Tag != null) && (buttonItem.Tag is string)) {
                 string drive = buttonItem.Tag as string;
-                Properties.Settings.Default.LastDrive = drive;
+                Settings.Default.LastDrive = drive;
                 UpdateReadVolumeButton();
                 startReading(drive);
             }
@@ -421,16 +422,16 @@ namespace BlueMirrorIndexer
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e) {
             try {
                 breakCalculating = true;
-                Properties.Settings.Default.DatabaseItemsColumnOrder = lvDatabaseItems.ColumnOrderArray;
-                Properties.Settings.Default.FolderElementsColumnOrder = lvFolderElements.ColumnOrderArray;
-                Properties.Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
+                Settings.Default.DatabaseItemsColumnOrder = lvDatabaseItems.ColumnOrderArray;
+                Settings.Default.FolderElementsColumnOrder = lvFolderElements.ColumnOrderArray;
+                Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
 
-                Properties.Settings.Default.DatabaseItemsColumnWidth = lvDatabaseItems.ColumnWidthArray;
-                Properties.Settings.Default.FolderElementsColumnWidth = lvFolderElements.ColumnWidthArray;
-                Properties.Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
+                Settings.Default.DatabaseItemsColumnWidth = lvDatabaseItems.ColumnWidthArray;
+                Settings.Default.FolderElementsColumnWidth = lvFolderElements.ColumnWidthArray;
+                Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
 
-                Properties.Settings.Default.LastOpenedFile = fileOperations.CurrentFilePath;
-                Properties.Settings.Default.Save();
+                Settings.Default.LastOpenedFile = fileOperations.CurrentFilePath;
+                Settings.Default.Save();
             }
             catch (Exception ex) {
                 MessageBox.Show(string.Format("Error occurred during saving configuration: {0}", ex.Message), ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -469,10 +470,7 @@ namespace BlueMirrorIndexer
 
         private void tcMain_Selected(object sender, TabControlEventArgs e) {
             UpdateCommands();
-            if (tcMain.SelectedTab == tpSearch)
-                AcceptButton = filesSearchCriteriaPanel.BtnSearch;
-            else
-                AcceptButton = null;
+            AcceptButton = tcMain.SelectedTab == tpSearch ? filesSearchCriteriaPanel.BtnSearch : null;
             updateStrip();
         }
 
@@ -545,9 +543,9 @@ namespace BlueMirrorIndexer
             updateStrip();
         }
 
-        private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-            updateStrip();
-        }
+        //private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
+        //    updateStrip();
+        //}
 
         void closeOpenedProgressDialog() {
             if (openProgressDialog != null) {
@@ -557,18 +555,18 @@ namespace BlueMirrorIndexer
         }
 
         /// <param name="progress">0..100</param>
-        void streamWithEvents_ProgressChanged(int progress) {
-            if (openProgressDialog != null) {
-                openProgressDialog.SetProgress(progress, null);
-            }
-        }
+        //void streamWithEvents_ProgressChanged(int progress) {
+        //    if (openProgressDialog != null) {
+        //        openProgressDialog.SetProgress(progress, null);
+        //    }
+        //}
 
         private static void saveAsCsv(string filePath) {
             try {
                 Database.SaveAsCsv(filePath);
             }
             catch (Exception e) {
-                MessageBox.Show(string.Format(Properties.Resources.ErrorSavingFile, filePath, e.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(Resources.ErrorSavingFile, filePath, e.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -594,15 +592,15 @@ namespace BlueMirrorIndexer
                 DiscInDatabase discInDatabase = DlgReadVolume.GetOptions(excludedElements, drive, out logicalFolders, this, Database, out discToReplace);
                 if (discInDatabase != null) {
                     readCdOnDrive(drive, discInDatabase, excludedElements, logicalFolders, discToReplace);
-                    if (Properties.Settings.Default.AutoEject)
+                    if (Settings.Default.AutoEject)
                         ejectCd(drive);
-                    if (Properties.Settings.Default.AutosaveAfterReading)
+                    if (Settings.Default.AutosaveAfterReading)
                         // saveFile();
                         fileOperations.Save();
                 }
             }
             catch (IOException e) {
-                MessageBox.Show(string.Format(Properties.Resources.ErrorIO, e.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(Resources.ErrorIO, e.Message), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (AbortException) {
             }
@@ -630,7 +628,7 @@ namespace BlueMirrorIndexer
                 Enabled = false;
                 ProgressInfo = null;
                 startCalculatingProgressInfo(drive, excludedElements);
-                bool useSize = Properties.Settings.Default.ComputeCrc;
+                bool useSize = Settings.Default.ComputeCrc;
                 openProgressDialog = new DlgReadingProgress("Reading Volume...", null, useSize);
                 openProgressDialog.StartShowing(new TimeSpan(0, 0, 1));
                 try {
@@ -670,7 +668,7 @@ namespace BlueMirrorIndexer
             calculatingDrive = drive;
             calculatingExcludedElements = excludedFolders;
             breakCalculating = false;
-            ThreadStart calculateDelegate = new ThreadStart(calculateProgressInfo);
+            ThreadStart calculateDelegate = calculateProgressInfo;
             Thread thread = new Thread(calculateDelegate);
             thread.Start();
         }
@@ -694,17 +692,17 @@ namespace BlueMirrorIndexer
             try {
                 if (breakCalculating)
                     throw new AbortException();
-                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(calculatingFolder);
-                System.IO.DirectoryInfo[] subFolders = di.GetDirectories();
-                foreach (System.IO.DirectoryInfo subFolder in subFolders) {
+                DirectoryInfo di = new DirectoryInfo(calculatingFolder);
+                DirectoryInfo[] subFolders = di.GetDirectories();
+                foreach (DirectoryInfo subFolder in subFolders) {
                     string subFolderName = subFolder.FullName.ToLower();
                     if (!calculatingExcludedElements.Contains(subFolderName)) {
                         calculateProgressInfo(subFolderName, calculatingExcludedElements, ref fileCount, ref fileSizeSum);
                     }
                 }
 
-                System.IO.FileInfo[] filesInFolder = di.GetFiles();
-                foreach (System.IO.FileInfo fileInFolder in filesInFolder) {
+                FileInfo[] filesInFolder = di.GetFiles();
+                foreach (FileInfo fileInFolder in filesInFolder) {
                     if (!calculatingExcludedElements.Contains(fileInFolder.FullName.ToLower())) {
                         fileCount++;
                         fileSizeSum += fileInFolder.Length;
@@ -789,7 +787,7 @@ namespace BlueMirrorIndexer
 
         #region Search
 
-        private List<ItemInDatabase> searchResultList = new List<ItemInDatabase>();
+        private readonly List<ItemInDatabase> searchResultList = new List<ItemInDatabase>();
 
         private void filesSearchCriteriaPanel_SearchBtnClicked(object sender, SearchEventArgs e) {
             search(e, searchResultList);
@@ -803,7 +801,7 @@ namespace BlueMirrorIndexer
 
                 // usuwanie podtekstów ".*", gdy przed tekstem nie ma œrednika lub pocz¹tku tekstu, a za tekstem jest œrednik lub koniec tekstu
                 int i = 0;
-                while ((i = e.FileMask.IndexOf(".*", i)) > -1) {
+                while ((i = e.FileMask.IndexOf(".*", i, StringComparison.Ordinal)) > -1) {
                     // i > -1
                     if ((i > 0) && (e.FileMask[i - 1] != ';') && ((i == e.FileMask.Length - 2) || (e.FileMask[i + 2] == ';')))
                         e.FileMask = e.FileMask.Substring(0, i) + e.FileMask.Substring(i + 2);
@@ -869,7 +867,7 @@ namespace BlueMirrorIndexer
         }
 
         private static void insertSimilarToList(FileInDatabase file, List<FileInDatabase> foundFilesNoCrc, List<ItemInDatabase> list, FileComparer noCrcComparer) {
-            int index = -1;
+            int index;
             do {
                 index = foundFilesNoCrc.BinarySearch(file, noCrcComparer);
                 if (index >= 0) {
@@ -881,7 +879,7 @@ namespace BlueMirrorIndexer
         }
 
         private void updateSearchListImages() {
-            Win32.UpdateSystemImageList(lvSearchResults.SmallImageList, Win32.FileIconSize.Small, false, Properties.Resources.delete);
+            Win32.UpdateSystemImageList(lvSearchResults.SmallImageList, Win32.FileIconSize.Small, false, Resources.delete);
         }
 
         #endregion
@@ -909,12 +907,9 @@ namespace BlueMirrorIndexer
             bool found = false;
             ListViewItem selectedItem = null;
             foreach (ItemInDatabase itemInPathList in pathList) {
-                if (itemInPathList is IFolder) {
-                    TreeNodeCollection nodes;
-                    if (lastNode == null)
-                        nodes = tvDatabaseFolderTree.Nodes;
-                    else
-                        nodes = lastNode.Nodes;
+                if (itemInPathList is IFolder)
+                {
+                    TreeNodeCollection nodes = lastNode == null ? tvDatabaseFolderTree.Nodes : lastNode.Nodes;
                     foreach (TreeNode node in nodes)
                         if (node.Tag == itemInPathList) {
                             lastNode = node;
@@ -938,7 +933,7 @@ namespace BlueMirrorIndexer
                 }
             }
             if (!found)
-                MessageBox.Show(Properties.Resources.FileNotFoundInDatabase, ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(Resources.FileNotFoundInDatabase, ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
             else {
                 tcMain.SelectedTab = tpDatabase;
                 if (selectedItem != null) { // file found
@@ -961,16 +956,16 @@ namespace BlueMirrorIndexer
         }
 
         private void updateTitle() {
-            Text = string.Format("{0} {1} [{2}{3}]", ProductName, ProductVersion, fileOperations.CurrentFilePath == null ? "untitled" : fileOperations.CurrentFilePath, fileOperations.Modified ? " *" : string.Empty);
+            Text = string.Format("{0} {1} [{2}{3}]", ProductName, ProductVersion, fileOperations.CurrentFilePath ?? "untitled", fileOperations.Modified ? " *" : string.Empty);
         }
 
         # region Export
 
         private void export() {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Title = Properties.Resources.ExportDatabaseTo;
+            sfd.Title = Resources.ExportDatabaseTo;
             sfd.DefaultExt = DEF_EXT;
-            sfd.Filter = Properties.Resources.ExportFilesFilter;
+            sfd.Filter = Resources.ExportFilesFilter;
             if (sfd.ShowDialog() == DialogResult.OK) {
                 saveAsCsv(sfd.FileName);
             }
@@ -1011,9 +1006,9 @@ namespace BlueMirrorIndexer
         private void mergeFile() {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Title = Properties.Resources.MergeWithFile;
+                ofd.Title = Resources.MergeWithFile;
                 ofd.DefaultExt = DEF_EXT;
-                ofd.Filter = Properties.Resources.IndexerFilesFilter;
+                ofd.Filter = Resources.IndexerFilesFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     VolumeDatabase cid = deserialize(ofd.FileName);
@@ -1051,29 +1046,26 @@ namespace BlueMirrorIndexer
                 m.Result = new IntPtr(1);
                 return;
             }
-            else
-                if ((m.Msg == Win32.WM_DEVICECHANGE) && Properties.Settings.Default.ScanNewMedia) {
-                    Win32.BroadcastHeader lBroadcastHeader;
-                    Win32.Volume lVolume;
-                    switch ((int)m.WParam) {
-                        case Win32.DBT_DEVICEARRIVAL:
-                            lBroadcastHeader = (Win32.BroadcastHeader)Marshal.PtrToStructure(m.LParam, typeof(Win32.BroadcastHeader));
-                            if (lBroadcastHeader.Type == Win32.DeviceType.Volume) {
-                                updateVolumeButtons();
-                                lVolume = (Win32.Volume)Marshal.PtrToStructure(m.LParam, typeof(Win32.Volume));
-                                string drive = getDriveFromMask(lVolume.Mask);
-                                if (drive != null) {
-                                    startReading(drive);
-                                }
-                            }
-                            break;
-                        case Win32.DBT_DEVICEREMOVECOMPLETE:
+            if ((m.Msg == Win32.WM_DEVICECHANGE) && Settings.Default.ScanNewMedia) {
+                switch ((int)m.WParam) {
+                    case Win32.DBT_DEVICEARRIVAL:
+                        Win32.BroadcastHeader lBroadcastHeader = (Win32.BroadcastHeader)Marshal.PtrToStructure(m.LParam, typeof(Win32.BroadcastHeader));
+                        if (lBroadcastHeader.Type == Win32.DeviceType.Volume) {
                             updateVolumeButtons();
-                            startRefreshDiscs();
-                            break;
-                    }
-
+                            Win32.Volume lVolume = (Win32.Volume)Marshal.PtrToStructure(m.LParam, typeof(Win32.Volume));
+                            string drive = getDriveFromMask(lVolume.Mask);
+                            if (drive != null) {
+                                startReading(drive);
+                            }
+                        }
+                        break;
+                    case Win32.DBT_DEVICEREMOVECOMPLETE:
+                        updateVolumeButtons();
+                        startRefreshDiscs();
+                        break;
                 }
+
+            }
             base.WndProc(ref m);
         }
 
@@ -1086,7 +1078,7 @@ namespace BlueMirrorIndexer
                     mask = mask >> 1;
                 }
                 int charCode = (i + 'A');
-                return Convert.ToChar(charCode).ToString() + ":\\";
+                return Convert.ToChar(charCode) + ":\\";
             }
             catch {
                 return null;
@@ -1126,14 +1118,14 @@ namespace BlueMirrorIndexer
         }
 
         private void startRefreshDiscs() {
-            ThreadStart scanMediaDelegate = new ThreadStart(refreshDiscs);
+            ThreadStart scanMediaDelegate = refreshDiscs;
             Thread thread = new Thread(scanMediaDelegate);
             thread.Start();
         }
 
         private void cmScanNewMedia_Click(object sender, EventArgs e) {
             cmScanNewMedia.Checked = !cmScanNewMedia.Checked;
-            Properties.Settings.Default.ScanNewMedia = cmScanNewMedia.Checked;
+            Settings.Default.ScanNewMedia = cmScanNewMedia.Checked;
         }
 
         #region Background work
@@ -1291,7 +1283,7 @@ namespace BlueMirrorIndexer
                             ListViewItem lvi = iid.ToListViewItem();
                             lvFolderElements.Items.Add(lvi);
                         }
-                        Win32.UpdateSystemImageList(lvFolderElements.SmallImageList, Win32.FileIconSize.Small, false, Properties.Resources.delete);
+                        Win32.UpdateSystemImageList(lvFolderElements.SmallImageList, Win32.FileIconSize.Small, false, Resources.delete);
                     }
                     finally {
                         lvFolderElements.EndUpdate();
@@ -1346,8 +1338,7 @@ namespace BlueMirrorIndexer
 
         private void tvDatabaseFolderTree_MouseDown(object sender, MouseEventArgs e) {
             if (tvDatabaseFolderTree.SelectedNode != null) {
-                itemsToDrag = new List<ItemInDatabase>();
-                itemsToDrag.Add(tvDatabaseFolderTree.SelectedNode.Tag as ItemInDatabase);
+                itemsToDrag = new List<ItemInDatabase> {tvDatabaseFolderTree.SelectedNode.Tag as ItemInDatabase};
                 Size dragSize = SystemInformation.DragSize;
                 dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
             }
@@ -1558,11 +1549,11 @@ namespace BlueMirrorIndexer
                 showItemProperties(item);
         }
 
-        private ItemInDatabase getItemFromFolderElements() {
+        private ItemInDatabase getItemFromFolderElements()
+        {
             if (lvFolderElements.SelectedItems.Count == 1)
                 return (ItemInDatabase)lvFolderElements.SelectedItems[0].Tag;
-            else
-                return null;
+            return null;
         }
 
         private void lvLogicalFolderItems_DoubleClick(object sender, EventArgs e) {
@@ -1724,9 +1715,8 @@ namespace BlueMirrorIndexer
         {
             // Invoke windows explorer on the item.
             // N.B. assumes menu is disabled when more than one item selected
-            var f = getSearchSelectedItem() as FileInDatabase; // look for search selection first
-            if (f == null)
-                f = getSelectedFile();
+            // TODO KBR search panel in focus?
+            var f = getSearchSelectedItem() as FileInDatabase ?? getSelectedFile(); // look for search selection first
             if (f == null)
                 return;
             var p = f.FullName;
