@@ -2,7 +2,12 @@ CD/DVD/HD Indexer : A work-in-progress.
 
 1. Disk read is now faster.
 1. Using SQLite as persistence is partially complete. Current speed to load is much faster! (Missing Logical Folders, Compressed files)
+1. Added "show file in windows explorer".
+1. Added folder consumption statistics to the tree.
+1. Replaced CRC32 hash with MD5 - built-in and faster.
+1. Charting is in-progress.
 
+*Note*: this fork is dependent on my matching fork of 'Igorary'.
 
 ## Project Description ##
 
