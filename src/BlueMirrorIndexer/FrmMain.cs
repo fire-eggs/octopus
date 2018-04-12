@@ -39,11 +39,6 @@ namespace BlueMirrorIndexer
             clearSearchList();
         }
 
-        private void clearSearchList() {
-            searchResultList.Clear();
-            displaySearchList();
-        }
-
         private void updateVolumesInSearchCriterias() {
             filesSearchCriteriaPanel.UpdateVolumeList(Database);
         }
@@ -72,29 +67,33 @@ namespace BlueMirrorIndexer
             return null;
         }
 
+        private ItemInDatabase getSelectedTreeItem()
+        {
+            if (tvDatabaseFolderTree.SelectedNode != null)
+                return tvDatabaseFolderTree.SelectedNode.Tag as ItemInDatabase;
+            return null;
+        }
+
         #region Menu commands and events
 
-        private void cmVolumeFolderProperties_Click(object sender, EventArgs e) {
-            DiscInDatabase selectedDisc = getSelectedDisc();
-            if (selectedDisc != null) {
-                if (showItemProperties(selectedDisc))
-                    // TODO: refactor
-                    tvDatabaseFolderTree.SelectedNode.Text = (tvDatabaseFolderTree.SelectedNode.Tag as DiscInDatabase).Name;
-            }
-            else {
-                FolderInDatabase selectedFolder = getSelectedFolder();
-                if (selectedFolder != null) {
-                    showItemProperties(selectedFolder);
-                }
-                else {
-                    CompressedFile selectedCompressedFile = getSelectedCompressedFile();
-                    if (selectedCompressedFile != null)
-                        showItemProperties(selectedCompressedFile);
-                }
+        private void cmVolumeFolderProperties_Click(object sender, EventArgs e)
+        {
+            ItemInDatabase iid = getSelectedTreeItem();
+            showItemProperties(iid);
+            if (iid is DiscInDatabase)
+            {
+                // TODO KBR wipes volume size data!
+                tvDatabaseFolderTree.SelectedNode.Text = iid.Name; // view any user changes to label
             }
         }
 
-        private void cmDeleteTreeItemPopup_Click(object sender, EventArgs e) {
+        private void cmDeleteTreeItemPopup_Click(object sender, EventArgs e)
+        {
+            //ItemInDatabase iid = getSelectedTreeItem();
+            //if (iid == null)
+            //    return;
+            //iid.DeleteWithConfirm();
+
             if (getSelectedDisc() != null) {
                 if (MessageBox.Show(String.Format(Resources.AreUSureToDeleteVolume, getSelectedDisc().Name), ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     deleteCdInfo(getSelectedDisc());
@@ -235,15 +234,6 @@ namespace BlueMirrorIndexer
             return null;
         }
 
-        private ItemInDatabase getSelectedItemInSearch() {
-            if (lvSearchResults.SelectedIndices.Count == 1) {
-                int index = lvSearchResults.SelectedIndices[0];
-                if ((index >= 0) && (index < searchResultList.Count))
-                    return searchResultList[index];
-            }
-            return null;
-        }
-
         private void updateList() {
             lvDatabaseItems.Items.Clear();
             if (tvDatabaseFolderTree.SelectedNode != null) {
@@ -314,22 +304,7 @@ namespace BlueMirrorIndexer
                     }
             }
             else if (tcMain.SelectedTab == tpSearch) {
-                long sum = 0;
-                if (lvSearchResults.SelectedIndices.Count > 0) {
-                    // selected items
-                    sbFiles.Text = Resources.SelectedFiles + ": " + lvSearchResults.SelectedIndices.Count;
-
-                    foreach (int index in lvSearchResults.SelectedIndices) {
-                        sum += searchResultList[index].Length;
-                    }
-                }
-                else {
-                    sbFiles.Text = Resources.Files + ": " + searchResultList.Count;
-                    foreach (ItemInDatabase iid in searchResultList)
-                        if (iid is FileInDatabase)
-                            sum += (iid as FileInDatabase).Length;
-                }
-                sbSize.Text = Resources.Size + ": " + sum.ToKB();
+                updateStripSearch();
             }
         }
 
@@ -416,13 +391,13 @@ namespace BlueMirrorIndexer
                 breakCalculating = true;
                 Settings.Default.DatabaseItemsColumnOrder = lvDatabaseItems.ColumnOrderArray;
                 Settings.Default.FolderElementsColumnOrder = lvFolderElements.ColumnOrderArray;
-                Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
 
                 Settings.Default.DatabaseItemsColumnWidth = lvDatabaseItems.ColumnWidthArray;
                 Settings.Default.FolderElementsColumnWidth = lvFolderElements.ColumnWidthArray;
-                Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
 
                 Settings.Default.LastOpenedFile = fileOperations.CurrentFilePath;
+
+                SaveSearchSettings();
                 Settings.Default.Save();
             }
             catch (Exception ex) {
@@ -510,34 +485,6 @@ namespace BlueMirrorIndexer
 
         #endregion
 
-        IComparer<ItemInDatabase> searchListComparer = null;
-        int lastColInSearchView = -1;
-        private void lvSearchResults_ColumnClick(object sender, ColumnClickEventArgs e) {
-            int col = e.Column;
-            bool ascending;
-            if (lastColInSearchView == col) {
-                ascending = false;
-                lastColInSearchView = -1;
-            }
-            else {
-                ascending = true;
-                lastColInSearchView = col;
-            }
-            searchListComparer = new SearchResultComparer(col, ascending);
-            displaySearchList();
-        }
-
-        private void displaySearchList() {
-            lvSearchResults.VirtualListSize = 0;
-            if (searchListComparer != null)
-                searchResultList.Sort(searchListComparer);
-            lvSearchResults.VirtualListSize = searchResultList.Count;
-            updateStrip();
-        }
-
-        //private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-        //    updateStrip();
-        //}
 
         void closeOpenedProgressDialog() {
             if (openProgressDialog != null) {
@@ -764,7 +711,10 @@ namespace BlueMirrorIndexer
 
         #region Show properties
 
-        private bool showItemProperties(ItemInDatabase itemInDatabase) {
+        private bool showItemProperties(ItemInDatabase itemInDatabase)
+        {
+            if (itemInDatabase == null)
+                return false;
             bool result = itemInDatabase.EditPropertiesDlg();
             if (result) {
                 fileOperations.Modified = true;
@@ -777,120 +727,8 @@ namespace BlueMirrorIndexer
 
         #endregion
 
-        #region Search
-
-        private readonly List<ItemInDatabase> searchResultList = new List<ItemInDatabase>();
-
-        private void filesSearchCriteriaPanel_SearchBtnClicked(object sender, SearchEventArgs e) {
-            search(e, searchResultList);
-            displaySearchList();
-        }
-
-        private void search(SearchEventArgs e, List<ItemInDatabase> list) {
-            Cursor oldCursor = Cursor.Current;
-            try {
-                Cursor.Current = Cursors.WaitCursor;
-
-                // usuwanie podtekstów ".*", gdy przed tekstem nie ma œrednika lub pocz¹tku tekstu, a za tekstem jest œrednik lub koniec tekstu
-                int i = 0;
-                while ((i = e.FileMask.IndexOf(".*", i, StringComparison.Ordinal)) > -1) {
-                    // i > -1
-                    if ((i > 0) && (e.FileMask[i - 1] != ';') && ((i == e.FileMask.Length - 2) || (e.FileMask[i + 2] == ';')))
-                        e.FileMask = e.FileMask.Substring(0, i) + e.FileMask.Substring(i + 2);
-                }
-
-                Regex fileMaskRegex = new Regex(e.FileMask.ToRegex(e.TreatFileMaskAsWildcard), RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-                KeywordMatcher keywordMatcher = new KeywordMatcher(e.Keywords, e.AllKeywordsNeeded, e.CaseSensitiveKeywords, e.TreatKeywordsAsWildcard);
-
-                list.Clear();
-
-                if (e.OnlyDuplicates) {
-                    List<FileInDatabase> foundFilesCrc = new List<FileInDatabase>();
-                    List<FileInDatabase> foundFilesNoCrc = new List<FileInDatabase>();
-
-                    foreach (DiscInDatabase disc in e.SearchInVolumes)
-                        disc.InsertFilesToList(fileMaskRegex, e.DateFrom, e.DateTo, e.SizeFrom, e.SizeTo, keywordMatcher, foundFilesCrc, foundFilesNoCrc);
-
-                    foundFilesCrc.Sort(new FileComparer(true));
-                    FileComparer noCrcComparer = new FileComparer(false);
-                    foundFilesNoCrc.Sort(noCrcComparer);
-                    FileInDatabase lastFile = null; ulong lastCrc = 0;
-                    foreach (FileInDatabase file in foundFilesCrc) {
-                        if (file.Hash != 0) {
-                            if (lastCrc != file.Hash)
-                            {
-                                lastCrc = file.Hash;
-                                lastFile = file;
-                            }
-                            else {
-                                if (lastFile != null) { // lastFile dodajemy tylko raz
-                                    insertSimilarToList(lastFile, foundFilesNoCrc, list, noCrcComparer);
-                                    list.Add(lastFile);
-                                    lastFile = null;
-                                }
-                                list.Add(file);
-                                insertSimilarToList(file, foundFilesNoCrc, list, noCrcComparer);
-                            }
-                        }
-                    }
-                    lastFile = null; string lastKey = null;
-                    foreach (FileInDatabase file in foundFilesNoCrc) {
-                        if (lastKey != file.NameLengthKey) {
-                            lastKey = file.NameLengthKey;
-                            lastFile = file;
-                        }
-                        else {
-                            if (lastFile != null) { // lastFile dodajemy tylko raz
-                                list.Add(lastFile);
-                                lastFile = null;
-                            }
-                            list.Add(file);
-                        }
-                    }
-                }
-                else
-                    foreach (DiscInDatabase disc in e.SearchInVolumes)
-                        disc.InsertFilesToList(fileMaskRegex, e.DateFrom, e.DateTo, e.SizeFrom, e.SizeTo, keywordMatcher, list /*, lvSearchResults*/);
-            }
-            finally {
-                Cursor.Current = oldCursor;
-            }
-        }
-
-        private static void insertSimilarToList(FileInDatabase file, List<FileInDatabase> foundFilesNoCrc, List<ItemInDatabase> list, FileComparer noCrcComparer) {
-            int index;
-            do {
-                index = foundFilesNoCrc.BinarySearch(file, noCrcComparer);
-                if (index >= 0) {
-                    list.Add(foundFilesNoCrc[index]);
-                    foundFilesNoCrc.RemoveAt(index);
-                }
-            }
-            while (index > 0);
-        }
-
-        private void updateSearchListImages() {
-            Win32.UpdateSystemImageList(lvSearchResults.SmallImageList, Win32.FileIconSize.Small, false, Resources.delete);
-        }
-
-        #endregion
 
         bool duringSelectAll = false;
-        private void lvSearchResults_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!duringSelectAll) {
-                updateStrip();
-                UpdateCommands();
-            }
-        }
-
-        private void cmFindInDatabase_Click(object sender, EventArgs e) {
-            if (lvSearchResults.SelectedIndices.Count == 1) {
-                int index = lvSearchResults.SelectedIndices[0];
-                ItemInDatabase itemInDatabase = searchResultList[index];
-                findInTree(itemInDatabase);
-            }
-        }
 
         private void findInTree(ItemInDatabase itemInDatabase) {
             List<ItemInDatabase> pathList = new List<ItemInDatabase>();
@@ -941,10 +779,6 @@ namespace BlueMirrorIndexer
                     lastNode.EnsureVisible();
                 }
             }
-        }
-
-        private void cmsSearchList_Opening(object sender, CancelEventArgs e) {
-            cmFindInDatabase.Enabled = cmItemPropertiesFromSearch.Enabled = lvSearchResults.SelectedIndices.Count == 1;
         }
 
         private void updateTitle() {
@@ -1520,20 +1354,6 @@ namespace BlueMirrorIndexer
 
         #endregion
 
-        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e) {
-            ItemInDatabase item = getSearchSelectedItem();
-            if (item != null)
-                showItemProperties(item);
-        }
-
-        private ItemInDatabase getSearchSelectedItem() {
-            if (lvSearchResults.SelectedIndices.Count == 1) {
-                int index = lvSearchResults.SelectedIndices[0];
-                if ((index >= 0) && (index < searchResultList.Count))
-                    return searchResultList[index];
-            }
-            return null;
-        }
 
         private void cmItemPropertiesFromFolders_Click(object sender, EventArgs e) {
             ItemInDatabase item = getItemFromFolderElements();
@@ -1552,10 +1372,6 @@ namespace BlueMirrorIndexer
             cmItemPropertiesFromFolders_Click(sender, e);
         }
 
-        private void lvSearchResults_DoubleClick(object sender, EventArgs e) {
-            cmItemPropertiesFromSearch_Click(sender, e);
-        }
-
         private void cmFindInDatabaseFromFolders_Click(object sender, EventArgs e) {
             if (lvFolderElements.SelectedIndices.Count == 1) {
                 ItemInDatabase itemInDatabase = getItemFromFolderElements();
@@ -1564,25 +1380,7 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private void lvSearchResults_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.A) {
-                e.SuppressKeyPress = true;
-                duringSelectAll = true;
-                try {
-                    lvSearchResults.SelectAll();
-                }
-                finally {
-                    duringSelectAll = false;
-                }
-                updateStrip();
-            }
-        }
-
         private void lvFolderElements_Enter(object sender, EventArgs e) {
-            UpdateCommands();
-        }
-
-        private void lvSearchResults_Enter(object sender, EventArgs e) {
             UpdateCommands();
         }
 
@@ -1703,15 +1501,21 @@ namespace BlueMirrorIndexer
             return Database.IsEmpty();
         }
 
+        // TODO KBR getSelectedFile could hide search/db logic
+
         private void cmExplorer_Click(object sender, EventArgs e)
         {
             // Invoke windows explorer on the item.
             // N.B. assumes menu is disabled when more than one item selected
-            // TODO KBR search panel in focus?
-            var f = getSearchSelectedItem() as FileInDatabase ?? getSelectedFile(); // look for search selection first
-            if (f == null)
+            FileInDatabase fid;
+            if (tcMain.SelectedTab == tpSearch)
+                fid = getSearchSelectedItem() as FileInDatabase;
+            else
+                fid = getSelectedFile();
+
+            if (fid == null)
                 return;
-            var p = f.FullName;
+            var p = fid.FullName;
 
             Process.Start("explorer.exe", "/select,\"" + p + "\"");
         }

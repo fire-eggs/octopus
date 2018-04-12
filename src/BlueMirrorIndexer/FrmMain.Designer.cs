@@ -37,6 +37,7 @@ namespace BlueMirrorIndexer
             this.pmList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmItemPropertiesFromList = new System.Windows.Forms.ToolStripMenuItem();
             this.cmDeleteListItemPopup = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInWindowsExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilSystem = new System.Windows.Forms.ImageList(this.components);
             this.pmSearchList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmItemPropertiesFromSearch = new System.Windows.Forms.ToolStripMenuItem();
@@ -239,6 +240,12 @@ namespace BlueMirrorIndexer
             resources.ApplyResources(this.cmDeleteListItemPopup, "cmDeleteListItemPopup");
             this.cmDeleteListItemPopup.Name = "cmDeleteListItemPopup";
             this.cmDeleteListItemPopup.Click += new System.EventHandler(this.cmDeleteFileInfoPopup_Click);
+            // 
+            // showInWindowsExplorerToolStripMenuItem
+            // 
+            this.showInWindowsExplorerToolStripMenuItem.Name = "showInWindowsExplorerToolStripMenuItem";
+            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem, "showInWindowsExplorerToolStripMenuItem");
+            this.showInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem_Click);
             // 
             // ilSystem
             // 
@@ -532,7 +539,6 @@ namespace BlueMirrorIndexer
             // 
             this.findInWindowsExplorerToolStripMenuItem.Name = "findInWindowsExplorerToolStripMenuItem";
             resources.ApplyResources(this.findInWindowsExplorerToolStripMenuItem, "findInWindowsExplorerToolStripMenuItem");
-            this.findInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.findInWindowsExplorerToolStripMenuItem_Click);
             // 
             // columnHeader16
             // 

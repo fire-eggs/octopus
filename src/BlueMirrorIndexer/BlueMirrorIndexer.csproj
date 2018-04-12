@@ -99,6 +99,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="FolderReader.cs" />
+    <Compile Include="frmMainSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="VolumeDatabase.cs" />
     <Compile Include="Components\FilesSearchCriteriaPanel.cs">
