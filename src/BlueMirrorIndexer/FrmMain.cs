@@ -30,6 +30,8 @@ namespace BlueMirrorIndexer
             cmScanNewMedia.Checked = Settings.Default.ScanNewMedia;
             Text = string.Format("{0} {1}", ProductName, ProductVersion);
             btnSave.Enabled = cmSave.Enabled = false;
+
+            charting.MainForm = this;
         }
 
         private void updateControls() {
@@ -730,7 +732,7 @@ namespace BlueMirrorIndexer
 
         bool duringSelectAll = false;
 
-        private void findInTree(ItemInDatabase itemInDatabase) {
+        public void findInTree(ItemInDatabase itemInDatabase) {
             List<ItemInDatabase> pathList = new List<ItemInDatabase>();
             itemInDatabase.GetPath(pathList);
             TreeNode lastNode = null;

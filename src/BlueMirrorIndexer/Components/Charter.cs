@@ -38,6 +38,8 @@ namespace BlueMirrorIndexer.Components
             }
         }
 
+        public FrmMain MainForm { get; set; }
+
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
             if (folds == null)
@@ -148,25 +150,26 @@ namespace BlueMirrorIndexer.Components
             return string.Format("{0:0,0.##}M", val2);
         }
 
+        private IFolder FolderFromMouse(Point loc)
+        {
+            int dex = loc.Y / (spacing + rectH);
+            if (dex >= folds.Count)
+                return null;
+
+            IFolder fold = sort[dex].Item1;
+            return fold;
+        }
+
         private void panel2_MouseClick(object sender, MouseEventArgs e)
         {
             if (folds == null || folds.Count < 1)
                 return;
-
-            int dex = e.Y / (spacing + rectH);
-            if (dex >= folds.Count)
+            var fold = FolderFromMouse(e.Location);
+            if (fold.Folders.Length < 1) // no sub-folders, do nothing
                 return;
 
-            IFolder fold = sort[dex].Item1;
-            if (e.Button == MouseButtons.Left)
-            {
-                baseFold = fold as ItemInDatabase;
-                reChart();
-            }
-            else
-            {
-                RightMenu(fold, e.Location);
-            }
+            baseFold = fold as ItemInDatabase;
+            reChart();
         }
 
         private void reChart()
@@ -216,10 +219,19 @@ namespace BlueMirrorIndexer.Components
 
         }
 
-        private void RightMenu(IFolder fold, Point loc )
+        private IFolder _menuFold;
+
+        private void findInDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ContextMenu.Tag = fold;
-            ContextMenu.Show(contextMenuStrip1, loc);
+            ItemInDatabase iid = _menuFold as ItemInDatabase;
+            if (iid != null)
+                MainForm.findInTree(iid);
+        }
+
+        private void panel2_MouseDown(object sender, MouseEventArgs e)
+        {
+            // figure out which folder the mouse is on before the context menu takes over
+            _menuFold = FolderFromMouse(e.Location);
         }
     }
 
