@@ -134,9 +134,6 @@ namespace BlueMirrorIndexer
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.filesSearchCriteriaPanel = new BlueMirrorIndexer.Components.FilesSearchCriteriaPanel();
             this.tpChart = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.tcBottom = new System.Windows.Forms.TabControl();
             this.tpLogicalFolders = new System.Windows.Forms.TabPage();
             this.scFolders = new System.Windows.Forms.SplitContainer();
@@ -157,7 +154,7 @@ namespace BlueMirrorIndexer
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.showInWindowsExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.charting = new BlueMirrorIndexer.Components.Charter();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -180,7 +177,6 @@ namespace BlueMirrorIndexer
             this.tpSearch.SuspendLayout();
             this.searchBottomPanel.SuspendLayout();
             this.tpChart.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.tcBottom.SuspendLayout();
             this.tpLogicalFolders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scFolders)).BeginInit();
@@ -965,30 +961,10 @@ namespace BlueMirrorIndexer
             // 
             // tpChart
             // 
-            this.tpChart.Controls.Add(this.tableLayoutPanel1);
+            this.tpChart.Controls.Add(this.charting);
             resources.ApplyResources(this.tpChart, "tpChart");
             this.tpChart.Name = "tpChart";
             this.tpChart.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel1
-            // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            // 
-            // panel1
-            // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.panel2, "panel2");
-            this.panel2.Name = "panel2";
             // 
             // tcBottom
             // 
@@ -1149,11 +1125,10 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
             // 
-            // showInWindowsExplorerToolStripMenuItem
+            // charting
             // 
-            this.showInWindowsExplorerToolStripMenuItem.Name = "showInWindowsExplorerToolStripMenuItem";
-            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem, "showInWindowsExplorerToolStripMenuItem");
-            this.showInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem_Click);
+            resources.ApplyResources(this.charting, "charting");
+            this.charting.Name = "charting";
             // 
             // FrmMain
             // 
@@ -1195,7 +1170,6 @@ namespace BlueMirrorIndexer
             this.tpSearch.ResumeLayout(false);
             this.searchBottomPanel.ResumeLayout(false);
             this.tpChart.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.tcBottom.ResumeLayout(false);
             this.tpLogicalFolders.ResumeLayout(false);
             this.scFolders.Panel1.ResumeLayout(false);
@@ -1333,13 +1307,11 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem cmExplorer;
         private System.Windows.Forms.TabPage tpChart;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ToolStripMenuItem findInWindowsExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem;
+        private Components.Charter charting;
 	}
 }
 

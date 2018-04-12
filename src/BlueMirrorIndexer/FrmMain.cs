@@ -1,21 +1,16 @@
+using BlueMirrorIndexer.Properties;
+using Igorary.Forms;
+using Igorary.Forms.Components;
+using Igorary.Utils.Utils.Extensions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using BlueMirrorIndexer.Components;
-using BlueMirrorIndexer.Properties;
-using Igorary.Forms;
-using Igorary.Forms.Components;
-using Igorary.Utils.Utils.Extensions;
-
-using SizeCont = System.Tuple<BlueMirrorIndexer.IFolder, ulong>;
 
 // ReSharper disable InconsistentNaming
 
@@ -35,8 +30,6 @@ namespace BlueMirrorIndexer
             cmScanNewMedia.Checked = Settings.Default.ScanNewMedia;
             Text = string.Format("{0} {1}", ProductName, ProductVersion);
             btnSave.Enabled = cmSave.Enabled = false;
-
-            chartInit();
         }
 
         private void updateControls() {
@@ -727,7 +720,7 @@ namespace BlueMirrorIndexer
 
 
             Database.UpdateStats(); // TODO KBR need a subscriber model for chart
-            folds = null;
+            charting.Database = Database;
 
 
             Database.SortDiscs();
@@ -1675,7 +1668,7 @@ namespace BlueMirrorIndexer
             if (Database != null)
             {
                 Database.UpdateStats(); // TODO switch to subscriber model
-                folds = null;
+                charting.Database = Database;
             }
         }
 
@@ -1723,106 +1716,10 @@ namespace BlueMirrorIndexer
             Process.Start("explorer.exe", "/select,\"" + p + "\"");
         }
 
-        private void chartInit()
-        {
-            //Control c = panel1 as Control;
-            //c.DoubleBuffered = true;
-
-            //panel1.SetStyle(ControlStyles.AllPaintingInWmPaint |
-            //          ControlStyles.Opaque |
-            //          ControlStyles.OptimizedDoubleBuffer |
-            //          ControlStyles.ResizeRedraw |
-            //          ControlStyles.Selectable |
-            //          ControlStyles.UserPaint, true);
-        }
-
-        private List<SizeCont> folds;
-        private List<SizeCont> sort;
-
-        private void CalcChart()
-        {
-            folds = new List<SizeCont>();
-            foreach (var discInDatabase in Database.GetDiscs())
-            {
-                foreach (var fold in ((IFolder)discInDatabase).Folders)
-                {
-                    SizeCont tup = new SizeCont(fold, fold.TotalSizeUsed);
-                    folds.Add(tup);
-                }
-            }
-            sort = folds.OrderByDescending(x => x.Item2).ToList();
-        }
-
-        const int rectH = 15; // TODO derive from font when text drawn
-        const int spacing = 3;
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            if (folds == null)
-                CalcChart();
-
-            if (folds.Count < 1)
-            {
-                e.Graphics.Clear(Color.Red);
-                return;
-            }
-
-            ulong first = sort[0].Item2;             //ulong superTotal = Database.TotalSizeUsed;
-
-            int y = spacing;
-            int maxW = panel1.Width - 6;
-            int dex = 0;
-
-            Brush textb = new SolidBrush(Color.CadetBlue);
-            Pen dPen = new Pen(Color.Blue);
-
-            var g = e.Graphics;
-            g.Clear(Color.Azure);
-            do
-            {
-                int w = (int)(maxW*((double)sort[dex].Item2/(double)first));
-                g.DrawRectangle(dPen, spacing, y, w, rectH);
-
-                var fold = sort[dex].Item1 as FolderInDatabase;
-                var disp = string.Format("{0}{1} - {2}", fold.GetVolumeUserName(), fold.Name, FormatAsMb(fold.TotalSizeUsed));
-
-                g.DrawString(disp, DefaultFont, textb, spacing, y);
-
-                y += rectH;
-                y += spacing;
-                dex++;
-            } 
-            while (y < panel1.Height && dex < sort.Count);
-        }
-
-        private string FormatAsMb(ulong val)
-        {
-            double val2 = val/1024.0/1024.0;
-            return string.Format("{0:0,0.##}M", val2);
-        }
-
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (folds == null || folds.Count < 1)
-                return;
-
-            int dex = e.Y/(spacing + rectH);
-            if (dex >= folds.Count)
-                return;
-
-            IFolder fold = sort[dex].Item1;
-            MessageBox.Show(fold.FullName);
-        }
-
-        private void findInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
         private void showInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cmExplorer_Click(sender, e);
         }
-
     }
 
     class AbortException : Exception

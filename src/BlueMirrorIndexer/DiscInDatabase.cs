@@ -97,6 +97,11 @@ namespace BlueMirrorIndexer
             return Name;
         }
 
+        public override uint GetVolumeClusterSize()
+        {
+            return ClusterSize;
+        }
+
         protected override Form CreateDialog() {
             return new DlgDiscProperties(this);
         }

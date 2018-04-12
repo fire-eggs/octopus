@@ -61,5 +61,9 @@ namespace BlueMirrorIndexer
 
         void UpdateStats();
         UInt64 TotalSizeUsed { get; set; }
+        ulong TotalFileCount { get; set; }
+
+
+        DiscInDatabase GetDisc();
     }
 }

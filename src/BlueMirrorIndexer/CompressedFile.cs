@@ -386,8 +386,15 @@ namespace BlueMirrorIndexer
 
         public ulong TotalSizeUsed { get; set; }
 
+        public ulong TotalFileCount { get; set; }
+
         void IFolder.CopyToNode(TreeNode treeNode) {
             folderImpl.CopyToNode(treeNode);
+        }
+
+        public DiscInDatabase GetDisc()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

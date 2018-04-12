@@ -88,6 +88,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Charter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Charter.Designer.cs">
+      <DependentUpon>Charter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FolderImpl.cs" />
     <Compile Include="Components\LogicalFoldersTreeView.cs">
       <SubType>Component</SubType>
@@ -183,6 +189,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProgressInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Components\Charter.resx">
+      <DependentUpon>Charter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\FilesSearchCriteriaPanel.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FilesSearchCriteriaPanel.cs</DependentUpon>

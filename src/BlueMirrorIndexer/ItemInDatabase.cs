@@ -77,6 +77,12 @@ namespace BlueMirrorIndexer {
 			return (_parent as ItemInDatabase).GetVolumeUserName();
 		}
 
+        public virtual uint GetVolumeClusterSize()
+        {
+            // percolates up the parent chain until the disc is reached
+            return (_parent as ItemInDatabase).GetVolumeClusterSize();
+        }
+
 		public string GetPath()
 		{
 		    if ((_parent != null) && !(_parent is DiscInDatabase)) // inheritance

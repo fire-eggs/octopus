@@ -100,14 +100,18 @@ namespace BlueMirrorIndexer
             return discs.Count == 0;
         }
 
+        public ulong TotalFileCount { get; set; }
         public UInt64 TotalSizeUsed { get; set; }
+
 	    public void UpdateStats()
 	    {
 	        TotalSizeUsed = 0;
+	        TotalFileCount = 0;
 	        foreach (var discInDatabase in discs)
 	        {
 	            discInDatabase.UpdateStats();
 	            TotalSizeUsed += discInDatabase.TotalSizeUsed;
+	            TotalFileCount += discInDatabase.TotalFileCount;
 	        }
 	    }
     }

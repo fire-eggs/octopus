@@ -162,18 +162,31 @@ namespace BlueMirrorIndexer {
         #endregion
 
         public UInt64 TotalSizeUsed { get; set; }
+        public ulong TotalFileCount { get; set; }
 
         public void UpdateStats()
         {
             TotalSizeUsed = 0;
+            TotalFileCount = 0;
             TotalSizeUsed += (ulong)folderImpl.GetFilesSize();
+            TotalFileCount += (ulong)folderImpl.FileCount;
             foreach (var folder in folderImpl.Folders)
             {
                 folder.UpdateStats();
                 TotalSizeUsed += folder.TotalSizeUsed;
+                TotalFileCount += folder.TotalFileCount;
             }
         }
 
+	    public DiscInDatabase GetDisc()
+	    {
+	        ItemInDatabase dad = Parent as ItemInDatabase;
+	        while (dad != null)
+	        {
+	            dad = dad.Parent as ItemInDatabase;
+	        }
+	        return null;
+	    }
     }
 
 }
