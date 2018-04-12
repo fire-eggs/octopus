@@ -21,7 +21,6 @@ using SizeCont = System.Tuple<BlueMirrorIndexer.IFolder, ulong>;
 
 namespace BlueMirrorIndexer
 {
-
     public partial class FrmMain : Form
     {
 
@@ -1824,5 +1823,9 @@ namespace BlueMirrorIndexer
             cmExplorer_Click(sender, e);
         }
 
+    }
+
+    class AbortException : Exception
+    {
     }
 }

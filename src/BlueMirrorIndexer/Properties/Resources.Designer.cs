@@ -353,38 +353,6 @@ namespace BlueMirrorIndexer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2.0.1.0
-        ///- Refreshed
-        ///
-        ///2.0.0.20
-        ///- FIXED: Minor bugs
-        ///- Enhanced file/folder properties dialog box
-        ///
-        ///2.0.0.18
-        ///- Enhanced file properties dialog box
-        ///
-        ///2.0.0.17
-        ///- &apos;Description&apos; tab added for disc, folder, file properties
-        ///- &apos;License&apos; tab in about box
-        ///
-        ///2.0.0.14
-        ///- Name changed from &quot;Blue Mirror CD/DVD Indexer&quot;
-        ///
-        ///2.0.0.13
-        ///- Import from Octopus / Blue Mirror 1.x implemented
-        ///- FIXED: Compressed files appear twice in the search result list
-        ///
-        ///2.0.0.12
-        ///- Indexing subdirectories 
-        ///- Indexing compressed fi [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string History {
-            get {
-                return ResourceManager.GetString("History", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Blue Mirror CD/DVD Indexer|*.bmin.
         /// </summary>
         internal static string IndexerFilesFilter {
