@@ -31,13 +31,13 @@ namespace BlueMirrorIndexer
     {
         private long _runningFileCount;
         private long _runningFileSize;
-        private readonly List<string> _excludedFolders;
+        private readonly List<string> _excludedItems;
         private readonly DlgReadingProgress _dlgReadingProgress;
-        private FolderInDatabase _folderToReplace; // TODO KBR is this at the disc-only level??
+        private FolderInDatabase _folderToReplace;
 
-        public FolderReader(List<string> excludedFolders, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace)
+        public FolderReader(List<string> excludedItems, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace)
         {
-            _excludedFolders = excludedFolders;
+            _excludedItems = excludedItems;
             _dlgReadingProgress = dlgReadingProgress;
             _folderToReplace = folderToReplace;
 
@@ -65,7 +65,12 @@ namespace BlueMirrorIndexer
                     if (findData.cFileName == "." || findData.cFileName == "..")
                         continue;
 
-                    string fullpath = folder + (folder.EndsWith("\\") ? "" : "\\") + findData.cFileName;
+                    string fullpath = Path.Combine(folder, findData.cFileName).ToLower(); // folder + (folder.EndsWith("\\") ? "" : "\\") + findData.cFileName;
+
+                    if (_excludedItems.Contains(fullpath))
+                        continue;
+
+                    // KBR TODO folder to replace
 
                     if ((findData.dwFileAttributes & FileAttributes.Directory) != 0)
                     {
@@ -134,9 +139,6 @@ namespace BlueMirrorIndexer
 
         internal void ProcessFolder(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
-            if (_excludedFolders.Contains(fullpath.ToLower()))
-                return;
-
             FolderInDatabase newFolder = new FolderInDatabase(owner);
 
             ProcessCommon(newFolder, findData, fullpath);
@@ -167,12 +169,12 @@ namespace BlueMirrorIndexer
 }
 
 /* Original read code for hystorical reference
-        internal void ReadFromFolder(string folder, List<string> excludedFolders, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) {
+        internal void ReadFromFolder(string folder, List<string> excludedItems, ref long runningFileCount, ref long runningFileSize, bool useSize, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace) {
             try {
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(folder);
                 System.IO.DirectoryInfo[] subFolders = di.GetDirectories();
                 foreach (System.IO.DirectoryInfo subFolder in subFolders) {
-                    if (!excludedFolders.Contains(subFolder.FullName.ToLower())) {
+                    if (!excludedItems.Contains(subFolder.FullName.ToLower())) {
                         FolderInDatabase newFolder = new FolderInDatabase(this);
                         newFolder.Name = subFolder.Name;
                         newFolder.Attributes = subFolder.Attributes;
@@ -186,7 +188,7 @@ namespace BlueMirrorIndexer
                             subFolderToReplace = folderToReplace.findFolder(subFolder.Name);
                         else
                             subFolderToReplace = null;
-                        newFolder.ReadFromFolder(subFolder.FullName, excludedFolders, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, subFolderToReplace);
+                        newFolder.ReadFromFolder(subFolder.FullName, excludedItems, ref runningFileCount, ref runningFileSize, useSize, dlgReadingProgress, subFolderToReplace);
                         if (subFolderToReplace != null) {
                             newFolder.Keywords = subFolderToReplace.Keywords;
                             foreach (LogicalFolder logicalFolder in subFolderToReplace.LogicalFolders)
@@ -200,7 +202,7 @@ namespace BlueMirrorIndexer
 
                 System.IO.FileInfo[] filesInFolder = di.GetFiles();
                 foreach (System.IO.FileInfo fileInFolder in filesInFolder) {
-                    if (!excludedFolders.Contains(fileInFolder.FullName.ToLower())) {
+                    if (!excludedItems.Contains(fileInFolder.FullName.ToLower())) {
                         FileInDatabase newFile;
                         FileInDatabase fileToReplace;
                         if (folderToReplace != null)

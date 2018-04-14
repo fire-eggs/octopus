@@ -573,7 +573,8 @@ namespace BlueMirrorIndexer
                 openProgressDialog = new DlgReadingProgress("Reading Volume...", null, useSize);
                 openProgressDialog.StartShowing(new TimeSpan(0, 0, 1));
                 try {
-                    if (!excludedElements.Contains(drive.ToLower())) {
+                    if (!excludedElements.Contains(drive.ToLower())) // TODO KBR doesn't make sense? user chose to read this drive, should not be excluded?
+                    {
                         try {
                             discToScan.ReadFromDrive(drive, excludedElements, openProgressDialog as DlgReadingProgress, discToReplace);
                             openProgressDialog.SetProgress(100, "Adding: " + discToScan.VolumeLabel);
@@ -1445,8 +1446,11 @@ namespace BlueMirrorIndexer
             Cursor = Cursors.WaitCursor;
             try {
                 // TODO KBR write to SQLite
-
+#if SQLITE
                 SQLite.WriteToDb(Database);
+#elif LITEDB
+                LiteDB.WriteToDb(Database);
+#endif
             }
             finally {
                 Cursor = oldCursor;

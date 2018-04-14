@@ -396,7 +396,6 @@ namespace BlueMirrorIndexer
         {
             throw new NotImplementedException();
         }
-
         #endregion
     }
 }

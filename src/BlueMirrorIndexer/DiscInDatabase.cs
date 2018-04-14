@@ -110,6 +110,7 @@ namespace BlueMirrorIndexer
             return Name;
         }
 
+        // TODO KBR move to Win32.cs
         internal uint GetClusterSize(string drive)
         {
             uint sectorsPerCluster;
@@ -119,6 +120,7 @@ namespace BlueMirrorIndexer
             return sectorsPerCluster* bytesPerSector;
         }
 
+        // TODO KBR move to FolderReader.cs
         internal void ReadFromDrive(string drive, List<string> excludedElements, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace)
         {
             var FR = new FolderReader(excludedElements, dlgReadingProgress, discToReplace);
@@ -136,6 +138,7 @@ namespace BlueMirrorIndexer
             ScannedZip = Properties.Settings.Default.BrowseInsideCompressed;
             FromDrive = drive;
 
+            // TODO KBR must calculate first and pass to FolderReader. That code must track running total cluster sizes.
             ClusterSize = GetClusterSize(drive);
 
             if (discToReplace != null) {
