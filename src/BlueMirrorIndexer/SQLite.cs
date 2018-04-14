@@ -224,29 +224,35 @@ namespace BlueMirrorIndexer
             }
         }
 
+        private static SQLiteCommand _writeFileCmd;
+
         private static void WriteFiles(SQLiteConnection conn, int owner, FileInDatabase[] files)
         {
-            string start = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," + 
-                           "Keywords, Desc, Hash) VALUES ('"+owner+"',";
-            using (var cmd = conn.CreateCommand())
+            if (_writeFileCmd == null)
             {
-                foreach (var afile in files)
-                {
-                    cmd.CommandText = start;
-                    cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Extension.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + (int)afile.Attributes + "',";
-                    cmd.CommandText += "'" + afile.Length + "',";
-                    cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime().Ticks + "',";
-                    cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime().Ticks + "',";
-                    cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime().Ticks + "',";
-                    cmd.CommandText += "'" + afile.Keywords.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Description.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + afile.Hash + "'";
-                    cmd.CommandText += ")";
-                    cmd.ExecuteNonQuery();
-                }
+                _writeFileCmd = new SQLiteCommand(conn);
+                string sql = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
+                               "Keywords, Desc, Hash) VALUES (@own,@name,@ext,@fname,@attrib,@len,@ctime, @atime, @wtime, @keyw,@desc,@hash)";
+                _writeFileCmd.CommandText = sql;
+            }
+
+            foreach (var afile in files)
+            {
+                _writeFileCmd.Parameters.Clear();
+
+                _writeFileCmd.Parameters.AddWithValue("@own", owner);
+                _writeFileCmd.Parameters.AddWithValue("@name", afile.Name);
+                _writeFileCmd.Parameters.AddWithValue("@ext", afile.Extension);
+                _writeFileCmd.Parameters.AddWithValue("@fname", afile.FullName);
+                _writeFileCmd.Parameters.AddWithValue("@attrib", (int) afile.Attributes);
+                _writeFileCmd.Parameters.AddWithValue("@len", afile.Length);
+                _writeFileCmd.Parameters.AddWithValue("@ctime", afile.CreationTime.ToUniversalTime().Ticks);
+                _writeFileCmd.Parameters.AddWithValue("@atime", afile.LastAccessTime.ToUniversalTime().Ticks);
+                _writeFileCmd.Parameters.AddWithValue("@wtime", afile.LastWriteTime.ToUniversalTime().Ticks);
+                _writeFileCmd.Parameters.AddWithValue("@keyw", afile.Keywords);
+                _writeFileCmd.Parameters.AddWithValue("@desc", afile.Description);
+                _writeFileCmd.Parameters.AddWithValue("@hash", afile.Hash.ToString());
+                _writeFileCmd.ExecuteNonQuery();
             }
         }
 
