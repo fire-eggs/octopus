@@ -33,6 +33,7 @@ namespace BlueMirrorIndexer
             this.pmTree = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmTreeItemPropertiesPopup = new System.Windows.Forms.ToolStripMenuItem();
             this.cmDeleteTreeItemPopup = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInWindowsExplorerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ilTree = new System.Windows.Forms.ImageList(this.components);
             this.pmList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmItemPropertiesFromList = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,6 +136,7 @@ namespace BlueMirrorIndexer
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.filesSearchCriteriaPanel = new BlueMirrorIndexer.Components.FilesSearchCriteriaPanel();
             this.tpChart = new System.Windows.Forms.TabPage();
+            this.charting = new BlueMirrorIndexer.Components.Charter();
             this.tcBottom = new System.Windows.Forms.TabControl();
             this.tpLogicalFolders = new System.Windows.Forms.TabPage();
             this.scFolders = new System.Windows.Forms.SplitContainer();
@@ -155,7 +157,7 @@ namespace BlueMirrorIndexer
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.charting = new BlueMirrorIndexer.Components.Charter();
+            this.showInWindowsExplorerToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -192,7 +194,8 @@ namespace BlueMirrorIndexer
             this.pmTree.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.pmTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmTreeItemPropertiesPopup,
-            this.cmDeleteTreeItemPopup});
+            this.cmDeleteTreeItemPopup,
+            this.showInWindowsExplorerToolStripMenuItem1});
             this.pmTree.Name = "cmTree";
             resources.ApplyResources(this.pmTree, "pmTree");
             // 
@@ -209,6 +212,12 @@ namespace BlueMirrorIndexer
             resources.ApplyResources(this.cmDeleteTreeItemPopup, "cmDeleteTreeItemPopup");
             this.cmDeleteTreeItemPopup.Name = "cmDeleteTreeItemPopup";
             this.cmDeleteTreeItemPopup.Click += new System.EventHandler(this.cmDeleteTreeItemPopup_Click);
+            // 
+            // showInWindowsExplorerToolStripMenuItem1
+            // 
+            this.showInWindowsExplorerToolStripMenuItem1.Name = "showInWindowsExplorerToolStripMenuItem1";
+            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem1, "showInWindowsExplorerToolStripMenuItem1");
+            this.showInWindowsExplorerToolStripMenuItem1.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem1_Click);
             // 
             // ilTree
             // 
@@ -258,7 +267,8 @@ namespace BlueMirrorIndexer
             this.pmSearchList.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.pmSearchList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmItemPropertiesFromSearch,
-            this.cmFindInDatabase});
+            this.cmFindInDatabase,
+            this.showInWindowsExplorerToolStripMenuItem2});
             this.pmSearchList.Name = "cmsSearchList";
             resources.ApplyResources(this.pmSearchList, "pmSearchList");
             this.pmSearchList.Opening += new System.ComponentModel.CancelEventHandler(this.cmsSearchList_Opening);
@@ -972,6 +982,12 @@ namespace BlueMirrorIndexer
             this.tpChart.Name = "tpChart";
             this.tpChart.UseVisualStyleBackColor = true;
             // 
+            // charting
+            // 
+            resources.ApplyResources(this.charting, "charting");
+            this.charting.MainForm = null;
+            this.charting.Name = "charting";
+            // 
             // tcBottom
             // 
             this.tcBottom.Controls.Add(this.tpLogicalFolders);
@@ -1131,10 +1147,11 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
             // 
-            // charting
+            // showInWindowsExplorerToolStripMenuItem2
             // 
-            resources.ApplyResources(this.charting, "charting");
-            this.charting.Name = "charting";
+            this.showInWindowsExplorerToolStripMenuItem2.Name = "showInWindowsExplorerToolStripMenuItem2";
+            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem2, "showInWindowsExplorerToolStripMenuItem2");
+            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem2_Click);
             // 
             // FrmMain
             // 
@@ -1318,6 +1335,8 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.ToolStripMenuItem findInWindowsExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem;
         private Components.Charter charting;
+        private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem2;
 	}
 }
 

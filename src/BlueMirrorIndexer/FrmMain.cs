@@ -1509,25 +1509,63 @@ namespace BlueMirrorIndexer
 
         // TODO KBR getSelectedFile could hide search/db logic
 
+        // TODO KBR disable menu when more than one item selected
+        // TODO KBR disable menu when item selected is on a dismounted drive
         private void cmExplorer_Click(object sender, EventArgs e)
         {
             // Invoke windows explorer on the item.
             // N.B. assumes menu is disabled when more than one item selected
-            FileInDatabase fid;
+            ItemInDatabase fid;
             if (tcMain.SelectedTab == tpSearch)
-                fid = getSearchSelectedItem() as FileInDatabase;
+                fid = getSearchSelectedItem();
             else
                 fid = getSelectedFile();
 
             if (fid == null)
+            {
+                showInWindowsExplorerToolStripMenuItem1_Click(null, null);
                 return;
-            var p = fid.FullName;
+            }
 
-            Process.Start("explorer.exe", "/select,\"" + p + "\"");
+            // TODO KBR if item is a disc, fullname is empty. it should be set to name.
+            var p = string.IsNullOrEmpty(fid.FullName) ? fid.Name : fid.FullName;
+            InvokeExplorer(p);
+        }
+
+        private bool DriveMounted(string which)
+        {
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            foreach (var driveInfo in allDrives)
+            {
+                if (driveInfo.Name == which)
+                    return driveInfo.IsReady;
+            }
+            return false;
+        }
+
+        private void InvokeExplorer(string path)
+        {
+            string drive = Path.GetPathRoot(path).ToUpper();
+            if (DriveMounted(drive))
+                Process.Start("explorer.exe", string.Format("/select,\"{0}\"", path));
         }
 
         private void showInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            cmExplorer_Click(sender, e);
+        }
+
+        private void showInWindowsExplorerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // tree volume/folder
+            ItemInDatabase iid = getSelectedTreeItem();
+            if (iid != null)
+                InvokeExplorer(string.IsNullOrEmpty(iid.FullName) ? iid.Name : iid.FullName);
+        }
+
+        private void showInWindowsExplorerToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            // search menu
             cmExplorer_Click(sender, e);
         }
     }
