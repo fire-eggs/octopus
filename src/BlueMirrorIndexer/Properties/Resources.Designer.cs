@@ -353,6 +353,22 @@ namespace BlueMirrorIndexer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to V3.0.0.1-Alpha
+        ///
+        ///* Save database using SQLite
+        ///* Add &quot;Show in Windows Explorer&quot;
+        ///* Use MD5 hash instead of CRC32
+        ///* Remove &quot;Import from V1&quot;
+        ///* Remove File Description/Version (applied only to .EXE/.DLL files)
+        ///.
+        /// </summary>
+        internal static string History {
+            get {
+                return ResourceManager.GetString("History", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue Mirror CD/DVD Indexer|*.bmin.
         /// </summary>
         internal static string IndexerFilesFilter {
@@ -398,18 +414,18 @@ namespace BlueMirrorIndexer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BlueMirror.Octopus (CD/DVD Indexer)
-        ///Copyright (c) 2006 - 2016 Blue Mirror Software
+        ///   Looks up a localized string similar to MIT License
         ///
-        ///Microsoft Reciprocal License (Ms-RL)
+        ///Copyright (c) 2018 github.com/fire-eggs
         ///
-        ///This license governs use of the accompanying software. If you use the software, you accept this license. If you do not accept the license, do not use the software.
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy
+        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
+        ///in the Software without restriction, including without limitation the rights
+        ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        ///copies of the Software, and to permit persons to whom the Software is
+        ///furnished to do so, subject to the following conditions:
         ///
-        ///1. Definitions
-        ///
-        ///The terms &quot;reproduce,&quot; &quot;reproduction,&quot; &quot;derivative works,&quot; and &quot;distribution&quot; have the same meaning here as under U.S. copyright law.
-        ///
-        ///A &quot;contribution&quot; is the original software, or any additions or  [rest of string was truncated]&quot;;.
+        ///The above cop [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string License {
             get {

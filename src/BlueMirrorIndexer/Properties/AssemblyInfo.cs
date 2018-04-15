@@ -1,17 +1,16 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Octopus.Covalition")]
-[assembly: AssemblyDescription("DVD/CD Indexer")]
+[assembly: AssemblyTitle("Octopus")]
+[assembly: AssemblyDescription("Media Indexer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Covalition")]
-[assembly: AssemblyProduct("Octopus.Covalition")]
-[assembly: AssemblyCopyright("Copyright © 2006 - 2016 Covalition")]
+[assembly: AssemblyCompany("github.com/fire-eggs")]
+[assembly: AssemblyProduct("Octopus")]
+[assembly: AssemblyCopyright("Copyright © 2018 github.com/fire-eggs")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,6 +29,6 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.0.1.4")]
-[assembly: AssemblyFileVersion("2.0.1.4")]
+[assembly: AssemblyVersion("3.0.0.1")]
+[assembly: AssemblyFileVersion("3.0.0.1-Alpha")]
 [assembly: NeutralResourcesLanguageAttribute("")]

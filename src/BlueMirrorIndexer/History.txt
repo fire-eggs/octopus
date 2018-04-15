@@ -1,0 +1,7 @@
+﻿V3.0.0.1-Alpha
+
+* Save database using SQLite
+* Add "Show in Windows Explorer"
+* Use MD5 hash instead of CRC32
+* Remove "Import from V1"
+* Remove File Description/Version (applied only to .EXE/.DLL files)

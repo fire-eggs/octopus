@@ -265,7 +265,7 @@
     <value>108</value>
   </data>
   <data name="llSourceForge.Text" xml:space="preserve">
-    <value>https://github.com/BlueMirrorSoftware/Octopus</value>
+    <value>https://github.com/fire-eggs/octopus</value>
   </data>
   <data name="&gt;&gt;llSourceForge.Name" xml:space="preserve">
     <value>llSourceForge</value>
@@ -361,7 +361,7 @@
     <value>106</value>
   </data>
   <data name="linkLabel1.Text" xml:space="preserve">
-    <value>https://github.com/BlueMirrorSoftware/Octopus/issues</value>
+    <value>https://github.com/fire-eggs/octopus/issues</value>
   </data>
   <data name="&gt;&gt;linkLabel1.Name" xml:space="preserve">
     <value>linkLabel1</value>
@@ -404,39 +404,6 @@
   </data>
   <data name="&gt;&gt;llCopyright.ZOrder" xml:space="preserve">
     <value>9</value>
-  </data>
-  <data name="llCodePlex.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="llCodePlex.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="llCodePlex.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 160</value>
-  </data>
-  <data name="llCodePlex.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 3, 0, 0</value>
-  </data>
-  <data name="llCodePlex.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 20</value>
-  </data>
-  <data name="llCodePlex.TabIndex" type="System.Int32, mscorlib">
-    <value>112</value>
-  </data>
-  <data name="llCodePlex.Text" xml:space="preserve">
-    <value>http://bluemirrorsoftware.github.io/Octopus/</value>
-  </data>
-  <data name="&gt;&gt;llCodePlex.Name" xml:space="preserve">
-    <value>llCodePlex</value>
-  </data>
-  <data name="&gt;&gt;llCodePlex.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;llCodePlex.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;llCodePlex.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
     <value>tabPage1</value>

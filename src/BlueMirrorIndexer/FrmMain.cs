@@ -174,7 +174,7 @@ namespace BlueMirrorIndexer
 
         private void cmHomePage_Click(object sender, EventArgs e)
         {
-            Process.Start("http://covalition.github.io/octopus/");
+            Process.Start("http://github.com/fire-eggs/octopus/releases");
         }
 
         private void cmFeatureRequests_Click(object sender, EventArgs e) {

@@ -14,18 +14,19 @@ namespace BlueMirrorIndexer
             llCopyright.Text = assemblyCopyright;
             llVersion.Text = String.Format(llVersion.Text, assemblyVersion);
             llTitle.Text = ProductName;
+            tbHistory.Text = Properties.Resources.History;
             tbLicense.Text = Properties.Resources.License;
         }
 
         private void linkLabel1_Click(object sender, EventArgs e) {
             Process navigate = new Process();
-            navigate.StartInfo.FileName = "https://github.com/BlueMirrorSoftware/Octopus/issues";
+            navigate.StartInfo.FileName = "https://github.com/fire-eggs/octopus/issues";
             navigate.Start();
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process navigate = new Process();
-            navigate.StartInfo.FileName = "https://github.com/BlueMirrorSoftware/Octopus";
+            navigate.StartInfo.FileName = "https://github.com/fire-eggs/octopus";
             navigate.Start();
         }
 
@@ -43,22 +44,6 @@ namespace BlueMirrorIndexer
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
-
-        //private string assemblyTitle {
-        //    get {
-        //        object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-        //        if (attributes.Length == 0)
-        //            return "";
-        //        return ((AssemblyTitleAttribute)attributes[0]).Title;
-        //    }
-        //}
-
-        private void llCodePlex_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process navigate = new Process();
-            navigate.StartInfo.FileName = "http://bluemirrorsoftware.github.io/Octopus/";
-            navigate.Start();
-        }
-
     }
 }
 

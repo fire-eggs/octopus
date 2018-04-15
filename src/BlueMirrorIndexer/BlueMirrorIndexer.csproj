@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BlueMirrorIndexer</RootNamespace>
-    <AssemblyName>Octopus.Covalition</AssemblyName>
+    <AssemblyName>Octopus</AssemblyName>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <ManifestCertificateThumbprint>6AACE257760ADF7D657585A88D6211B904358622</ManifestCertificateThumbprint>
     <GenerateManifests>true</GenerateManifests>
@@ -69,7 +69,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -358,6 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\FindHS.png" />
+    <Content Include="History.txt" />
     <Content Include="Resources\MainIcon.ico" />
   </ItemGroup>
   <ItemGroup>

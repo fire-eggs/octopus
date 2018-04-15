@@ -35,7 +35,6 @@ namespace BlueMirrorIndexer
             this.label2 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.llCopyright = new System.Windows.Forms.Label();
-            this.llCodePlex = new System.Windows.Forms.LinkLabel();
             this.tcAbout = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -103,13 +102,6 @@ namespace BlueMirrorIndexer
             resources.ApplyResources(this.llCopyright, "llCopyright");
             this.llCopyright.Name = "llCopyright";
             // 
-            // llCodePlex
-            // 
-            resources.ApplyResources(this.llCodePlex, "llCodePlex");
-            this.llCodePlex.Name = "llCodePlex";
-            this.llCodePlex.TabStop = true;
-            this.llCodePlex.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llCodePlex_LinkClicked);
-            // 
             // tcAbout
             // 
             this.tcAbout.Controls.Add(this.tabPage1);
@@ -157,7 +149,6 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.tcAbout);
-            this.Controls.Add(this.llCodePlex);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.llVersion);
             this.Controls.Add(this.label3);
@@ -176,7 +167,6 @@ namespace BlueMirrorIndexer
             this.Controls.SetChildIndex(this.label3, 0);
             this.Controls.SetChildIndex(this.llVersion, 0);
             this.Controls.SetChildIndex(this.panel1, 0);
-            this.Controls.SetChildIndex(this.llCodePlex, 0);
             this.Controls.SetChildIndex(this.tcAbout, 0);
             this.tcAbout.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -201,7 +191,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label llCopyright;
-        private System.Windows.Forms.LinkLabel llCodePlex;
         private System.Windows.Forms.TabControl tcAbout;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tpChangeLog;
