@@ -80,6 +80,8 @@ namespace BlueMirrorIndexer
         public static void WriteToDb(VolumeDatabase mem)
         {
             // TODO KBR allow user to name file, location
+            SQLite sdb = new SQLite();
+            sdb.logit("SQLite-DBWrite", true);
 
             string dbName = "Indexer.db";
             string dbFile = AppDomain.CurrentDomain.BaseDirectory + dbName;
@@ -98,6 +100,7 @@ namespace BlueMirrorIndexer
                 WriteData(conn, mem);
                 CreateIndices(conn);
             }
+            sdb.logit("SQLite-DBWrite");
         }
 
         private static void CreateTables(SQLiteConnection conn)
@@ -192,6 +195,8 @@ namespace BlueMirrorIndexer
             }
         }
 
+        private const int COMPRESSED_FLAG = 0x1000000;
+
         private static void WriteFolders(SQLiteConnection conn, int owner, IFolder[] folders)
         {
             string start = "insert into Folds (Owner, Name, Ext, FullName, Attributes, CreateT, AccessT, WriteT) VALUES ('" + owner + "',";
@@ -201,7 +206,7 @@ namespace BlueMirrorIndexer
 
                 foreach (var afold in folders)
                 {
-                    FolderInDatabase afile = afold as FolderInDatabase;
+                    var afile = afold as ItemInDatabase; // FolderInDatabase;
                     if (afile == null)
                         continue;
 
@@ -209,7 +214,13 @@ namespace BlueMirrorIndexer
                     cmd.CommandText += "'" + afile.Name.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + afile.Extension.Replace("'", "''") + "',";
                     cmd.CommandText += "'" + afile.FullName.Replace("'", "''") + "',";
-                    cmd.CommandText += "'" + (int)afile.Attributes + "',";
+
+                    // A Q&D hack: mark a 'compressed file' folder with a special Attribute value. Must be removed on read!!!
+                    int attribs = (int) afile.Attributes;
+                    if (afold is CompressedFile)
+                        attribs |= COMPRESSED_FLAG;
+
+                    cmd.CommandText += "'" + attribs + "',";
                     cmd.CommandText += "'" + afile.CreationTime.ToUniversalTime().Ticks + "',";
                     cmd.CommandText += "'" + afile.LastAccessTime.ToUniversalTime().Ticks + "',";
                     cmd.CommandText += "'" + afile.LastWriteTime.ToUniversalTime().Ticks + "')";
@@ -375,7 +386,7 @@ namespace BlueMirrorIndexer
         private static Hashtable _foldHash;
         private static SQLiteCommand _readFoldCmd;
 
-        private static void ReadFolders(SQLiteConnection conn, FolderInDatabase did)
+        private static void ReadFolders(SQLiteConnection conn, IFolder did)
         {
             if (_readFoldCmd == null)
             {
@@ -384,7 +395,7 @@ namespace BlueMirrorIndexer
             }
 
             _readFoldCmd.Parameters.Clear();
-            _readFoldCmd.Parameters.AddWithValue("@own", did.DbId);
+            _readFoldCmd.Parameters.AddWithValue("@own", (did as ItemInDatabase).DbId);
 
             using (SQLiteDataReader rdr = _readFoldCmd.ExecuteReader())
             {
@@ -401,26 +412,32 @@ namespace BlueMirrorIndexer
                     [AccessT] INTEGER,
                     [WriteT] INTEGER
                     */
+                    ItemInDatabase afile;
+                    int attrib = rdr.GetInt32(5);
                     long dbid = rdr.GetInt64(0);
-                    FolderInDatabase afile = new FolderInDatabase((int) dbid, did);
+
+                    // Check the magic flag for a compressed file, remove it below
+                    if ((attrib & COMPRESSED_FLAG) != 0)
+                        afile = new CompressedFile((int) dbid, did);
+                    else
+                        afile = new FolderInDatabase((int) dbid, did);
                     afile.Name = rdr.GetString(2);
                     afile.Extension = rdr.GetString(3);
                     afile.FullName = rdr.GetString(4);
-                    afile.Attributes = (FileAttributes)rdr.GetInt64(5);
+                    afile.Attributes = (FileAttributes) (attrib & ~COMPRESSED_FLAG);
 
                     afile.CreationTime = new DateTime(rdr.GetInt64(6));
                     afile.LastAccessTime = new DateTime(rdr.GetInt64(7));
                     afile.LastWriteTime = new DateTime(rdr.GetInt64(8));
 
-                    ((IFolder) did).AddToFolders(afile);
+                    ((IFolder) did).AddToFolders(afile as IFolder);
                     _foldHash.Add((int)dbid, afile);
                 }
             }
 
             foreach (var afold in ((IFolder) did).Folders)
             {
-                var fold = afold as FolderInDatabase;
-                ReadFolders(conn, fold);
+                ReadFolders(conn, afold);
             }
         }
 
@@ -440,7 +457,7 @@ namespace BlueMirrorIndexer
                         int ownerId;
                         var afile = FileFromRow(rdr, out ownerId);
 
-                        FolderInDatabase fid = _foldHash[ownerId] as FolderInDatabase;
+                        IFolder fid = _foldHash[ownerId] as IFolder;
                         fid.AddToFiles(afile);
                     }
                 }
@@ -478,7 +495,14 @@ namespace BlueMirrorIndexer
             afile.LastWriteTime = new DateTime(rdr.GetInt64(9));
 
             afile.Keywords = rdr.GetString(10);
-            afile.Description = rdr.GetString(11);
+            object tmp2 = rdr[11];
+            if (tmp2 is DBNull)
+            {
+                // TODO KBR file inside a compressed file
+            }
+            else
+                afile.Description = (string) tmp2; //rdr.GetString(11);
+
             string tmp = rdr.GetString(12); // SQLite doesn't support unsigned
             afile.Hash = UInt64.Parse(tmp);
             return afile;
@@ -529,6 +553,21 @@ namespace BlueMirrorIndexer
             parent.AddFolder(child);
         }
         #endregion
+
+        private int tick;
+        private void logit(string msg, bool first = false)
+        {
+            int delta = 0;
+            if (first)
+                tick = Environment.TickCount;
+            else
+                delta = Environment.TickCount - tick;
+            using (var f = File.Open("octopus.log", System.IO.FileMode.Append))
+            using (var sw = new StreamWriter(f))
+            {
+                sw.WriteLine("{0}|{1}", msg, delta);
+            }
+        }
 
     }
 

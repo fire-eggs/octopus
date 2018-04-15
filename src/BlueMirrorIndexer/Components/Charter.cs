@@ -74,7 +74,7 @@ namespace BlueMirrorIndexer.Components
                 int w = (int)(maxW * ((double)sort[dex].Item2 / (double)first));
                 g.DrawRectangle(dPen, spacing, y, w, rectH);
 
-                var fold = sort[dex].Item1 as FolderInDatabase;
+                var fold = sort[dex].Item1 as ItemInDatabase; // TODO KBR CompressedFile problem?
                 string disp = "";
                 if (chartType == 0)
                     disp = string.Format("{0}{1} - {2}", fold.GetVolumeUserName(), fold.Name, FormatAsMb(sort[dex].Item2));

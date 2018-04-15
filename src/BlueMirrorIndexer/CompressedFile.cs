@@ -16,8 +16,13 @@ namespace BlueMirrorIndexer
     [Serializable]
     public class CompressedFile : FileInDatabase, IFolder
     {
+        public CompressedFile(int dbId, IFolder parent) 
+            : this(parent as FolderInDatabase)
+        {
+            DbId = dbId; // TODO KBR for SQLite load
+        }
 
-        FolderImpl folderImpl;
+        readonly FolderImpl folderImpl;
 
         public CompressedFile(FolderInDatabase parent)
 			: base(parent) {
