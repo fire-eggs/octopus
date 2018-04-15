@@ -1,5 +1,7 @@
 ﻿/* 
- * Copyright © 2018 by Kevin Routley.
+ * MIT License. See license.txt for details.
+ * 
+ * Copyright © 2018 by github.com/fire-eggs.
  * 
  */
 using System;

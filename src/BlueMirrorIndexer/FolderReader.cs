@@ -1,5 +1,7 @@
 ﻿/* 
- * Copyright © 2018 by Kevin Routley.
+ * MIT License. See license.txt for details.
+ * 
+ * Copyright © 2018 by github.com/fire-eggs.
  * 
  */
 
@@ -11,7 +13,7 @@ using Igorary.Forms;
 
 // ReSharper disable InconsistentNaming
 
-// TODO KBR folder to replace?
+// TODO KBR folder to replace
 // TODO KBR why is 'ComputeCRC' in default settings rather than some per-volume tracking?
 // TODO KBR CRC was used for compatibility with ZIP files!
 
@@ -154,9 +156,6 @@ namespace BlueMirrorIndexer
                     // File might be locked
                 }
             }
-
-            // TODO KBR compressed files
-
 
             ((IFolder)owner).AddToFiles(newFile);
             return newFile.Length;

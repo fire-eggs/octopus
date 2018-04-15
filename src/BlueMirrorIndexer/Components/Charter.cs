@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* 
+ * MIT License. See license.txt for details.
+ * 
+ * Copyright © 2018 by github.com/fire-eggs.
+ * 
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
