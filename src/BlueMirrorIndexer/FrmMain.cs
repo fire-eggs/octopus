@@ -1446,11 +1446,7 @@ namespace BlueMirrorIndexer
             Cursor = Cursors.WaitCursor;
             try {
                 // TODO KBR write to SQLite
-#if SQLITE
                 SQLite.WriteToDb(Database);
-#elif LITEDB
-                LiteDB.WriteToDb(Database);
-#endif
             }
             finally {
                 Cursor = oldCursor;
