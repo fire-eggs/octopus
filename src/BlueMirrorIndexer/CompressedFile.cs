@@ -8,7 +8,6 @@ using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using Igorary.Forms;
-using Igorary.Utils.Extensions;
 using Igorary.Utils.Utils.Extensions;
 using Schematrix;
 
@@ -33,8 +32,7 @@ namespace BlueMirrorIndexer
             string ext = Path.GetExtension(fileName.ToLower());
             if ((ext == EXT_ZIP) || (ext == EXT_JAR) || (ext == ".tar") || (ext == ".gzip") || (ext == ".gz") || (ext == ".bzip2") || (ext == ".bz2") || (ext == EXT_RAR))
                 return true;
-            else
-                return false;
+            return false;
         }
 
         internal void BrowseFiles(string fullName, CompressedFile fileToReplace) {
@@ -305,12 +303,11 @@ namespace BlueMirrorIndexer
             else
                 lvi.SubItems.Add(string.Empty);
             lvi.SubItems.Add(CreationTime.ToString("g"));
+            lvi.SubItems.Add(LastWriteTime.ToString("g"));
             lvi.SubItems.Add(Attributes.ToString());
 
             lvi.SubItems.Add(Keywords);
             lvi.SubItems.Add(Extension);
-            lvi.SubItems.Add(FileDescription);
-            lvi.SubItems.Add(FileVersion);
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());
@@ -381,7 +378,7 @@ namespace BlueMirrorIndexer
 
         public void UpdateStats()
         {
-            throw new NotImplementedException();
+            // TODO KBR would this be double-counting the compressed files + contents of same?
         }
 
         public ulong TotalSizeUsed { get; set; }
@@ -394,7 +391,12 @@ namespace BlueMirrorIndexer
 
         public DiscInDatabase GetDisc()
         {
-            throw new NotImplementedException();
+            ItemInDatabase dad = Parent as ItemInDatabase;
+            while (dad != null)
+            {
+                dad = dad.Parent as ItemInDatabase;
+            }
+            return null;
         }
         #endregion
     }

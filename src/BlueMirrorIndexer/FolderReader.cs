@@ -101,10 +101,35 @@ namespace BlueMirrorIndexer
         // Arbitrary threshold: don't calculate hash for files larger than 250M
         private const uint M250 = 250*1024*1024;
 
+        internal FileInDatabase ProcessCompressed(FolderInDatabase owner, string fullpath)
+        {
+            FileInDatabase newFile;
+            if (Properties.Settings.Default.BrowseInsideCompressed && (CompressedFile.IsCompressedFile(fullpath)))
+            {
+                newFile = new CompressedFile(owner);
+                CompressedFile cf = newFile as CompressedFile;
+                try
+                {
+                    cf.BrowseFiles(fullpath, null); //fileToReplace as CompressedFile);
+                }
+                catch (Exception ex)
+                {
+                    // TODO KBR how to replicate this?
+                    //cf.Comments = ex.Message;
+                }
+                ((IFolder)owner).AddToFolders(cf);
+            }
+            else
+            {
+                newFile = new FileInDatabase(owner);
+            }
+            return newFile;
+        }
+
         internal long ProcessFile(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
-            var newFile = new FileInDatabase(owner);
-
+            //var newFile = new FileInDatabase(owner);
+            var newFile = ProcessCompressed(owner, fullpath);
             ProcessCommon(newFile, findData, fullpath);
 
             newFile.IsReadOnly = (findData.dwFileAttributes & FileAttributes.ReadOnly) != 0;

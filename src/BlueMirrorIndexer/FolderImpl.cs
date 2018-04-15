@@ -135,8 +135,14 @@ namespace BlueMirrorIndexer
 
         public void CopyToNode(TreeNode treeNode)
         {
-            FolderInDatabase fid0 = owner as FolderInDatabase;
-            treeNode.Text = string.Format("{0} ({1})", fid0.Name, FormatNice(fid0.TotalSizeUsed));
+            string name = owner.Name;
+            ulong size;
+            if (owner is CompressedFile)
+                size = (ulong) owner.Length;
+            else
+                size = (owner as FolderInDatabase).TotalSizeUsed;
+
+            treeNode.Text = string.Format("{0} ({1})", name, FormatNice(size));
             treeNode.Tag = owner;
             treeNode.ImageIndex = imageIndex;
             treeNode.SelectedImageIndex = imageIndex;
