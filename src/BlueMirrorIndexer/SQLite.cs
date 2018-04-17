@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,6 @@ using System.Linq;
 
 // TODO KBR investigate automapper?
 // TODO KBR optional disc fields
-// TODO KBR logical folders
 
 namespace BlueMirrorIndexer
 {
@@ -74,7 +74,19 @@ namespace BlueMirrorIndexer
 [Type] INTEGER
 )";
 
-        private const string FileDex = @"CREATE INDEX owner_dex1 ON Files(Owner)";
+        // [LFold]: id of a logical folder in the [LFold] table
+        // [ItemId]: id of an ItemInDatabase object. Will be an id from the [Discs]/[Folds]/[Files] table.
+        // [ItemType]: defines *which* table the [ItemId] is from.
+        private const string LFoldMapCreate = @"CREATE TABLE IF NOT EXISTS [LFoldMap] (
+[ID] INTEGER NOT NULL PRIMARY KEY,
+[LFold] INTEGER NOT NULL,
+[ItemId] INTEGER NOT NULL,
+[ItemType] INTEGER NOT NULL
+)";
+
+        // No longer necessary when reading all files at once
+        //private const string FileDex = @"CREATE INDEX owner_dex1 ON Files(Owner)";
+
         private const string FoldDex = @"CREATE INDEX owner_dex2 ON Folds(Owner)";
 
         public static void WriteToDb(VolumeDatabase mem)
@@ -124,6 +136,8 @@ namespace BlueMirrorIndexer
                 cmd.ExecuteNonQuery();
 
                 // Logical Folder <> item mappings
+                cmd.CommandText = LFoldMapCreate;
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -131,8 +145,9 @@ namespace BlueMirrorIndexer
         {
             using (var cmd = new SQLiteCommand(conn))
             {
-                cmd.CommandText = FileDex;
-                cmd.ExecuteNonQuery();
+                // No longer necessary when reading all files at once.
+                //cmd.CommandText = FileDex;
+                //cmd.ExecuteNonQuery();
                 cmd.CommandText = FoldDex;
                 cmd.ExecuteNonQuery();
             }
@@ -155,6 +170,7 @@ namespace BlueMirrorIndexer
                 foreach (var lFold in mem.GetLogicalFolders())
                 {
                     WriteLFold(conn, lFold);
+                    WriteLFoldMap(conn, lFold);
                 }
                 tx.Commit();
             }
@@ -190,6 +206,8 @@ namespace BlueMirrorIndexer
                 Int64 lastRowId64 = (Int64) cmd.ExecuteScalar();
                 int lastRowId = (int) lastRowId64;
 
+                disc.DbId = lastRowId; // Needed for logical folder map
+
                 WriteFiles(conn, -lastRowId, ((IFolder) disc).Files);
                 WriteFolders(conn, -lastRowId, ((IFolder)disc).Folders);
             }
@@ -206,7 +224,7 @@ namespace BlueMirrorIndexer
 
                 foreach (var afold in folders)
                 {
-                    var afile = afold as ItemInDatabase; // FolderInDatabase;
+                    var afile = afold as ItemInDatabase;
                     if (afile == null)
                         continue;
 
@@ -230,6 +248,8 @@ namespace BlueMirrorIndexer
                     Int64 lastRowId64 = (Int64)cmd.ExecuteScalar();
                     int lastRowId = (int)lastRowId64;
 
+                    afile.DbId = lastRowId; // logical folder mapping will need this
+
                     WriteFiles(conn, lastRowId, afold.Files);
                     WriteFolders(conn, lastRowId, afold.Folders);
                 }
@@ -244,11 +264,12 @@ namespace BlueMirrorIndexer
             if (_writeFileCmd == null)
             {
                 _writeFileCmd = new SQLiteCommand(conn);
-                string sql = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
-                               "Keywords, Desc, Hash) VALUES (@own,@name,@ext,@fname,@attrib,@len,@ctime, @atime, @wtime, @keyw,@desc,@hash)";
+                const string sql = "insert into Files (Owner, Name, Ext, FullName, Attributes, Length, CreateT, AccessT, WriteT," +
+                                   "Keywords, Desc, Hash) VALUES (@own,@name,@ext,@fname,@attrib,@len,@ctime, @atime, @wtime, @keyw,@desc,@hash)";
                 _writeFileCmd.CommandText = sql;
             }
 
+            using (var cmd = new SQLiteCommand(conn))
             foreach (var afile in files)
             {
                 _writeFileCmd.Parameters.Clear();
@@ -266,6 +287,12 @@ namespace BlueMirrorIndexer
                 _writeFileCmd.Parameters.AddWithValue("@desc", afile.Description);
                 _writeFileCmd.Parameters.AddWithValue("@hash", afile.Hash.ToString());
                 _writeFileCmd.ExecuteNonQuery();
+
+                cmd.CommandText = "select last_insert_rowid()";
+                Int64 lastRowId64 = (Int64)cmd.ExecuteScalar();
+                int lastRowId = (int)lastRowId64;
+
+                afile.DbId = lastRowId; // logical folder mapping will need this
             }
         }
 
@@ -293,10 +320,56 @@ namespace BlueMirrorIndexer
                 Int64 lastRowId64 = (Int64)cmd.ExecuteScalar();
                 int lastRowId = (int)lastRowId64;
 
+                lfold.DbId = lastRowId; // Will need this for logical folder map
+
                 foreach (var subFold in lfold.GetSubFolders())
                 {
                     WriteLFold(conn, subFold, lastRowId);
                 }
+            }
+        }
+
+        private static SQLiteCommand _writeLFoldMapCmd;
+
+        private static void WriteLFoldMap(SQLiteConnection conn, LogicalFolder lfold)
+        {
+            // Write the mapping between logical folders and items in them.
+            // This code depends on each object's DbId having been updated 
+            // earlier in the write process.
+
+//[ID] INTEGER NOT NULL PRIMARY KEY,
+//[LFold] INTEGER NOT NULL,
+//[ItemId] INTEGER NOT NULL,
+//[ItemType] INTEGER NOT NULL
+
+            if (_writeLFoldMapCmd == null)
+            {
+                _writeLFoldMapCmd = new SQLiteCommand(conn);
+                const string sql = "insert into [LFoldMap] (LFold,ItemId,ItemType) VALUES (@lfold,@item,@type)";
+                _writeLFoldMapCmd.CommandText = sql;
+            }
+
+            foreach (var iid in lfold.Items)
+            {
+                _writeFileCmd.Parameters.Clear();
+
+                _writeLFoldMapCmd.Parameters.Add("@lfold", DbType.Int32).Value = lfold.DbId;
+                _writeLFoldMapCmd.Parameters.Add("@item", DbType.Int32).Value = iid.DbId;
+                int itemType = 1; // assume folder (regular)
+                if (iid is CompressedFile)
+                    itemType = 1;
+                else if (iid is FileInDatabase)
+                    itemType = 2;
+                else if (iid is DiscInDatabase)
+                    itemType = 3;
+                _writeLFoldMapCmd.Parameters.Add("@type", DbType.Int16).Value = itemType;
+
+                _writeLFoldMapCmd.ExecuteNonQuery();
+            }
+
+            foreach (var subf in lfold.GetSubFolders())
+            {
+                WriteLFoldMap(conn, subf);
             }
         }
 
