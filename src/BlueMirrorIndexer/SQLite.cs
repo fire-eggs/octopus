@@ -410,6 +410,8 @@ namespace BlueMirrorIndexer
         {
             // Track all folders by db-id for fast lookup
             _foldHash = new Hashtable();
+            _lfoldHash = new Hashtable();
+            _fileHash = new Hashtable();
 
             VolumeDatabase mem = new VolumeDatabase();
 
@@ -452,7 +454,9 @@ namespace BlueMirrorIndexer
             ReadAllFiles(conn, mem);
 
             ReadLogicalFolders(conn, mem);
+            ReadLogicalFolderItems(conn, mem);
 
+            _lfoldHash = _fileHash = _foldHash = null; // GC
             return mem;
         }
 
@@ -489,7 +493,7 @@ namespace BlueMirrorIndexer
                     int attrib = rdr.GetInt32(5);
                     long dbid = rdr.GetInt64(0);
 
-                    // Check the magic flag for a compressed file, remove it below
+                    // Check the magic flag for a compressed file; remove the flag below
                     if ((attrib & COMPRESSED_FLAG) != 0)
                         afile = new CompressedFile((int) dbid, did);
                     else
@@ -503,16 +507,18 @@ namespace BlueMirrorIndexer
                     afile.LastAccessTime = new DateTime(rdr.GetInt64(7));
                     afile.LastWriteTime = new DateTime(rdr.GetInt64(8));
 
-                    ((IFolder) did).AddToFolders(afile as IFolder);
+                    did.AddToFolders(afile as IFolder);
                     _foldHash.Add((int)dbid, afile);
                 }
             }
 
-            foreach (var afold in ((IFolder) did).Folders)
+            foreach (var afold in did.Folders)
             {
                 ReadFolders(conn, afold);
             }
         }
+
+        private static Hashtable _fileHash;
 
         private static void ReadAllFiles(SQLiteConnection conn, VolumeDatabase mem)
         {
@@ -532,6 +538,7 @@ namespace BlueMirrorIndexer
 
                         IFolder fid = _foldHash[ownerId] as IFolder;
                         fid.AddToFiles(afile);
+                        _fileHash.Add(afile.DbId, afile);
                     }
                 }
             }
@@ -581,6 +588,8 @@ namespace BlueMirrorIndexer
             return afile;
         }
 
+        private static Hashtable _lfoldHash;
+
         private static void ReadLogicalFolders(SQLiteConnection conn, VolumeDatabase mem)
         {
             var lFoldList = mem.GetLogicalFolders();
@@ -612,11 +621,56 @@ namespace BlueMirrorIndexer
                             HookupParent(lfold, rdr.GetInt32(1), lFoldList);
                         else
                             lFoldList.Add(lfold);
+                        _lfoldHash.Add(lfold.DbId, lfold);
                     }
                 }
             }
         }
 
+        private static void ReadLogicalFolderItems(SQLiteConnection conn, VolumeDatabase mem)
+        {
+            string txt = "SELECT * FROM [LFoldMap]";
+            using (SQLiteCommand cmd = new SQLiteCommand(txt, conn))
+            {
+                using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        int lFoldId = rdr.GetInt32(1);
+                        int iidId = rdr.GetInt32(2);
+                        int typeId = rdr.GetInt16(3);
+
+                        LogicalFolder lfold = _lfoldHash[lFoldId] as LogicalFolder;
+                        ItemInDatabase iid = null;
+                        switch (typeId)
+                        {
+                            case 1:
+                                // folder
+                                iid = _foldHash[iidId] as ItemInDatabase;
+                                break;
+                            case 2:
+                                // file
+                                iid = _fileHash[iidId] as ItemInDatabase;
+                                break;
+                            case 3:
+                                // disc. brute it.
+                                foreach (var discInDatabase in mem.GetDiscs())
+                                {
+                                    if (-discInDatabase.DbId == iidId)
+                                    {
+                                        iid = discInDatabase as ItemInDatabase;
+                                        break;
+                                    }
+                                }
+                                break;
+                        }
+
+                        lfold.AddItem(iid); // TODO make sure the two-way mapping is set!
+                    }
+                }
+            }
+            
+        }
         private static void HookupParent(LogicalFolder child, int ownerId, List<LogicalFolder> foldlist)
         {
             // Connect a sub-folder to its parent
