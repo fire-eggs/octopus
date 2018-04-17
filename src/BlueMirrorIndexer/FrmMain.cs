@@ -1542,8 +1542,12 @@ namespace BlueMirrorIndexer
         private void InvokeExplorer(string path)
         {
             string drive = Path.GetPathRoot(path).ToUpper();
-            if (DriveMounted(drive))
+            if (DriveMounted(drive) && File.Exists(path))
                 Process.Start("explorer.exe", string.Format("/select,\"{0}\"", path));
+            else
+            {
+                MessageBox.Show(this, "Media not mounted or item no longer exists", "Explorer Failure", MessageBoxButtons.OK);
+            }
         }
 
         private void showInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
