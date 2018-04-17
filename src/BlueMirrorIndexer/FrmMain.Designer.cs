@@ -43,6 +43,7 @@ namespace BlueMirrorIndexer
             this.pmSearchList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmItemPropertiesFromSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.cmFindInDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInWindowsExplorerToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -150,14 +151,12 @@ namespace BlueMirrorIndexer
             this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader20 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader27 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader28 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.showInWindowsExplorerToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pmTree.SuspendLayout();
             this.pmList.SuspendLayout();
             this.pmSearchList.SuspendLayout();
@@ -286,6 +285,12 @@ namespace BlueMirrorIndexer
             resources.ApplyResources(this.cmFindInDatabase, "cmFindInDatabase");
             this.cmFindInDatabase.Name = "cmFindInDatabase";
             this.cmFindInDatabase.Click += new System.EventHandler(this.cmFindInDatabase_Click);
+            // 
+            // showInWindowsExplorerToolStripMenuItem2
+            // 
+            this.showInWindowsExplorerToolStripMenuItem2.Name = "showInWindowsExplorerToolStripMenuItem2";
+            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem2, "showInWindowsExplorerToolStripMenuItem2");
+            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem2_Click);
             // 
             // menuMain
             // 
@@ -1076,11 +1081,10 @@ namespace BlueMirrorIndexer
             this.columnHeader18,
             this.columnHeader19,
             this.columnHeader20,
+            this.columnHeader10,
             this.columnHeader21,
             this.columnHeader22,
             this.columnHeader23,
-            this.columnHeader24,
-            this.columnHeader25,
             this.columnHeader26,
             this.columnHeader27,
             this.columnHeader28});
@@ -1119,6 +1123,10 @@ namespace BlueMirrorIndexer
             // 
             resources.ApplyResources(this.columnHeader21, "columnHeader21");
             // 
+            // columnHeader10
+            // 
+            resources.ApplyResources(this.columnHeader10, "columnHeader10");
+            // 
             // columnHeader22
             // 
             resources.ApplyResources(this.columnHeader22, "columnHeader22");
@@ -1126,14 +1134,6 @@ namespace BlueMirrorIndexer
             // columnHeader23
             // 
             resources.ApplyResources(this.columnHeader23, "columnHeader23");
-            // 
-            // columnHeader24
-            // 
-            resources.ApplyResources(this.columnHeader24, "columnHeader24");
-            // 
-            // columnHeader25
-            // 
-            resources.ApplyResources(this.columnHeader25, "columnHeader25");
             // 
             // columnHeader26
             // 
@@ -1146,12 +1146,6 @@ namespace BlueMirrorIndexer
             // columnHeader28
             // 
             resources.ApplyResources(this.columnHeader28, "columnHeader28");
-            // 
-            // showInWindowsExplorerToolStripMenuItem2
-            // 
-            this.showInWindowsExplorerToolStripMenuItem2.Name = "showInWindowsExplorerToolStripMenuItem2";
-            resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem2, "showInWindowsExplorerToolStripMenuItem2");
-            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem2_Click);
             // 
             // FrmMain
             // 
@@ -1258,8 +1252,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.ColumnHeader columnHeader21;
         private System.Windows.Forms.ColumnHeader columnHeader22;
         private System.Windows.Forms.ColumnHeader columnHeader23;
-        private System.Windows.Forms.ColumnHeader columnHeader24;
-        private System.Windows.Forms.ColumnHeader columnHeader25;
         private System.Windows.Forms.ContextMenuStrip pmItems;
         private System.Windows.Forms.ToolStripMenuItem cmRemoveFromFolder;
         private System.Windows.Forms.ToolStripMenuItem cmItemPropertiesFromSearch;
@@ -1337,6 +1329,7 @@ namespace BlueMirrorIndexer
         private Components.Charter charting;
         private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem2;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
 	}
 }
 
