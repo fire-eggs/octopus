@@ -347,6 +347,7 @@ namespace BlueMirrorIndexer
 
         void IFolder.AddToFiles(FileInDatabase file) {
             folderImpl.AddToFiles(file);
+            file.Parent = this;
         }
 
         int IFolder.FileCount {

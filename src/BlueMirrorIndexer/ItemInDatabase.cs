@@ -73,8 +73,12 @@ namespace BlueMirrorIndexer {
 
 	    public DateTime LastWriteTime { get; set; }
 
-	    public virtual string GetVolumeUserName() {
-			return (_parent as ItemInDatabase).GetVolumeUserName();
+	    public virtual string GetVolumeUserName()
+	    {
+	        var iid = _parent as ItemInDatabase;
+	        if (iid == null)
+	            return "";
+			return iid.GetVolumeUserName();
 		}
 
         public virtual uint GetVolumeClusterSize()
