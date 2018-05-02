@@ -161,55 +161,55 @@
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAS
-        CwAAAk1TRnQBSQFMAgEBAgEAAawBAAGsAQABEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAQ
+        CwAAAk1TRnQBSQFMAgEBAgEAAbwBAAG8AQABEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABEAMAAQEBAAEgBgABECIAAycBOwNOAZQCXgFcAc4CYAFZAesCYAFZAesCXgFcAc4DTgGUAycBO9gA
-        AwoBDQNOAZYBaQJNAfoB4QHNAbkB/wHxAeABzgH/AfkB5wHWAf8B+AHmAdQB/wHwAd0BzAH/AeEBzQG5
-        Af8BaQJNAfoDTgGWAwoBDcwAAwoBDQNXAbgB2QG/AaUB/wH+AfIB5AL/AecBzwH/AfwB2wG7Af8B+QHT
+        AwoBDQNOAZYBZwJNAfoB4QHNAbkB/wHxAeABzgH/AfkB5wHWAf8B+AHmAdQB/wHwAd0BzAH/AeEBzQG5
+        Af8BZwJNAfoDTgGWAwoBDcwAAwoBDQNXAbgB2QG/AaUB/wH+AfIB5AL/AecBzwH/AfwB2wG7Af8B+QHT
         AbIB/wH2AdABrAH/AfQB0QGuAf8B9gHYAbsB/wH6AekB1wH/AdkBvwGlAf8DVwG4AwoBDQgAA0ABcAFS
         AlQBpgFRAlwB6gE2Am0B9wE2Am0B9wE2Am0B9wE2Am0B9wE2Am0B9wE2Am0B9wE2Am0B9wE2Am0B9wE2
         Am0B9wFTAmQB8QNMAZOIAANOAZYB2QG/AaUC/wH4AesC/wHrAdEC/wHhAcMB/wH+AdsBugH/AfsB1gGy
         Af8B9wHRAawB/wH2Ac4BqQH/AfMBywGlAf8B8gHNAagB/wH6AeEBygH/AdkBvwGlAf8DTgGWCAABWAJh
-        AeYDXQHwAacCqAH9AZ4B2wH0Af8BlgHaAfMB/wGOAdgB8wH/AYYB1wHzAf8BVwHUAfIB/wFRAdMB8gH/
-        AUoB0gHxAf8BRAHQAfEB/wFBAc8B8QH/An8BgQH+AU4CXQHwhAADJgE4AagBhwFAAf0C/gH6Av8B+QHp
-        Av8B7wHYAv8B5wHNAv8B4QHCAf8B/AHcAbsB/wH5AdUBswH/AfYB0AGsAf8B9gHNAagB/wHzAcsBpQH/
-        AfMBzQGpAf8B+gHqAdkB/wGoAYcBQAH9AyYBOAQAATYCbQH3Ae8B+gH+Af8BoQHpAfkB/wGRAeUB+AH/
-        AYEB4QH3Af8BSgHeAfYB/wE7AdoB9QH/ASwB1wH0Af8BHwHTAfMB/wERAdAB8gH/AQYBzQHxAf8BAAHL
-        AfAB/wHKAfIB+wH/ATYCbQH3hAADTgGWAeIBzgG6Af8B9wHeAcYC/wHpAdEC/wH2AeIC/wHyAd0C/wHw
-        Ad0B/wH4AeoB2QH/AfgB5gHUAf8B+wHfAccB/wH1Ac8BqwH/AfIBygGkAf8B8wHMAagB/wH4Ad0BwwH/
-        AeIBzgG6Af8DTgGWBAABOQFcAWoB+AHyAfoB/QH/AbMB7QH6Af8BpAHpAfkB/wGVAeYB+AH/AYUB4gH3
-        Af8BTgHeAfYB/wE9AdsB9QH/AS8B1wH0Af8BIQHUAfMB/wETAdEB8gH/AQgBzgHxAf8BzAHyAfsB/wE2
-        Am0B94QAAl4BWwHQAe8B4AHQAf8B5wG+AZYB/wHnAbwBlAH/AfABzAGpAf8B/gHsAdoB/wHdAcQBrAH/
-        AmQBXAHnAmQBXAHnAd0BwwGqAf8B+AHdAcQB/wH0AdIBsgH/AfYB1AGzAf8B9QHWAbgB/wHxAd8BzwH/
-        Al4BWwHQBAABQQJqAfkB9gH8Af4B/wHIAfIB/AH/AbkB7wH7Af8BrAHsAfoB/wGcAegB+QH/AYsB4wH3
-        Af8BVAHgAfYB/wFEAdwB9gH/ATUB2QH1Af8BJwHWAfQB/wEcAdMB8wH/AdAB8wH8Af8BNgJtAfeEAAJk
-        AVkB7AH1AeQB1QH/AekBvgGXAf8B6AG8AZYB/wHnAbwBlAH/AfMB3gHKAf8CYQFYAeYDFAEbAxQBGwJh
-        AVgB5gH2AeMB0wH/AfEBzQGrAf8B7wHJAaQB/wHtAckBpAH/AfYB5AHSAf8CZAFZAewEAAFNAWABbwH6
-        Af4D/wH4Af0C/wH2Af0C/wH1AfwC/wHzAfwB/gH/AdgB9gH8Af8BlAHmAfgB/wGFAeMB9wH/AU4B3wH2
-        Af8BQAHbAfUB/wE0AdgB9AH/AdcB9AH8Af8BNgJtAfeEAAJkAVkB7AH1AeQB1QH/AekBvwGZAf8B6QHA
-        AZkB/wHpAcEBmgH/AfMB3QHJAf8CYQFYAeYDFAEbAxQBGwJhAVgB5gH4AegB2QH/AfIB0gGyAf8B8AHM
-        AasB/wHwAcwBqwH/AfYB5AHTAf8CZAFZAewEAAFNAWYBbwH6AegB9gH7Af8BlAHUAe8B/wGIAc4B7gH/
-        AUsBwQHpAf8ByQHpAfYB/wHyAfwB/gH/AfMB/AH+Af8B8gH8Af4B/wHwAfwB/gH/Ae8B+wH+Af8B7gH7
-        Af4B/wH+A/8BNwJtAfeEAAJeAVsB0AHwAeEB0QH/AeoBxAGhAf8B6QHBAZsB/wHpAcABlwH/AfEBzgGy
-        Af8B3AHDAaoB/wJkAVwB5wJkAVwB5wHdAcQBrAL/AfwB8wL/AfQB5QL/Ae4B2gH/AfwB5QHRAf8B8QHh
-        AdEB/wJeAVsB0AQAAUcCZwHyAfEB+gH9Af8BlAHeAfUB/wGTAdwB9AH/AYEB1QHyAf8BQgHKAe0B/wFE
-        AcsB6gH/AYUB0wHvAf8BgAHSAe8B/wFSAdAB7wH/AU4BzwHuAf8BSgHPAe4B/wHpAfcB+wH/AUwCXwHz
-        hAADTgGWAeIBzgG6Af8B8QHSAbYB/wHrAcEBmwH/AesBvwGZAv8B5AHTAv8B6AHbAf8B8wHaAccB/wH4
-        AfEB5AL/AfgB7QL/AfcB6QL/Af4B8QL/AfwB7wL/AfwB8gH/AeIBzgG6Af8DTgGWBAABTgJdAfAB9wH8
-        Af4B/wGOAeQB+AH/AZEB3gH1Af8BnwHgAfUB/wGsAeEB9gH/Ae8B+wH+Af8B9AH9Af4B/wHzAfwB/gH/
-        AfEB/AH+Af8B7wH7Af4B/wHuAfsB/gH/A3MB+QFYAmAB1IQAAyYBOAGoAYcBQAH9AfoB7QHhAf8B7AHH
-        AaMC/wHsAdoF/wH3Ac0BtgH/AewBvQGXAv8B9AHcA/8B9wL/AfcB6AP/AfMD/wH5Af8C/gH5Af8BqAGH
-        AUAB/QMmATgEAAE5AVwBagH4Af0C/gH/Af4D/wL+Av8B/QH+Av8B/gP/AeoB9wH7Af8DagH5AVwBZAFu
-        AfgBXAFkAW4B+AFcAWQBbgH4A20B9wNhAeEDNQFWiAADTgGWAdkBvwGlAv8B+gHwBv8B/QHzAf8B8AHB
-        AaMB/wHuAcYBoAH/Af0B8AHRA/8B/gL/Af0B8AL/Af0B8QX/AdkBvwGlAf8DTgGWCAABWwJeAdABTQFr
-        AXEB+gFNAWsBcQH6AU0BawFxAfoBTQFrAXEB+gFNAWsBcQH6AVgCXgHdAxABFgMLAQ8DCwEPAwsBDwML
-        AQ8DCwEPAwMBBIgAAwoBDQNXAbgB2QG/AaUB/wH+Af0B/AL/AfEB5AH/AfIBygGuAf8B8gHSAa0B/wH5
-        Ae0ByAP/AfcD/wH9Af8B/gH9AfwB/wHZAb8BpQH/A1cBuAMKAQ3MAAMKAQ0DTgGWAWkCTQH6AeEBzQG5
-        Af8B8QHiAdQB/wH5AewB3wH/AfsB8wHlAf8B9AHtAeQB/wHiAc4BuwH/AWkCTQH6A04BlgMKAQ3YAAMn
-        ATsDTgGUAl4BXAHOAmABWQHrAmIBWAHvAl4BWwHZA08BlwMnATvQAAFCAU0BPgcAAT4DAAEoAwABQAMA
-        ARADAAEBAQABAQUAAYAXAAP/AQAB8AEPAv8EAAHAAQMC/wQAAYABAQGAAQEEAAGAAQEBgAEBBgABgAEB
-        BgABgAEBBgABgAEBBgABgAEBBgABgAEBBgABgAEBBgABgAEBBgABgAEBBAABgAEBAYABAQQAAYABAQL/
-        BAABwAEDAv8EAAHwAQ8C/wQACw==
+        AeYDXQHwAacCqAH9AZ4B2wH0Af8BlgHaAfMB/wGOAdgB8wH/AYYB1wHzAf8BVQHUAfIB/wFPAdMB8gH/
+        AUgB0gHxAf8BQgHQAfEB/wE/Ac8B8QH/A38B/gFOAl0B8IQAAyYBOAGoAYcBQAH9Av4B+gL/AfkB6QL/
+        Ae8B2AL/AecBzQL/AeEBwgH/AfwB3AG7Af8B+QHVAbMB/wH2AdABrAH/AfYBzQGoAf8B8wHLAaUB/wHz
+        Ac0BqQH/AfoB6gHZAf8BqAGHAUAB/QMmATgEAAE2Am0B9wHvAfoB/gH/AaEB6QH5Af8BkQHlAfgB/wGB
+        AeEB9wH/AUgB3gH2Af8BOQHaAfUB/wEqAdcB9AH/AR0B0wHzAf8BDwHQAfIB/wEEAc0B8QH/AQABywHw
+        Af8BygHyAfsB/wE2Am0B94QAA04BlgHiAc4BugH/AfcB3gHGAv8B6QHRAv8B9gHiAv8B8gHdAv8B8AHd
+        Af8B+AHqAdkB/wH4AeYB1AH/AfsB3wHHAf8B9QHPAasB/wHyAcoBpAH/AfMBzAGoAf8B+AHdAcMB/wHi
+        Ac4BugH/A04BlgQAATkBXAFkAfgB8gH6Af0B/wGzAe0B+gH/AaQB6QH5Af8BlQHmAfgB/wGFAeIB9wH/
+        AUwB3gH2Af8BOwHbAfUB/wEtAdcB9AH/AR8B1AHzAf8BEQHRAfIB/wEGAc4B8QH/AcwB8gH7Af8BNgJt
+        AfeEAAJeAVsB0AHvAeAB0AH/AecBvgGWAf8B5wG8AZQB/wHwAcwBqQH/Af4B7AHaAf8B3QHEAawB/wJk
+        AVwB5wJkAVwB5wHdAcMBqgH/AfgB3QHEAf8B9AHSAbIB/wH2AdQBswH/AfUB1gG4Af8B8QHfAc8B/wJe
+        AVsB0AQAAUECagH5AfYB/AH+Af8ByAHyAfwB/wG5Ae8B+wH/AawB7AH6Af8BnAHoAfkB/wGLAeMB9wH/
+        AVIB4AH2Af8BQgHcAfYB/wEzAdkB9QH/ASUB1gH0Af8BGgHTAfMB/wHQAfMB/AH/ATYCbQH3hAACZAFZ
+        AewB9QHkAdUB/wHpAb4BlwH/AegBvAGWAf8B5wG8AZQB/wHzAd4BygH/AmEBWAHmAxQBGwMUARsCYQFY
+        AeYB9gHjAdMB/wHxAc0BqwH/Ae8ByQGkAf8B7QHJAaQB/wH2AeQB0gH/AmQBWQHsBAABTQFaAW0B+gH+
+        A/8B+AH9Av8B9gH9Av8B9QH8Av8B8wH8Af4B/wHYAfYB/AH/AZQB5gH4Af8BhQHjAfcB/wFMAd8B9gH/
+        AT4B2wH1Af8BMgHYAfQB/wHXAfQB/AH/ATYCbQH3hAACZAFZAewB9QHkAdUB/wHpAb8BmQH/AekBwAGZ
+        Af8B6QHBAZoB/wHzAd0ByQH/AmEBWAHmAxQBGwMUARsCYQFYAeYB+AHoAdkB/wHyAdIBsgH/AfABzAGr
+        Af8B8AHMAasB/wH2AeQB0wH/AmQBWQHsBAABTQFgAW0B+gHoAfYB+wH/AZQB1AHvAf8BiAHOAe4B/wFJ
+        AcEB6QH/AckB6QH2Af8B8gH8Af4B/wHzAfwB/gH/AfIB/AH+Af8B8AH8Af4B/wHvAfsB/gH/Ae4B+wH+
+        Af8B/gP/ATcCbQH3hAACXgFbAdAB8AHhAdEB/wHqAcQBoQH/AekBwQGbAf8B6QHAAZcB/wHxAc4BsgH/
+        AdwBwwGqAf8CZAFcAecCZAFcAecB3QHEAawC/wH8AfMC/wH0AeUC/wHuAdoB/wH8AeUB0QH/AfEB4QHR
+        Af8CXgFbAdAEAAFHAmcB8gHxAfoB/QH/AZQB3gH1Af8BkwHcAfQB/wGBAdUB8gH/AUABygHtAf8BQgHL
+        AeoB/wGFAdMB7wH/AYAB0gHvAf8BUAHQAe8B/wFMAc8B7gH/AUgBzwHuAf8B6QH3AfsB/wFMAl8B84QA
+        A04BlgHiAc4BugH/AfEB0gG2Af8B6wHBAZsB/wHrAb8BmQL/AeQB0wL/AegB2wH/AfMB2gHHAf8B+AHx
+        AeQC/wH4Ae0C/wH3AekC/wH+AfEC/wH8Ae8C/wH8AfIB/wHiAc4BugH/A04BlgQAAU4CXQHwAfcB/AH+
+        Af8BjgHkAfgB/wGRAd4B9QH/AZ8B4AH1Af8BrAHhAfYB/wHvAfsB/gH/AfQB/QH+Af8B8wH8Af4B/wHx
+        AfwB/gH/Ae8B+wH+Af8B7gH7Af4B/wNrAfkBWAJgAdSEAAMmATgBqAGHAUAB/QH6Ae0B4QH/AewBxwGj
+        Av8B7AHaBf8B9wHNAbYB/wHsAb0BlwL/AfQB3AP/AfcC/wH3AegD/wHzA/8B+QH/Av4B+QH/AagBhwFA
+        Af0DJgE4BAABOQFcAWQB+AH9Av4B/wH+A/8C/gL/Af0B/gL/Af4D/wHqAfcB+wH/A2oB+QFcAV4BagH4
+        AVwBXgFqAfgBXAFeAWoB+ANtAfcDYQHhAzUBVogAA04BlgHZAb8BpQL/AfoB8Ab/Af0B8wH/AfABwQGj
+        Af8B7gHGAaAB/wH9AfAB0QP/Af4C/wH9AfAC/wH9AfEF/wHZAb8BpQH/A04BlggAAVsCXgHQAU0BaQFv
+        AfoBTQFpAW8B+gFNAWkBbwH6AU0BaQFvAfoBTQFpAW8B+gFYAl4B3QMQARYDCwEPAwsBDwMLAQ8DCwEP
+        AwsBDwMDAQSIAAMKAQ0DVwG4AdkBvwGlAf8B/gH9AfwC/wHxAeQB/wHyAcoBrgH/AfIB0gGtAf8B+QHt
+        AcgD/wH3A/8B/QH/Af4B/QH8Af8B2QG/AaUB/wNXAbgDCgENzAADCgENA04BlgFnAk0B+gHhAc0BuQH/
+        AfEB4gHUAf8B+QHsAd8B/wH7AfMB5QH/AfQB7QHkAf8B4gHOAbsB/wFnAk0B+gNOAZYDCgEN2AADJwE7
+        A04BlAJeAVwBzgJgAVkB6wJiAVgB7wJeAVsB2QNPAZcDJwE70AABQgFNAT4HAAE+AwABKAMAAUADAAEQ
+        AwABAQEAAQEFAAGAFwAD/wEAAfABDwL/BAABwAEDAv8EAAGAAQEBgAEBBAABgAEBAYABAQYAAYABAQYA
+        AYABAQYAAYABAQYAAYABAQYAAYABAQYAAYABAQYAAYABAQYAAYABAQQAAYABAQGAAQEEAAGAAQEC/wQA
+        AcABAwL/BAAB8AEPAv8EAAs=
 </value>
   </data>
   <metadata name="pmList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -828,7 +828,7 @@
     <value>tvDatabaseFolderTree</value>
   </data>
   <data name="&gt;&gt;tvDatabaseFolderTree.Type" xml:space="preserve">
-    <value>BlueMirror.Commons.Controls.TreeViewVista, Igorary.Forms, Version=1.0.1.31745, Culture=neutral, PublicKeyToken=null</value>
+    <value>BlueMirror.Commons.Controls.TreeViewVista, Igorary.Forms, Version=1.0.1.31753, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;tvDatabaseFolderTree.Parent" xml:space="preserve">
     <value>scDatabase.Panel1</value>
@@ -947,7 +947,7 @@
     <value>lvDatabaseItems</value>
   </data>
   <data name="&gt;&gt;lvDatabaseItems.Type" xml:space="preserve">
-    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31745, Culture=neutral, PublicKeyToken=null</value>
+    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31753, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvDatabaseItems.Parent" xml:space="preserve">
     <value>scDatabase.Panel2</value>
@@ -1020,6 +1020,9 @@
   </data>
   <data name="&gt;&gt;tpDatabase.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="lvSearchResults.ColumnOrderArray" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
@@ -1118,10 +1121,10 @@
 </value>
   </data>
   <data name="lvSearchResults.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>209, 137</value>
   </data>
   <data name="lvSearchResults.Size" type="System.Drawing.Size, System.Drawing">
-    <value>186, 0</value>
+    <value>818, 130</value>
   </data>
   <data name="lvSearchResults.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1130,52 +1133,28 @@
     <value>lvSearchResults</value>
   </data>
   <data name="&gt;&gt;lvSearchResults.Type" xml:space="preserve">
-    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31745, Culture=neutral, PublicKeyToken=null</value>
+    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31753, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvSearchResults.Parent" xml:space="preserve">
-    <value>searchBottomPanel</value>
+    <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;lvSearchResults.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="searchBottomPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="searchBottomPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 129</value>
-  </data>
-  <data name="searchBottomPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>186, 0</value>
-  </data>
-  <data name="searchBottomPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;searchBottomPanel.Name" xml:space="preserve">
-    <value>searchBottomPanel</value>
-  </data>
-  <data name="&gt;&gt;searchBottomPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;searchBottomPanel.Parent" xml:space="preserve">
-    <value>tpSearch</value>
-  </data>
-  <data name="&gt;&gt;searchBottomPanel.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="filesSearchCriteriaPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+    <value>Fill</value>
   </data>
   <data name="filesSearchCriteriaPanel.Font" type="System.Drawing.Font, System.Drawing">
     <value>Verdana, 7pt</value>
   </data>
   <data name="filesSearchCriteriaPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>210, 4</value>
   </data>
   <data name="filesSearchCriteriaPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
   <data name="filesSearchCriteriaPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>186, 126</value>
+    <value>816, 126</value>
   </data>
   <data name="filesSearchCriteriaPanel.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1187,10 +1166,64 @@
     <value>BlueMirrorIndexer.Components.FilesSearchCriteriaPanel, Octopus, Version=3.0.0.1, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;filesSearchCriteriaPanel.Parent" xml:space="preserve">
-    <value>tpSearch</value>
+    <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;filesSearchCriteriaPanel.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="filters1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="filters1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="filters1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 264</value>
+  </data>
+  <data name="filters1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;filters1.Name" xml:space="preserve">
+    <value>filters1</value>
+  </data>
+  <data name="&gt;&gt;filters1.Type" xml:space="preserve">
+    <value>BlueMirrorIndexer.Components.Filters, Octopus, Version=3.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;filters1.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;filters1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1030, 270</value>
+  </data>
+  <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
+    <value>tpSearch</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="lvSearchResults" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="filesSearchCriteriaPanel" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="filters1" Row="0" RowSpan="2" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,20,Percent,80" /&gt;&lt;Rows Styles="AutoSize,0,Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="tpSearch.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 24</value>
@@ -1199,7 +1232,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpSearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>192, 72</value>
+    <value>1036, 276</value>
   </data>
   <data name="tpSearch.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1513,7 +1546,7 @@
     <value>lvFolderElements</value>
   </data>
   <data name="&gt;&gt;lvFolderElements.Type" xml:space="preserve">
-    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31745, Culture=neutral, PublicKeyToken=null</value>
+    <value>BlueMirror.Commons.Controls.ListViewVista, Igorary.Forms, Version=1.0.1.31753, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvFolderElements.Parent" xml:space="preserve">
     <value>scFolders.Panel2</value>
@@ -2072,7 +2105,7 @@
     <value>fileOperations</value>
   </data>
   <data name="&gt;&gt;fileOperations.Type" xml:space="preserve">
-    <value>Igorary.Forms.Components.FileOperations, Igorary.Forms, Version=1.0.1.31745, Culture=neutral, PublicKeyToken=null</value>
+    <value>Igorary.Forms.Components.FileOperations, Igorary.Forms, Version=1.0.1.31753, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;openFileDialog.Name" xml:space="preserve">
     <value>openFileDialog</value>
@@ -2242,16 +2275,16 @@
   <data name="&gt;&gt;columnHeader20.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;columnHeader21.Name" xml:space="preserve">
-    <value>columnHeader21</value>
-  </data>
-  <data name="&gt;&gt;columnHeader21.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;columnHeader10.Name" xml:space="preserve">
     <value>columnHeader10</value>
   </data>
   <data name="&gt;&gt;columnHeader10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;columnHeader21.Name" xml:space="preserve">
+    <value>columnHeader21</value>
+  </data>
+  <data name="&gt;&gt;columnHeader21.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;columnHeader22.Name" xml:space="preserve">

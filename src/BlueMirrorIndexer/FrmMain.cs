@@ -43,6 +43,7 @@ namespace BlueMirrorIndexer
 
         private void updateVolumesInSearchCriterias() {
             filesSearchCriteriaPanel.UpdateVolumeList(Database);
+            filters1.UpdateVolumeList(Database);
         }
 
         private DiscInDatabase getSelectedDisc() {
@@ -1567,6 +1568,11 @@ namespace BlueMirrorIndexer
         {
             // search menu
             cmExplorer_Click(sender, e);
+        }
+
+        private void filesSearchCriteriaPanel_Load(object sender, EventArgs e)
+        {
+            filters1.SearchBtnClicked += filesSearchCriteriaPanel_SearchBtnClicked;
         }
     }
 

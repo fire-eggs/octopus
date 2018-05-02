@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BlueMirrorIndexer.Components
 {
     public class SearchEventArgs
     {
+
+        public SearchEventArgs()
+        {
+            searchInVolumes = new List<DiscInDatabase>();
+        }
 
         public SearchEventArgs(string fileMask, bool treatFileMaskAsWildcard, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, string keywords, bool allKeywordsNeeded, bool onlyDuplicates, List<DiscInDatabase> searchInVolumes, bool caseSensitiveKeywords, bool treatKeywordsAsWildcard) {
             this.fileMask = fileMask;
@@ -24,14 +28,18 @@ namespace BlueMirrorIndexer.Components
 
         bool treatFileMaskAsWildcard;
 
-        public bool TreatFileMaskAsWildcard {
+        public bool TreatFileMaskAsWildcard
+        {
             get { return treatFileMaskAsWildcard; }
+            set { treatFileMaskAsWildcard = value; }
         }
 
         bool treatKeywordsAsWildcard;
 
-        public bool TreatKeywordsAsWildcard {
+        public bool TreatKeywordsAsWildcard
+        {
             get { return treatKeywordsAsWildcard; }
+            set { treatKeywordsAsWildcard = value; }
         }
 
         bool caseSensitiveKeywords;
@@ -59,35 +67,45 @@ namespace BlueMirrorIndexer.Components
         }
 
         private DateTime? dateFrom;
-        public DateTime? DateFrom {
+        public DateTime? DateFrom
+        {
             get { return dateFrom; }
+            set { dateFrom = value; }
         }
 
         private DateTime? dateTo;
-        public DateTime? DateTo {
+        public DateTime? DateTo
+        {
             get { return dateTo; }
+            set { dateTo = value; }
         }
 
         private long? sizeFrom;
-        public long? SizeFrom {
+        public long? SizeFrom
+        {
             get { return sizeFrom; }
+            set { sizeFrom = value; }
         }
 
         private long? sizeTo;
-        public long? SizeTo {
+        public long? SizeTo
+        {
             get { return sizeTo; }
+            set { sizeTo = value; }
         }
 
         private string keywords;
-        public string Keywords {
+        public string Keywords
+        {
             get { return keywords; }
+            set { keywords = value; }
         }
 
         private bool allKeywordsNeeded;
-        public bool AllKeywordsNeeded {
+        public bool AllKeywordsNeeded
+        {
             get { return allKeywordsNeeded; }
+            set { allKeywordsNeeded = value; }
         }
-	
-	
     }
 }
