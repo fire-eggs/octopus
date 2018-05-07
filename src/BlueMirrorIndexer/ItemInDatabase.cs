@@ -8,7 +8,11 @@ namespace BlueMirrorIndexer {
 	[Serializable]
     public abstract class ItemInDatabase
     {
-        public int DbId { get; set; } // For SQLite restore
+	    public int DbId
+	    {
+	        get { return _dbId; }
+	        set { _dbId = value; }
+	    } // For SQLite restore
 
 	    public ItemInDatabase()
 	    {
@@ -46,32 +50,60 @@ namespace BlueMirrorIndexer {
             set { _parent = value; } // for sqlite
 		}
 
-	    public string Keywords { get; set; }
+	    public string Keywords
+	    {
+	        get { return _keywords; }
+	        set { _keywords = value; }
+	    }
 
 	    public string Description { get; set; }
 
-	    public string Name { get; set; }
+	    public string Name
+	    {
+	        get { return _name; }
+	        set { _name = value; }
+	    }
 
-	    public string FullName { get; set; }
+	    public string FullName
+	    {
+	        get { return _fullName; }
+	        set { _fullName = value; }
+	    }
 
-	    public FileAttributes Attributes { get; set; }
+	    public FileAttributes Attributes
+	    {
+	        get { return _attributes; }
+	        set { _attributes = value; }
+	    }
 
-	    public DateTime CreationTime { get; set; }
+	    public DateTime CreationTime
+	    {
+	        get { return _createTime; }
+	        set { _createTime = value; }
+	    }
 
 	    //string extension;
 
-        // TODO on volume read, set extension to lowercase before storing
-		public string Extension
-		{
-		    get;
-		    set;
-            //get { return extension; }
-            //set { extension = value.ToLower(); }
-		}
+	    // TODO on volume read, set extension to lowercase before storing
+	    public string Extension
+	    {
+	        get { return _extension; }
+	        set { _extension = value; }
+	        //get { return extension; }
+	        //set { extension = value.ToLower(); }
+	    }
 
-	    public DateTime LastAccessTime { get; set; }
+	    public DateTime LastAccessTime
+	    {
+	        get { return _accessTime; }
+	        set { _accessTime = value; }
+	    }
 
-	    public DateTime LastWriteTime { get; set; }
+	    public DateTime LastWriteTime
+	    {
+	        get { return _writeTime; }
+	        set { _writeTime = value; }
+	    }
 
 	    public virtual string GetVolumeUserName()
 	    {
@@ -124,7 +156,8 @@ namespace BlueMirrorIndexer {
 
 	    public string FileDescription { get; set; }
 
-	    public long Length { get; set; }
+	    protected long _length;
+        public long Length { get { return _length; } set { _length = value; } }
 
 	    public virtual void RemoveFromDatabase() {
             RemoveFromLogicalFolders();
@@ -133,8 +166,17 @@ namespace BlueMirrorIndexer {
         #region Logical Folders
 
 	    private List<LogicalFolder> logicalFolders; // = new List<LogicalFolder>();
+	    protected string _name;
+	    protected int _dbId;
+	    protected string _extension;
+	    protected FileAttributes _attributes;
+	    protected string _fullName;
+	    protected string _keywords;
+	    protected DateTime _accessTime;
+	    protected DateTime _writeTime;
+	    protected DateTime _createTime;
 
-        public List<LogicalFolder> LogicalFolders {
+	    public List<LogicalFolder> LogicalFolders {
             get { if (logicalFolders == null) logicalFolders = new List<LogicalFolder>();
                 return logicalFolders;
             }

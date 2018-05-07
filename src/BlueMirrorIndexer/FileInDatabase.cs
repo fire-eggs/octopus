@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows.Forms;
 using Igorary.Forms;
 using Igorary.Utils.Extensions;
@@ -23,7 +24,25 @@ namespace BlueMirrorIndexer
 			: base(parent) {
 		}
 
-		public bool IsReadOnly { get; set; }
+        public FileInDatabase(int dbid, string name, string ext, string fullname, 
+            FileAttributes attrib, long len, string keyw)
+        {
+            _dbId = dbid;
+            _name = name;
+            _extension = ext;
+            _fullName = fullname;
+            _attributes = attrib;
+            _length = len;
+            _keywords = keyw;
+        }
+
+        public void SetTimes(Int64 createTicks, Int64 accessTicks, Int64 writeTicks)
+        {
+            _createTime = new DateTime(createTicks);
+            _accessTime = new DateTime(accessTicks);
+            _writeTime = new DateTime(writeTicks);
+        }
+        public bool IsReadOnly { get; set; }
 
         protected override string GetItemType() {
             return "File";

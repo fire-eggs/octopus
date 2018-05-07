@@ -561,20 +561,33 @@ namespace BlueMirrorIndexer
     [Desc] TEXT,
     [Hash]
     */
-            FileInDatabase afile = new FileInDatabase();
-            afile.DbId = rdr.GetInt32(0);
             ownerId = rdr.GetInt32(1);
-            afile.Name = rdr.GetString(2);
-            afile.Extension = rdr.GetString(3);
-            afile.FullName = rdr.GetString(4);
-            afile.Attributes = (FileAttributes) rdr.GetInt64(5);
-            afile.Length = rdr.GetInt64(6);
 
-            afile.CreationTime = new DateTime(rdr.GetInt64(7));
-            afile.LastAccessTime = new DateTime(rdr.GetInt64(8));
-            afile.LastWriteTime = new DateTime(rdr.GetInt64(9));
+            FileInDatabase afile = new FileInDatabase(rdr.GetInt32(0),
+                rdr.GetString(2),
+                rdr.GetString(3),
+                rdr.GetString(4),
+                (FileAttributes) rdr.GetInt32(5),
+                rdr.GetInt64(6),
+                rdr.GetString(10));
 
-            afile.Keywords = rdr.GetString(10);
+            //FileInDatabase afile = new FileInDatabase();
+            //afile.DbId = rdr.GetInt32(0);
+            //afile.Name = rdr.GetString(2);
+            //afile.Extension = rdr.GetString(3);
+            //afile.FullName = rdr.GetString(4);
+            //afile.Attributes = (FileAttributes) rdr.GetInt64(5);
+            //afile.Length = rdr.GetInt64(6);
+
+            //afile.CreationTime = new DateTime(rdr.GetInt64(7));
+            //afile.LastAccessTime = new DateTime(rdr.GetInt64(8));
+            //afile.LastWriteTime = new DateTime(rdr.GetInt64(9));
+            object test1 = rdr[7];
+            object test2 = rdr[8];
+            object test3 = rdr[9];
+            afile.SetTimes((Int64)test1, (Int64)test2, (Int64)test3);
+
+            //afile.Keywords = rdr.GetString(10);
             object tmp2 = rdr[11];
             if (tmp2 is DBNull)
             {
@@ -584,7 +597,9 @@ namespace BlueMirrorIndexer
                 afile.Description = (string) tmp2; //rdr.GetString(11);
 
             string tmp = rdr.GetString(12); // SQLite doesn't support unsigned
-            afile.Hash = UInt64.Parse(tmp);
+            if (tmp != "0")
+                afile.Hash = UInt64.Parse(tmp);
+
             return afile;
         }
 
