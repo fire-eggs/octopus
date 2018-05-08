@@ -41,9 +41,11 @@ namespace BlueMirrorIndexer
             clearSearchList();
         }
 
-        private void updateVolumesInSearchCriterias() {
-            filesSearchCriteriaPanel.UpdateVolumeList(Database);
-            filters1.UpdateVolumeList(Database);
+        private void updateVolumesInSearchCriterias() 
+        {
+            //filesSearchCriteriaPanel.UpdateVolumeList(Database);
+            //filters1.UpdateVolumeList(Database);
+            searchPane.UpdateVolumeList(Database);
         }
 
         private DiscInDatabase getSelectedDisc() {
@@ -316,7 +318,11 @@ namespace BlueMirrorIndexer
         #region Form events
 
         public static uint QueryCancelAutoPlay = 0;
-        private void FrmMain_Load(object sender, EventArgs e) {
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+
+            Bonk(); // TODO
+
             updateVolumeButtons();
 
             lvDatabaseItems.ColumnOrderArray = Settings.Default.DatabaseItemsColumnOrder;
@@ -440,7 +446,7 @@ namespace BlueMirrorIndexer
 
         private void tcMain_Selected(object sender, TabControlEventArgs e) {
             UpdateCommands();
-            AcceptButton = tcMain.SelectedTab == tpSearch ? filesSearchCriteriaPanel.BtnSearch : null;
+            // TODO AcceptButton = tcMain.SelectedTab == tpSearch ? filesSearchCriteriaPanel.BtnSearch : null;
             updateStrip();
         }
 
@@ -1570,10 +1576,10 @@ namespace BlueMirrorIndexer
             cmExplorer_Click(sender, e);
         }
 
-        private void filesSearchCriteriaPanel_Load(object sender, EventArgs e)
-        {
-            filters1.SearchBtnClicked += filesSearchCriteriaPanel_SearchBtnClicked;
-        }
+        //private void filesSearchCriteriaPanel_Load(object sender, EventArgs e)
+        //{
+        //    filters1.SearchBtnClicked += filesSearchCriteriaPanel_SearchBtnClicked;
+        //}
     }
 
     class AbortException : Exception

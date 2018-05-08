@@ -115,6 +115,58 @@
     <Compile Include="frmMainSearch.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SearchFilters\Accordion.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\BasePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\BasePanel.Designer.cs">
+      <DependentUpon>BasePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\DatePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\DatePanel.Designer.cs">
+      <DependentUpon>DatePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\FilePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\FilePanel.Designer.cs">
+      <DependentUpon>FilePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\OpacityEx.cs" />
+    <Compile Include="SearchFilters\OtherPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\OtherPanel.Designer.cs">
+      <DependentUpon>OtherPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\SizePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\SizePanel.Designer.cs">
+      <DependentUpon>SizePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\TagPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\TagPanel.Designer.cs">
+      <DependentUpon>TagPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchFilters\VolPanel2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchFilters\VolPanel2.Designer.cs">
+      <DependentUpon>VolPanel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchPanel\SearchPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchPanel\SearchPanel.Designer.cs">
+      <DependentUpon>SearchPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="VolumeDatabase.cs" />
     <Compile Include="Components\FilesSearchCriteriaPanel.cs">
@@ -301,6 +353,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.pl.resx">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\BasePanel.resx">
+      <DependentUpon>BasePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\DatePanel.resx">
+      <DependentUpon>DatePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\FilePanel.resx">
+      <DependentUpon>FilePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\OtherPanel.resx">
+      <DependentUpon>OtherPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\SizePanel.resx">
+      <DependentUpon>SizePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\TagPanel.resx">
+      <DependentUpon>TagPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchFilters\VolPanel2.resx">
+      <DependentUpon>VolPanel2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchPanel\SearchPanel.resx">
+      <DependentUpon>SearchPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UcItemFolderClassification.resx">
       <SubType>Designer</SubType>

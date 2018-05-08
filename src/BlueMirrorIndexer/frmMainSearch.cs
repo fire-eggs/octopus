@@ -15,6 +15,12 @@ namespace BlueMirrorIndexer
 {
     public partial class FrmMain : Form
     {
+        private BlueMirror.Commons.Controls.ListViewVista lvSearchResults;
+
+        public void Bonk()
+        {
+            lvSearchResults = searchPane.GetSearchList();
+        }
 
         private ItemInDatabase getSelectedItemInSearch()
         {
