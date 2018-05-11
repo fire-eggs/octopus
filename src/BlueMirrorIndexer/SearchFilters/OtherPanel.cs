@@ -1,8 +1,9 @@
 ﻿using System;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class OtherPanel : BasePanel
+    public partial class OtherPanel : BasePanel, IFilterPanel
     {
         public OtherPanel()
         {
@@ -16,7 +17,19 @@ namespace BlueMirrorIndexer.SearchFilters
 
         public override string GetText()
         {
-            return "Other:" + (checkBox1.Checked ? "Duplicates" : "(None)");
+            var txt = "Other:";
+            if (checkBox1.Checked)
+                txt += "Duplicates;";
+            if (checkBox2.Checked)
+                txt += "No folders";
+            if (!checkBox1.Checked && !checkBox2.Checked)
+                txt += "(None)";
+            return txt;
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            sea.OnlyDuplicates = checkBox1.Checked;
         }
     }
 }

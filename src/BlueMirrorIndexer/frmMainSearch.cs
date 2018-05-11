@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,24 +23,18 @@ namespace BlueMirrorIndexer
             lvSearchResults = searchPane.GetSearchList();
         }
 
-        private ItemInDatabase getSelectedItemInSearch()
-        {
-            if (lvSearchResults.SelectedIndices.Count == 1)
-            {
-                int index = lvSearchResults.SelectedIndices[0];
-                if ((index >= 0) && (index < searchResultList.Count))
-                    return searchResultList[index];
-            }
-            return null;
-        }
-
         private void SaveSearchSettings()
         {
             Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
             Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
-            
+
+            // TODO save splitter position
         }
 
+        //private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
+        //    updateStrip();
+        //}
+#if FALSE
         IComparer<ItemInDatabase> searchListComparer = null;
         int lastColInSearchView = -1;
         private void lvSearchResults_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -69,9 +64,6 @@ namespace BlueMirrorIndexer
             updateStrip();
         }
 
-        //private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-        //    updateStrip();
-        //}
 
         private readonly List<ItemInDatabase> searchResultList = new List<ItemInDatabase>();
 
@@ -218,12 +210,6 @@ namespace BlueMirrorIndexer
             sbSize.Text = Resources.Size + ": " + sum.ToKB();
         }
 
-        private void clearSearchList()
-        {
-            searchResultList.Clear();
-            displaySearchList();
-        }
-
         private void cmFindInDatabase_Click(object sender, EventArgs e)
         {
             if (lvSearchResults.SelectedIndices.Count == 1)
@@ -232,18 +218,6 @@ namespace BlueMirrorIndexer
                 ItemInDatabase itemInDatabase = searchResultList[index];
                 findInTree(itemInDatabase);
             }
-        }
-
-        private void cmsSearchList_Opening(object sender, CancelEventArgs e)
-        {
-            cmFindInDatabase.Enabled = cmItemPropertiesFromSearch.Enabled = lvSearchResults.SelectedIndices.Count == 1;
-        }
-
-        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
-        {
-            ItemInDatabase item = getSearchSelectedItem();
-            if (item != null)
-                showItemProperties(item);
         }
 
         private ItemInDatabase getSearchSelectedItem()
@@ -257,10 +231,78 @@ namespace BlueMirrorIndexer
             return null;
         }
 
+        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
+        {
+            ItemInDatabase item = getSearchSelectedItem();
+            if (item != null)
+                showItemProperties(item);
+        }
+
         private void lvSearchResults_DoubleClick(object sender, EventArgs e)
         {
             cmItemPropertiesFromSearch_Click(sender, e);
         }
+
+#endif
+
+        private void cmFindInDatabase_Click(object sender, EventArgs e)
+        {
+            //if (lvSearchResults.SelectedIndices.Count == 1)
+            //{
+            //    int index = lvSearchResults.SelectedIndices[0];
+            //    ItemInDatabase itemInDatabase = searchResultList[index];
+            //    findInTree(itemInDatabase);
+            //}
+        }
+
+        private ItemInDatabase getSelectedItemInSearch()
+        {
+            //if (lvSearchResults.SelectedIndices.Count == 1)
+            //{
+            //    int index = lvSearchResults.SelectedIndices[0];
+            //    if ((index >= 0) && (index < searchResultList.Count))
+            //        return searchResultList[index];
+            //}
+            return null;
+        }
+
+        private void clearSearchList()
+        {
+            //searchResultList.Clear();
+            //displaySearchList();
+        }
+
+        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
+        {
+            //ItemInDatabase item = getSearchSelectedItem();
+            //if (item != null)
+            //    showItemProperties(item);
+        }
+
+        private void lvSearchResults_MouseDown(object sender, MouseEventArgs e)
+        {
+            //if (lvSearchResults.SelectedIndices.Count > 0)
+            //{
+            //    itemsToDrag = new List<ItemInDatabase>();
+            //    foreach (int index in lvSearchResults.SelectedIndices)
+            //        itemsToDrag.Add(searchResultList[index]);
+            //    Size dragSize = SystemInformation.DragSize;
+            //    dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+            //}
+            //else
+            //    dragBoxFromMouseDown = Rectangle.Empty;
+        }
+
+        private void updateStripSearch()
+        {
+            
+        }
+
+        private void cmsSearchList_Opening(object sender, CancelEventArgs e)
+        {
+            cmFindInDatabase.Enabled = cmItemPropertiesFromSearch.Enabled = lvSearchResults.SelectedIndices.Count == 1;
+        }
+
 
         private void lvSearchResults_KeyDown(object sender, KeyEventArgs e)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer.SearchFilters
 {
@@ -20,7 +21,7 @@ namespace BlueMirrorIndexer.SearchFilters
             remove { searchBtnClicked -= value; }
         }
 
-        public virtual void SomethingChanged(object sender, EventArgs e)
+        public void SomethingChanged(object sender, EventArgs e)
         {
             Raise();
         }
@@ -38,6 +39,13 @@ namespace BlueMirrorIndexer.SearchFilters
         {
             return "";
         }
+    }
+
+    public interface IFilterPanel
+    {
+        string GetText();
+
+        void GetFilter(SearchEventArgs sea);
     }
 
     public delegate void FilterChangeHandler(object sender, FilterChangeArgs e);

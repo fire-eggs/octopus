@@ -1,7 +1,9 @@
 ﻿
+using BlueMirrorIndexer.Components;
+
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class FilePanel : BasePanel
+    public partial class FilePanel : BasePanel, IFilterPanel
     {
         public FilePanel()
         {
@@ -24,6 +26,12 @@ namespace BlueMirrorIndexer.SearchFilters
         public override string GetText()
         {
             return string.Format("File: {0}{1}", getMask(), getWild());
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            sea.FileMask = getMask();
+            sea.TreatFileMaskAsWildcard = checkBox1.Checked;
         }
 
         private void textBox1_TextChanged(object sender, System.EventArgs e)

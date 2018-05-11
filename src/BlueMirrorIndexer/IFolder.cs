@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer
 {
@@ -56,6 +57,10 @@ namespace BlueMirrorIndexer
         void InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<FileInDatabase> listCrc, List<FileInDatabase> listNoCrc);
 
         void InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<ItemInDatabase> list);
+
+        void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom,
+            DateTime? dateTo, SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes,
+            KeywordMatcher tagMatcher, List<ItemInDatabase> list);
 
         //void RemoveFromAllLogicalFolders();
 

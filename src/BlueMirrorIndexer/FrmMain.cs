@@ -450,29 +450,6 @@ namespace BlueMirrorIndexer
             updateStrip();
         }
 
-        #region Search result list virtual mode
-
-        int firstCachedItem = -1;
-        List<ListViewItem> cachedItems = null;
-        private void lvSearchResults_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e) {
-            firstCachedItem = e.StartIndex;
-            cachedItems = new List<ListViewItem>();
-            for (int i = firstCachedItem; i <= e.EndIndex; i++)
-                cachedItems.Add(searchResultList[i].ToListViewItem());
-            updateSearchListImages();
-        }
-
-        private void lvSearchResults_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) {
-            if ((cachedItems != null) && (e.ItemIndex - firstCachedItem < cachedItems.Count) && (e.ItemIndex - firstCachedItem >= 0))
-                e.Item = cachedItems[e.ItemIndex - firstCachedItem];
-            else
-                e.Item = searchResultList[e.ItemIndex].ToListViewItem();
-            //if (e.Item.SubItems.Count != 11)
-            //    Debug.WriteLine(e.Item.Text + " " +  (e.Item.Tag as ItemInDatabase).GetCsvLine() + " " + e.Item.SubItems.Count);
-        }
-
-        #endregion
-
         private void lvDatabaseItems_DoubleClick(object sender, EventArgs e) {
             cmProperties_Click(sender, e);
         }
@@ -1182,17 +1159,6 @@ namespace BlueMirrorIndexer
                 dragBoxFromMouseDown = Rectangle.Empty;
         }
 
-        private void lvSearchResults_MouseDown(object sender, MouseEventArgs e) {
-            if (lvSearchResults.SelectedIndices.Count > 0) {
-                itemsToDrag = new List<ItemInDatabase>();
-                foreach (int index in lvSearchResults.SelectedIndices)
-                    itemsToDrag.Add(searchResultList[index]);
-                Size dragSize = SystemInformation.DragSize;
-                dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
-            }
-            else
-                dragBoxFromMouseDown = Rectangle.Empty;
-        }
 
         private void lvLogicalFolderItems_MouseDown(object sender, MouseEventArgs e) {
             if (lvFolderElements.SelectedItems.Count > 0) {
@@ -1520,7 +1486,7 @@ namespace BlueMirrorIndexer
             // N.B. assumes menu is disabled when more than one item selected
             ItemInDatabase fid;
             if (tcMain.SelectedTab == tpSearch)
-                fid = getSearchSelectedItem();
+                fid = getSelectedItemInSearch();
             else
                 fid = getSelectedFile();
 

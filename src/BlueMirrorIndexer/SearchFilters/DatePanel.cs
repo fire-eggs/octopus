@@ -1,8 +1,9 @@
 ﻿using System;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class DatePanel : BasePanel
+    public partial class DatePanel : BasePanel, IFilterPanel
     {
         public DatePanel()
         {
@@ -60,6 +61,23 @@ namespace BlueMirrorIndexer.SearchFilters
                     text += " and " + dateTimePicker2.Text;
             }
             return text;
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            if (!checkBox1.Checked)
+            {
+                sea.DateTo = sea.DateFrom = null;
+                sea.DateType = SearchEventArgs.SearchDateType.None;
+                return;
+            }
+
+            SearchEventArgs.SearchDateType res;
+            Enum.TryParse((string) comboBox2.SelectedItem, out res);
+            sea.DateType = res;
+
+            sea.DateFrom = dateTimePicker1.Value;
+            sea.DateTo = dateTimePicker2.Enabled ? dateTimePicker2.Value : (DateTime?)null;
         }
     }
 }

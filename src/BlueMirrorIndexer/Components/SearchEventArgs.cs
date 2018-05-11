@@ -5,6 +5,28 @@ namespace BlueMirrorIndexer.Components
 {
     public class SearchEventArgs
     {
+        public enum SearchDateType
+        {
+            Between,
+            Before,
+            After,
+            None
+        }
+
+        public enum SearchSizeRange
+        {
+            Between,
+            LessThan,
+            MoreThan,
+            None
+        }
+
+        public enum SearchSizeType
+        {
+            KB,
+            MB,
+            GB
+        }
 
         public SearchEventArgs()
         {
@@ -12,100 +34,81 @@ namespace BlueMirrorIndexer.Components
         }
 
         public SearchEventArgs(string fileMask, bool treatFileMaskAsWildcard, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, string keywords, bool allKeywordsNeeded, bool onlyDuplicates, List<DiscInDatabase> searchInVolumes, bool caseSensitiveKeywords, bool treatKeywordsAsWildcard) {
-            this.fileMask = fileMask;
-            this.dateFrom = dateFrom;
-            this.dateTo = dateTo;
-            this.sizeFrom = sizeFrom;
-            this.sizeTo = sizeTo;
-            this.keywords = keywords;
-            this.allKeywordsNeeded = allKeywordsNeeded;
-            this.onlyDuplicates = onlyDuplicates;
+            this.FileMask = fileMask;
+            this.DateFrom = dateFrom;
+            this.DateTo = dateTo;
+            this.SizeFrom = sizeFrom;
+            this.SizeTo = sizeTo;
+            this.Keywords = keywords;
+            this.AllKeywordsNeeded = allKeywordsNeeded;
+            this.OnlyDuplicates = onlyDuplicates;
             this.searchInVolumes = searchInVolumes;
-            this.caseSensitiveKeywords = caseSensitiveKeywords;
-            this.treatKeywordsAsWildcard = treatKeywordsAsWildcard;
-            this.treatFileMaskAsWildcard = treatFileMaskAsWildcard;
+            this.CaseSensitiveKeywords = caseSensitiveKeywords;
+            this.TreatKeywordsAsWildcard = treatKeywordsAsWildcard;
+            this.TreatFileMaskAsWildcard = treatFileMaskAsWildcard;
         }
 
-        bool treatFileMaskAsWildcard;
+        public bool TreatFileMaskAsWildcard { get; set; }
 
-        public bool TreatFileMaskAsWildcard
-        {
-            get { return treatFileMaskAsWildcard; }
-            set { treatFileMaskAsWildcard = value; }
-        }
+        public bool TreatKeywordsAsWildcard { get; set; }
 
-        bool treatKeywordsAsWildcard;
+        public bool CaseSensitiveKeywords { get; set; }
 
-        public bool TreatKeywordsAsWildcard
-        {
-            get { return treatKeywordsAsWildcard; }
-            set { treatKeywordsAsWildcard = value; }
-        }
-
-        bool caseSensitiveKeywords;
-
-        public bool CaseSensitiveKeywords {
-            get { return caseSensitiveKeywords; }
-        }
-
-        List<DiscInDatabase> searchInVolumes;
+        readonly List<DiscInDatabase> searchInVolumes;
 
         internal List<DiscInDatabase> SearchInVolumes {
             get { return searchInVolumes; }
         }
 
-        bool onlyDuplicates;
+        public bool OnlyDuplicates { get; set; }
 
-        public bool OnlyDuplicates {
-            get { return onlyDuplicates; }
-        }
+        public string FileMask { get; set; }
 
-        private string fileMask;
-        public string FileMask {
-            get { return fileMask; }
-            set { fileMask = value; }
-        }
+        public DateTime? DateFrom { get; set; }
 
-        private DateTime? dateFrom;
-        public DateTime? DateFrom
+        public DateTime? DateTo { get; set; }
+
+        public long? SizeFrom { get; set; }
+
+        public long? SizeTo { get; set; }
+
+        public string Keywords { get; set; }
+
+        public bool AllKeywordsNeeded { get; set; }
+
+        public SearchDateType DateType { get; set; }
+
+        public SearchSizeRange SizeType { get; set; }
+
+        public SearchSizeType SizeFromType { get; set; }
+
+        public SearchSizeType SizeToType { get; set; }
+
+        private long sizeInBytes(long? val, SearchSizeType type)
         {
-            get { return dateFrom; }
-            set { dateFrom = value; }
+            if (!val.HasValue)
+                return 0;
+
+            switch (type)
+            {
+                case SearchSizeType.KB:
+                    return val.Value * 1024;
+                case SearchSizeType.MB:
+                    return val.Value * 1024 * 1024;
+                case SearchSizeType.GB:
+                    return val.Value * 1024 * 1024 * 1024;
+            }
+            return 0;
         }
 
-        private DateTime? dateTo;
-        public DateTime? DateTo
+        public long SizeFromBytes()
         {
-            get { return dateTo; }
-            set { dateTo = value; }
+            return sizeInBytes(SizeFrom, SizeFromType);
         }
 
-        private long? sizeFrom;
-        public long? SizeFrom
+        public long SizeToBytes()
         {
-            get { return sizeFrom; }
-            set { sizeFrom = value; }
-        }
-
-        private long? sizeTo;
-        public long? SizeTo
-        {
-            get { return sizeTo; }
-            set { sizeTo = value; }
-        }
-
-        private string keywords;
-        public string Keywords
-        {
-            get { return keywords; }
-            set { keywords = value; }
-        }
-
-        private bool allKeywordsNeeded;
-        public bool AllKeywordsNeeded
-        {
-            get { return allKeywordsNeeded; }
-            set { allKeywordsNeeded = value; }
+            return sizeInBytes(SizeTo, SizeToType);
         }
     }
 }

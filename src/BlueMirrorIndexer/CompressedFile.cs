@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
@@ -380,6 +381,12 @@ namespace BlueMirrorIndexer
 
         void IFolder.InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<ItemInDatabase> list) {
             folderImpl.InsertFilesToList(regex, dateFrom, dateTo, sizeFrom, sizeTo,  keywordMatcher, list);
+        }
+
+        public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo,
+            SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes, KeywordMatcher tagMatcher, List<ItemInDatabase> list)
+        {
+            throw new NotImplementedException();
         }
 
         public void UpdateStats()

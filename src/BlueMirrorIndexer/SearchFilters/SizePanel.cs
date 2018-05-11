@@ -1,50 +1,51 @@
 ﻿using System;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class SizePanel : BasePanel
+    public partial class SizePanel : BasePanel, IFilterPanel
     {
         public SizePanel()
         {
             InitializeComponent();
 
             comboBox1.SelectedIndex = 0;
-            comboBox2.SelectedIndex = 0;
-            comboBox3.SelectedIndex = 0;
+            cmbSizeTo.SelectedIndex = 0;
+            cmbSizeFrom.SelectedIndex = 0;
 
             checkBox1_CheckedChanged(null,null);
         }
 
-        private void updateControls()
+        private void UpdateControls(bool enabled=true)
         {
             switch ((string)comboBox1.SelectedItem)
             {
                 case "Between":
-                    label1.Enabled = true;
-                    textBox2.Enabled = true;
-                    comboBox2.Enabled = true;
+                    label1.Enabled = true & enabled;
+                    txtSizeTo.Enabled = true & enabled;
+                    cmbSizeTo.Enabled = true & enabled;
                     break;
                 default:
                     label1.Enabled = false;
-                    textBox2.Enabled = false;
-                    comboBox2.Enabled = false;
+                    txtSizeTo.Enabled = false;
+                    cmbSizeTo.Enabled = false;
                     break;
             }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateControls();
+            UpdateControls();
             Raise();
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             var enabled = checkBox1.Checked;
-            comboBox1.Enabled = comboBox3.Enabled = enabled;
-            textBox1.Enabled = enabled;
-            updateControls();
+            comboBox1.Enabled = cmbSizeFrom.Enabled = enabled;
+            txtSizeFrom.Enabled = enabled;
+            UpdateControls(enabled);
             Raise();
         }
 
@@ -53,11 +54,40 @@ namespace BlueMirrorIndexer.SearchFilters
             string text = "Size:(None)";
             if (checkBox1.Checked)
             {
-                text = string.Format("Size:{0} {1}{2}", comboBox1.SelectedItem, textBox1.Text.Trim(), comboBox3.SelectedItem);
+                text = string.Format("Size:{0} {1}{2}", comboBox1.SelectedItem, txtSizeFrom.Text.Trim(), cmbSizeFrom.SelectedItem);
                 if ((string)comboBox1.SelectedItem == "Between")
-                    text += " and " + textBox2.Text.Trim() + comboBox2.SelectedItem;
+                    text += " and " + txtSizeTo.Text.Trim() + cmbSizeTo.SelectedItem;
             }
             return text;
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            if (!checkBox1.Checked)
+            {
+                sea.SizeType = SearchEventArgs.SearchSizeRange.None;
+                return;
+            }
+
+            SearchEventArgs.SearchSizeType res;
+            switch ((string) comboBox1.SelectedItem)
+            {
+                case "Between":
+                    sea.SizeType = SearchEventArgs.SearchSizeRange.Between;
+                    sea.SizeTo = long.Parse(txtSizeTo.Text);
+                    Enum.TryParse((string) cmbSizeTo.SelectedItem, out res);
+                    sea.SizeToType = res;
+                    break;
+                case "Less than":
+                    sea.SizeType = SearchEventArgs.SearchSizeRange.LessThan;
+                    break;
+                case "More than":
+                    sea.SizeType = SearchEventArgs.SearchSizeRange.MoreThan;
+                    break;
+            }
+            sea.SizeFrom = long.Parse(txtSizeFrom.Text);
+            Enum.TryParse((string)cmbSizeFrom.SelectedItem, out res);
+            sea.SizeFromType = res;
         }
 
         private void sizeBox_KeyPress(object sender, KeyPressEventArgs e)

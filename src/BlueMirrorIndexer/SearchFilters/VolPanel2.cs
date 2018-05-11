@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class VolPanel2 : BasePanel
+    public partial class VolPanel2 : BasePanel, IFilterPanel
     {
         public VolPanel2()
         {
@@ -31,6 +32,29 @@ namespace BlueMirrorIndexer.SearchFilters
             if (!any || all)
                 text = "Volumes: (All)";
             return text;
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            var vollist = sea.SearchInVolumes;
+            vollist.Clear();
+            bool none = true;
+            foreach (ListViewItem item in lvVolumes.Items)
+            {
+                if (item.Checked)
+                {
+                    vollist.Add(item.Tag as DiscInDatabase);
+                    none = false;
+                }
+            }
+
+            if (none)
+            {
+                foreach (ListViewItem item in lvVolumes.Items)
+                {
+                    vollist.Add(item.Tag as DiscInDatabase);
+                }
+            }
         }
 
         internal void UpdateVolumeList(List<string> volnames)

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 
 namespace BlueMirrorIndexer
@@ -157,7 +159,6 @@ namespace BlueMirrorIndexer
             RemoveFromLogicalFolders();
             database.RemoveDisc(this);
         }
-        
     }
 
 }

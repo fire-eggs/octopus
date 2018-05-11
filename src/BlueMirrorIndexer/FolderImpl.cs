@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using BlueMirrorIndexer.Components;
 
 namespace BlueMirrorIndexer
 {
@@ -120,6 +122,64 @@ namespace BlueMirrorIndexer
                 folder.InsertFilesToList(regex, dateFrom, dateTo, sizeFrom, sizeTo, keywordMatcher, list);
         }
 
+        public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo, SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes, KeywordMatcher tagMatcher, List<ItemInDatabase> list)
+        {
+            // TODO have the filters return yes/no pass?
+
+            // TODO owner
+            foreach (var file in files)
+            {
+                if (!fileMaskRegex.IsMatch(file.Name))
+                    continue;
+                if (dateType != SearchEventArgs.SearchDateType.None)
+                {
+                    // TODO modified date
+                    switch (dateType)
+                    {
+                        case SearchEventArgs.SearchDateType.Before:
+                            if (file.CreationTime >= dateFrom)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchDateType.After:
+                            if (file.CreationTime <= dateFrom)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchDateType.Between:
+                            if (file.CreationTime < dateFrom || file.CreationTime > dateTo)
+                                continue;
+                            break;
+                    }
+                }
+                if (sizeType != SearchEventArgs.SearchSizeRange.None)
+                {
+                    switch (sizeType)
+                    {
+                        case SearchEventArgs.SearchSizeRange.LessThan:
+                            if (file.Length >= sizeFromBytes)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchSizeRange.MoreThan:
+                            if (file.Length <= sizeFromBytes)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchSizeRange.Between:
+                            if (file.Length < sizeFromBytes || file.Length > sizeToBytes)
+                                continue;
+                            break;
+                    }
+                }
+
+                // Passed all filters! 
+                if (tagMatcher.IsMatch(file.Keywords))
+                    list.Add(file);
+            }
+
+            foreach (IFolder folder in folders)
+                folder.InsertFilesToList(fileMaskRegex, dateType, dateFrom, dateTo, sizeType, sizeFromBytes, sizeToBytes, tagMatcher, list);
+
+        }
+
+
         #endregion
 
         #region Logical Folders
@@ -171,6 +231,5 @@ namespace BlueMirrorIndexer
             double val2 = val / 1024.0 / 1024.0;
             return string.Format("{0:0,0.##}M", val2);
         }
-
     }
 }

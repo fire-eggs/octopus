@@ -1,3 +1,4 @@
+using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 using System;
 using System.Collections.Generic;
@@ -153,6 +154,13 @@ namespace BlueMirrorIndexer {
 
         public void InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<ItemInDatabase> list) {
             folderImpl.InsertFilesToList(regex, dateFrom, dateTo, sizeFrom, sizeTo, keywordMatcher, list);
+        }
+
+        public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo, 
+                                                           SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes,
+                                      KeywordMatcher tagMatcher, List<ItemInDatabase> list)
+        {
+            folderImpl.InsertFilesToList(fileMaskRegex, dateType, dateFrom, dateTo, sizeType, sizeFromBytes, sizeToBytes, tagMatcher, list);
         }
 
         public void CopyToNode(TreeNode treeNode) {

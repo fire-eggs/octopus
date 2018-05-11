@@ -1,7 +1,9 @@
 ﻿
+using BlueMirrorIndexer.Components;
+
 namespace BlueMirrorIndexer.SearchFilters
 {
-    public partial class TagPanel : BasePanel
+    public partial class TagPanel : BasePanel, IFilterPanel
     {
         public TagPanel()
         {
@@ -32,6 +34,18 @@ namespace BlueMirrorIndexer.SearchFilters
                     checkBox2.Checked ? "(wild)" : "");
             }
             return text;
+        }
+
+        public void GetFilter(SearchEventArgs sea)
+        {
+            if (!checkBox1.Checked)
+                sea.Keywords = null;
+            else
+            {
+                sea.Keywords = textBox1.Text;
+                // TODO keyword style
+                sea.TreatKeywordsAsWildcard = checkBox2.Checked;
+            }
         }
     }
 }

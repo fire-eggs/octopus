@@ -30,11 +30,11 @@
         {
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.txtSizeFrom = new System.Windows.Forms.TextBox();
+            this.cmbSizeTo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.txtSizeTo = new System.Windows.Forms.TextBox();
+            this.cmbSizeFrom = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // checkBox1
@@ -61,31 +61,31 @@
             this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // textBox1
+            // txtSizeFrom
             // 
-            this.textBox1.Location = new System.Drawing.Point(17, 32);
-            this.textBox1.MaxLength = 10;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "0";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sizeBox_KeyPress);
+            this.txtSizeFrom.Location = new System.Drawing.Point(17, 32);
+            this.txtSizeFrom.MaxLength = 10;
+            this.txtSizeFrom.Name = "txtSizeFrom";
+            this.txtSizeFrom.Size = new System.Drawing.Size(100, 20);
+            this.txtSizeFrom.TabIndex = 2;
+            this.txtSizeFrom.Text = "0";
+            this.txtSizeFrom.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtSizeFrom.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txtSizeFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sizeBox_KeyPress);
             // 
-            // comboBox2
+            // cmbSizeTo
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.cmbSizeTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSizeTo.FormattingEnabled = true;
+            this.cmbSizeTo.Items.AddRange(new object[] {
             "KB",
             "MB",
             "GB"});
-            this.comboBox2.Location = new System.Drawing.Point(134, 75);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(63, 21);
-            this.comboBox2.TabIndex = 3;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.cmbSizeTo.Location = new System.Drawing.Point(134, 75);
+            this.cmbSizeTo.Name = "cmbSizeTo";
+            this.cmbSizeTo.Size = new System.Drawing.Size(63, 21);
+            this.cmbSizeTo.TabIndex = 3;
+            this.cmbSizeTo.SelectedIndexChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -96,46 +96,46 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "and";
             // 
-            // textBox2
+            // txtSizeTo
             // 
-            this.textBox2.Location = new System.Drawing.Point(17, 75);
-            this.textBox2.MaxLength = 10;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 5;
-            this.textBox2.Text = "0";
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sizeBox_KeyPress);
+            this.txtSizeTo.Location = new System.Drawing.Point(17, 75);
+            this.txtSizeTo.MaxLength = 10;
+            this.txtSizeTo.Name = "txtSizeTo";
+            this.txtSizeTo.Size = new System.Drawing.Size(100, 20);
+            this.txtSizeTo.TabIndex = 5;
+            this.txtSizeTo.Text = "0";
+            this.txtSizeTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtSizeTo.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txtSizeTo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sizeBox_KeyPress);
             // 
-            // comboBox3
+            // cmbSizeFrom
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this.cmbSizeFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSizeFrom.FormattingEnabled = true;
+            this.cmbSizeFrom.Items.AddRange(new object[] {
             "KB",
             "MB",
             "GB"});
-            this.comboBox3.Location = new System.Drawing.Point(134, 32);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(63, 21);
-            this.comboBox3.TabIndex = 3;
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.cmbSizeFrom.Location = new System.Drawing.Point(134, 32);
+            this.cmbSizeFrom.Name = "cmbSizeFrom";
+            this.cmbSizeFrom.Size = new System.Drawing.Size(63, 21);
+            this.cmbSizeFrom.TabIndex = 3;
+            this.cmbSizeFrom.SelectedIndexChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // SizePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.txtSizeTo);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBox3);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.cmbSizeFrom);
+            this.Controls.Add(this.cmbSizeTo);
+            this.Controls.Add(this.txtSizeFrom);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.checkBox1);
             this.Name = "SizePanel";
-            this.Size = new System.Drawing.Size(1268, 505);
+            this.Size = new System.Drawing.Size(1479, 603);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -145,10 +145,10 @@
 
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.TextBox txtSizeFrom;
+        private System.Windows.Forms.ComboBox cmbSizeTo;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.TextBox txtSizeTo;
+        private System.Windows.Forms.ComboBox cmbSizeFrom;
     }
 }

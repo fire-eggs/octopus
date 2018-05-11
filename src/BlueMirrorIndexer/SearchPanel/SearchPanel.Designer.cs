@@ -30,14 +30,14 @@ namespace BlueMirrorIndexer.SearchPanel
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPanel));
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Volume", System.Windows.Forms.HorizontalAlignment.Left);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BtnSearch = new System.Windows.Forms.Button();
-            this.accordion1 = new Accordion();
+            this.accordion1 = new BlueMirrorIndexer.SearchFilters.Accordion();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.lvSearchResults = new BlueMirror.Commons.Controls.ListViewVista();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,6 +49,8 @@ namespace BlueMirrorIndexer.SearchPanel
             this.chSrVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label1 = new System.Windows.Forms.Label();
+            this.ilSystem = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -103,16 +105,17 @@ namespace BlueMirrorIndexer.SearchPanel
             this.BtnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.BtnSearch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.BtnSearch.UseVisualStyleBackColor = true;
+            this.BtnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
             // 
             // accordion1
             // 
             this.accordion1.AddResizeBars = true;
             this.accordion1.AllowMouseResize = true;
-            this.accordion1.AnimateCloseEffect = ((AnimateWindowFlags)(((AnimateWindowFlags.VerticalNegative | AnimateWindowFlags.Hide) 
-            | AnimateWindowFlags.Slide)));
+            this.accordion1.AnimateCloseEffect = ((BlueMirrorIndexer.SearchFilters.AnimateWindowFlags)(((BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.VerticalNegative | BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.Hide) 
+            | BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.Slide)));
             this.accordion1.AnimateCloseMillis = 300;
-            this.accordion1.AnimateOpenEffect = ((AnimateWindowFlags)(((AnimateWindowFlags.VerticalPositive | AnimateWindowFlags.Show) 
-            | AnimateWindowFlags.Slide)));
+            this.accordion1.AnimateOpenEffect = ((BlueMirrorIndexer.SearchFilters.AnimateWindowFlags)(((BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.VerticalPositive | BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.Show) 
+            | BlueMirrorIndexer.SearchFilters.AnimateWindowFlags.Slide)));
             this.accordion1.AnimateOpenMillis = 300;
             this.accordion1.AutoFixDockStyle = true;
             this.accordion1.AutoScroll = true;
@@ -181,15 +184,6 @@ namespace BlueMirrorIndexer.SearchPanel
             this.tableLayoutPanel2.Size = new System.Drawing.Size(509, 448);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(182, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "current search filter display goes here";
-            // 
             // lvSearchResults
             // 
             this.lvSearchResults.AllowColumnReorder = true;
@@ -217,10 +211,17 @@ namespace BlueMirrorIndexer.SearchPanel
             this.lvSearchResults.Location = new System.Drawing.Point(3, 33);
             this.lvSearchResults.Name = "lvSearchResults";
             this.lvSearchResults.Size = new System.Drawing.Size(503, 412);
+            this.lvSearchResults.SmallImageList = this.ilSystem;
             this.lvSearchResults.TabIndex = 2;
             this.lvSearchResults.UseCompatibleStateImageBehavior = false;
             this.lvSearchResults.View = System.Windows.Forms.View.Details;
             this.lvSearchResults.VirtualMode = true;
+            this.lvSearchResults.CacheVirtualItems += new System.Windows.Forms.CacheVirtualItemsEventHandler(this.lvSearchResults_CacheVirtualItems);
+            this.lvSearchResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvSearchResults_ColumnClick);
+            this.lvSearchResults.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lvSearchResults_RetrieveVirtualItem);
+            this.lvSearchResults.SelectedIndexChanged += new System.EventHandler(this.lvSearchResults_SelectedIndexChanged);
+            this.lvSearchResults.DoubleClick += new System.EventHandler(this.lvSearchResults_DoubleClick);
+            this.lvSearchResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSearchResults_KeyDown);
             // 
             // columnHeader5
             // 
@@ -275,6 +276,21 @@ namespace BlueMirrorIndexer.SearchPanel
             this.chSrCrc.Text = "CRC";
             this.chSrCrc.Width = 80;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(182, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "current search filter display goes here";
+            // 
+            // ilSystem
+            // 
+            this.ilSystem.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.ilSystem.ImageSize = new System.Drawing.Size(16, 16);
+            this.ilSystem.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // SearchPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -312,5 +328,6 @@ namespace BlueMirrorIndexer.SearchPanel
         private System.Windows.Forms.ColumnHeader chSrVolume;
         private System.Windows.Forms.ColumnHeader chSrPath;
         private System.Windows.Forms.ColumnHeader chSrCrc;
+        private System.Windows.Forms.ImageList ilSystem;
     }
 }
