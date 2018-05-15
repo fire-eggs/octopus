@@ -49,14 +49,19 @@ namespace BlueMirrorIndexer.SearchPanel
             this.chSrVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSrCrc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label1 = new System.Windows.Forms.Label();
+            this.pmSearchList = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmItemPropertiesFromSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmFindInDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInWindowsExplorerToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ilSystem = new System.Windows.Forms.ImageList(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.pmSearchList.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -201,6 +206,7 @@ namespace BlueMirrorIndexer.SearchPanel
             this.chSrPath,
             this.chSrCrc});
             this.lvSearchResults.ColumnWidthArray = ((System.Collections.ArrayList)(resources.GetObject("lvSearchResults.ColumnWidthArray")));
+            this.lvSearchResults.ContextMenuStrip = this.pmSearchList;
             this.lvSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSearchResults.FullRowSelect = true;
             listViewGroup1.Header = "Volume";
@@ -221,7 +227,11 @@ namespace BlueMirrorIndexer.SearchPanel
             this.lvSearchResults.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lvSearchResults_RetrieveVirtualItem);
             this.lvSearchResults.SelectedIndexChanged += new System.EventHandler(this.lvSearchResults_SelectedIndexChanged);
             this.lvSearchResults.DoubleClick += new System.EventHandler(this.lvSearchResults_DoubleClick);
+            this.lvSearchResults.Enter += new System.EventHandler(this.lvSearchResults_Enter);
             this.lvSearchResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSearchResults_KeyDown);
+            this.lvSearchResults.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvSearchResults_MouseDown);
+            this.lvSearchResults.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSearchResults_MouseMove);
+            this.lvSearchResults.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvSearchResults_MouseUp);
             // 
             // columnHeader5
             // 
@@ -276,6 +286,48 @@ namespace BlueMirrorIndexer.SearchPanel
             this.chSrCrc.Text = "CRC";
             this.chSrCrc.Width = 80;
             // 
+            // pmSearchList
+            // 
+            this.pmSearchList.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.pmSearchList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmItemPropertiesFromSearch,
+            this.cmFindInDatabase,
+            this.showInWindowsExplorerToolStripMenuItem2});
+            this.pmSearchList.Name = "cmsSearchList";
+            this.pmSearchList.Size = new System.Drawing.Size(218, 82);
+            this.pmSearchList.Opening += new System.ComponentModel.CancelEventHandler(this.pmSearchList_Opening);
+            // 
+            // cmItemPropertiesFromSearch
+            // 
+            this.cmItemPropertiesFromSearch.Image = global::BlueMirrorIndexer.Properties.Resources.tag_blue_edit;
+            this.cmItemPropertiesFromSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cmItemPropertiesFromSearch.Name = "cmItemPropertiesFromSearch";
+            this.cmItemPropertiesFromSearch.Size = new System.Drawing.Size(217, 26);
+            this.cmItemPropertiesFromSearch.Text = "Item Properties";
+            this.cmItemPropertiesFromSearch.Click += new System.EventHandler(this.cmItemPropertiesFromSearch_Click);
+            // 
+            // cmFindInDatabase
+            // 
+            this.cmFindInDatabase.Image = global::BlueMirrorIndexer.Properties.Resources.folder_find;
+            this.cmFindInDatabase.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+            this.cmFindInDatabase.Name = "cmFindInDatabase";
+            this.cmFindInDatabase.Size = new System.Drawing.Size(217, 26);
+            this.cmFindInDatabase.Text = "Find in Database";
+            this.cmFindInDatabase.Click += new System.EventHandler(this.cmFindInDatabase_Click);
+            // 
+            // showInWindowsExplorerToolStripMenuItem2
+            // 
+            this.showInWindowsExplorerToolStripMenuItem2.Name = "showInWindowsExplorerToolStripMenuItem2";
+            this.showInWindowsExplorerToolStripMenuItem2.Size = new System.Drawing.Size(217, 26);
+            this.showInWindowsExplorerToolStripMenuItem2.Text = "Show In Windows E&xplorer";
+            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem2_Click);
+            // 
+            // ilSystem
+            // 
+            this.ilSystem.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.ilSystem.ImageSize = new System.Drawing.Size(16, 16);
+            this.ilSystem.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -285,12 +337,6 @@ namespace BlueMirrorIndexer.SearchPanel
             this.label1.TabIndex = 0;
             this.label1.Text = "current search filter display goes here";
             // 
-            // ilSystem
-            // 
-            this.ilSystem.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilSystem.ImageSize = new System.Drawing.Size(16, 16);
-            this.ilSystem.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // SearchPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,6 +344,7 @@ namespace BlueMirrorIndexer.SearchPanel
             this.Controls.Add(this.splitContainer1);
             this.Name = "SearchPanel";
             this.Size = new System.Drawing.Size(769, 448);
+            this.Load += new System.EventHandler(this.SearchPanel_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -305,6 +352,7 @@ namespace BlueMirrorIndexer.SearchPanel
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.pmSearchList.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -329,5 +377,9 @@ namespace BlueMirrorIndexer.SearchPanel
         private System.Windows.Forms.ColumnHeader chSrPath;
         private System.Windows.Forms.ColumnHeader chSrCrc;
         private System.Windows.Forms.ImageList ilSystem;
+        private System.Windows.Forms.ContextMenuStrip pmSearchList;
+        private System.Windows.Forms.ToolStripMenuItem cmItemPropertiesFromSearch;
+        private System.Windows.Forms.ToolStripMenuItem cmFindInDatabase;
+        private System.Windows.Forms.ToolStripMenuItem showInWindowsExplorerToolStripMenuItem2;
     }
 }

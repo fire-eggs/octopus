@@ -1,4 +1,5 @@
 using BlueMirrorIndexer.Properties;
+using BlueMirrorIndexer.SearchPanel;
 using Igorary.Forms;
 using Igorary.Forms.Components;
 using Igorary.Utils.Utils.Extensions;
@@ -32,13 +33,17 @@ namespace BlueMirrorIndexer
             btnSave.Enabled = cmSave.Enabled = false;
 
             charting.MainForm = this;
+
+            searchPane.DragStart += searchPane_DragStart;
+            searchPane.DragGoing += searchPane_DragGoing;
+            searchPane.DragEnd += searchPane_DragEnd;
         }
 
         private void updateControls() {
             updateTree();
             updateLogicalFolders();
             UpdateCommands();
-            clearSearchList();
+            searchPane.clearSearchList();
         }
 
         private void updateVolumesInSearchCriterias() 
@@ -331,8 +336,7 @@ namespace BlueMirrorIndexer
             lvFolderElements.ColumnOrderArray = Settings.Default.FolderElementsColumnOrder;
             lvFolderElements.ColumnWidthArray = Settings.Default.FolderElementsColumnWidth;
 
-            lvSearchResults.ColumnOrderArray = Settings.Default.SearchResultsColumnOrder;
-            lvSearchResults.ColumnWidthArray = Settings.Default.SearchResultsColumnWidth;
+            searchPane.LoadSearchSettings();
 
             startRefreshDiscs();
             QueryCancelAutoPlay = Win32.RegisterWindowMessage("QueryCancelAutoPlay");
@@ -406,7 +410,8 @@ namespace BlueMirrorIndexer
 
                 Settings.Default.LastOpenedFile = fileOperations.CurrentFilePath;
 
-                SaveSearchSettings();
+                searchPane.SaveSearchSettings();
+
                 Settings.Default.Save();
             }
             catch (Exception ex) {
@@ -1326,6 +1331,22 @@ namespace BlueMirrorIndexer
                 TreeNode targetNode = getSelectedLogicalFolderTvItem();
                 dropItems(e, targetNode);
             }
+        }
+
+        void searchPane_DragEnd(object sender, EventArgs e)
+        {
+            emptyRectangle();
+        }
+
+        void searchPane_DragGoing(object sender, DraggingArgs draggingArgs)
+        {
+            startDragging(draggingArgs.MouseEvent, draggingArgs.Control);
+        }
+
+        void searchPane_DragStart(object sender, DragStartArgs e)
+        {
+            itemsToDrag = e.ItemsToDrag;
+            dragBoxFromMouseDown = e.DragRect;
         }
 
         #endregion

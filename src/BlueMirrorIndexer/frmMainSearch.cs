@@ -23,14 +23,6 @@ namespace BlueMirrorIndexer
             lvSearchResults = searchPane.GetSearchList();
         }
 
-        private void SaveSearchSettings()
-        {
-            Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
-            Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
-
-            // TODO save splitter position
-        }
-
         //private void lvSearchResults_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
         //    updateStrip();
         //}
@@ -266,11 +258,11 @@ namespace BlueMirrorIndexer
             return null;
         }
 
-        private void clearSearchList()
-        {
-            //searchResultList.Clear();
-            //displaySearchList();
-        }
+        //private void clearSearchList()
+        //{
+        //    //searchResultList.Clear();
+        //    //displaySearchList();
+        //}
 
         private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
         {

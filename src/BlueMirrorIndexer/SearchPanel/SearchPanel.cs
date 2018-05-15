@@ -65,6 +65,23 @@ namespace BlueMirrorIndexer.SearchPanel
             accordion1.SetTooltip(sender as Control, e.FilterText);
         }
 
+        public void LoadSearchSettings()
+        {
+            lvSearchResults.ColumnOrderArray = Settings.Default.SearchResultsColumnOrder;
+            lvSearchResults.ColumnWidthArray = Settings.Default.SearchResultsColumnWidth;
+            if (Settings.Default.SearchResultsSplitterPos > 0)
+                splitContainer1.SplitterDistance = Settings.Default.SearchResultsSplitterPos;
+        }
+
+        public void SaveSearchSettings()
+        {
+            Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
+            Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
+
+            // TODO save splitter position
+            Settings.Default.SearchResultsSplitterPos = splitContainer1.SplitterDistance;
+        }
+
         public void UpdateVolumeList(VolumeDatabase database)
         {
             if (volP != null)
@@ -150,25 +167,52 @@ namespace BlueMirrorIndexer.SearchPanel
 
         private void lvSearchResults_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.A)
+            if (!e.Control || e.KeyCode != Keys.A) 
+                return;
+
+            e.SuppressKeyPress = true;
+            duringSelectAll = true;
+            try
             {
-                e.SuppressKeyPress = true;
-                duringSelectAll = true;
-                try
-                {
-                    lvSearchResults.SelectAll();
-                }
-                finally
-                {
-                    duringSelectAll = false;
-                }
-                updateStrip();
+                lvSearchResults.SelectAll();
             }
+            finally
+            {
+                duringSelectAll = false;
+            }
+            updateStrip();
         }
 
         private void lvSearchResults_DoubleClick(object sender, EventArgs e)
         {
-            // TODO cmItemPropertiesFromSearch_Click(sender, e);
+            cmItemPropertiesFromSearch_Click(sender, e);
+        }
+
+        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
+        {
+            ItemInDatabase item = getSelectedItemInSearch();
+            if (item == null)
+                return;
+
+            // TODO notify mainform instead
+
+            bool result = item.EditPropertiesDlg();
+            if (result)
+            {
+                // TODO
+                //fileOperations.Modified = true;
+                //UpdateLogicalElements();
+            }
+        }
+
+        private ItemInDatabase getSelectedItemInSearch()
+        {
+            if (lvSearchResults.SelectedIndices.Count != 1) 
+                return null;
+            int index = lvSearchResults.SelectedIndices[0];
+            if ((index >= 0) && (index < searchResultList.Count))
+                return searchResultList[index];
+            return null;
         }
 
         #region Search result list virtual mode
@@ -200,15 +244,151 @@ namespace BlueMirrorIndexer.SearchPanel
 
         #endregion
 
+        public void clearSearchList()
+        {
+            searchResultList.Clear();
+            ShowSearchResults();
+        }
 
         private void updateStrip()
         {
+            int count = 0;
+            long sum = 0;
+            bool selected = false;
+            if (lvSearchResults.SelectedIndices.Count > 0)
+            {
+                // selected items
+                count = lvSearchResults.SelectedIndices.Count;
+                selected = true;
+                foreach (int index in lvSearchResults.SelectedIndices)
+                {
+                    sum += searchResultList[index].Length;
+                }
+            }
+            else
+            {
+                count = searchResultList.Count;
+                foreach (ItemInDatabase iid in searchResultList)
+                    if (iid is FileInDatabase)
+                        sum += (iid as FileInDatabase).Length;
+            }
+
             // TODO notify main form
+            // send selected, count, sum
         }
 
         private void UpdateCommands()
         {
             // TODO notify main form
         }
+
+        private void pmSearchList_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cmFindInDatabase.Enabled = cmItemPropertiesFromSearch.Enabled = lvSearchResults.SelectedIndices.Count == 1;
+        }
+
+        private void lvSearchResults_Enter(object sender, EventArgs e)
+        {
+            UpdateCommands();
+        }
+
+        private void lvSearchResults_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (lvSearchResults.SelectedIndices.Count > 0)
+            {
+                var itemsToDrag = new List<ItemInDatabase>();
+                foreach (int index in lvSearchResults.SelectedIndices)
+                    itemsToDrag.Add(searchResultList[index]);
+                Size dragSize = SystemInformation.DragSize;
+                var dragRect = new Rectangle(new Point(e.X - (dragSize.Width/2), e.Y - (dragSize.Height/2)), dragSize);
+                RaiseDragStart(itemsToDrag, dragRect);
+            }
+            else
+                RaiseDragEnd();
+        }
+
+        private void RaiseDragStart(List<ItemInDatabase> itemsToDrag, Rectangle dragRect)
+        {
+            if (DragStartHandler != null)
+                DragStartHandler(this, new DragStartArgs {ItemsToDrag = itemsToDrag, DragRect = dragRect});
+        }
+
+        private void lvSearchResults_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (DraggingHandler != null)
+                DraggingHandler(this, new DraggingArgs {MouseEvent = e, Control = lvSearchResults});
+        }
+
+        private void lvSearchResults_MouseUp(object sender, MouseEventArgs e)
+        {
+            RaiseDragEnd();
+        }
+
+        private void RaiseDragEnd()
+        {
+            if (DragEndHandler != null)
+                DragEndHandler(this, null);
+        }
+
+        public delegate void DragStarted(object sender, DragStartArgs e);
+
+        public delegate void Dragging(object sender, DraggingArgs e);
+
+        private event DragStarted DragStartHandler;
+        private event EventHandler DragEndHandler;
+        private event Dragging DraggingHandler;
+
+        public event DragStarted DragStart
+        {
+            add { DragStartHandler += value; }
+            remove { DragStartHandler -= value; }
+        }
+        public event EventHandler DragEnd
+        {
+            add { DragEndHandler += value; }
+            remove { DragEndHandler -= value; }
+        }
+        public event Dragging DragGoing
+        {
+            add { DraggingHandler += value; }
+            remove { DraggingHandler -= value; }
+        }
+
+        private void cmFindInDatabase_Click(object sender, EventArgs e)
+        {
+            if (lvSearchResults.SelectedIndices.Count != 1) 
+                return;
+            int index = lvSearchResults.SelectedIndices[0];
+            ItemInDatabase itemInDatabase = searchResultList[index];
+            // TODO findInTree(itemInDatabase);
+        }
+
+        private void showInWindowsExplorerToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (lvSearchResults.SelectedIndices.Count != 1)
+                return;
+            int index = lvSearchResults.SelectedIndices[0];
+            ItemInDatabase itemInDatabase = searchResultList[index];
+            // TODO showInExplorer(itemInDatabase);
+        }
+
+        private void SearchPanel_Load(object sender, EventArgs e)
+        {
+            if (Settings.Default.SearchResultsSplitterPos > 0)
+                splitContainer1.SplitterDistance = Settings.Default.SearchResultsSplitterPos;
+        }
     }
+
+    public class DraggingArgs
+    {
+        public MouseEventArgs MouseEvent { get; set; }
+        public Control Control { get; set; }
+    }
+
+    public class DragStartArgs
+    {
+        public List<ItemInDatabase> ItemsToDrag { get; set; }
+        public Rectangle DragRect { get; set; }
+    }
+
 }
