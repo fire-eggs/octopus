@@ -240,7 +240,7 @@ namespace BlueMirrorIndexer
             // 
             this.showInWindowsExplorerToolStripMenuItem.Name = "showInWindowsExplorerToolStripMenuItem";
             resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem, "showInWindowsExplorerToolStripMenuItem");
-            this.showInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem_Click);
+            this.showInWindowsExplorerToolStripMenuItem.Click += new System.EventHandler(this.cmExplorer_Click);
             // 
             // ilSystem
             // 
@@ -257,14 +257,12 @@ namespace BlueMirrorIndexer
             this.showInWindowsExplorerToolStripMenuItem2});
             this.pmSearchList.Name = "cmsSearchList";
             resources.ApplyResources(this.pmSearchList, "pmSearchList");
-            this.pmSearchList.Opening += new System.ComponentModel.CancelEventHandler(this.cmsSearchList_Opening);
             // 
             // cmItemPropertiesFromSearch
             // 
             this.cmItemPropertiesFromSearch.Image = global::BlueMirrorIndexer.Properties.Resources.tag_blue_edit;
             resources.ApplyResources(this.cmItemPropertiesFromSearch, "cmItemPropertiesFromSearch");
             this.cmItemPropertiesFromSearch.Name = "cmItemPropertiesFromSearch";
-            this.cmItemPropertiesFromSearch.Click += new System.EventHandler(this.cmItemPropertiesFromSearch_Click);
             // 
             // cmFindInDatabase
             // 
@@ -277,7 +275,7 @@ namespace BlueMirrorIndexer
             // 
             this.showInWindowsExplorerToolStripMenuItem2.Name = "showInWindowsExplorerToolStripMenuItem2";
             resources.ApplyResources(this.showInWindowsExplorerToolStripMenuItem2, "showInWindowsExplorerToolStripMenuItem2");
-            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.showInWindowsExplorerToolStripMenuItem2_Click);
+            this.showInWindowsExplorerToolStripMenuItem2.Click += new System.EventHandler(this.cmExplorer_Click);
             // 
             // menuMain
             // 

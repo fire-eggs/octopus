@@ -226,7 +226,7 @@ namespace BlueMirrorIndexer.SearchPanel
             this.lvSearchResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvSearchResults_ColumnClick);
             this.lvSearchResults.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lvSearchResults_RetrieveVirtualItem);
             this.lvSearchResults.SelectedIndexChanged += new System.EventHandler(this.lvSearchResults_SelectedIndexChanged);
-            this.lvSearchResults.DoubleClick += new System.EventHandler(this.lvSearchResults_DoubleClick);
+            this.lvSearchResults.DoubleClick += new System.EventHandler(this.cmItemPropertiesFromSearch_Click);
             this.lvSearchResults.Enter += new System.EventHandler(this.lvSearchResults_Enter);
             this.lvSearchResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSearchResults_KeyDown);
             this.lvSearchResults.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvSearchResults_MouseDown);
@@ -365,7 +365,7 @@ namespace BlueMirrorIndexer.SearchPanel
         private Accordion accordion1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label label1;
-        private BlueMirror.Commons.Controls.ListViewVista lvSearchResults;
+        internal BlueMirror.Commons.Controls.ListViewVista lvSearchResults;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;

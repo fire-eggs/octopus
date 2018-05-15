@@ -101,20 +101,11 @@
     <Compile Include="Components\ExpanderLabel.Designer.cs">
       <DependentUpon>ExpanderLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\filters.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Components\filters.Designer.cs">
-      <DependentUpon>filters.cs</DependentUpon>
-    </Compile>
     <Compile Include="FolderImpl.cs" />
     <Compile Include="Components\LogicalFoldersTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="FolderReader.cs" />
-    <Compile Include="frmMainSearch.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="SearchFilters\Accordion.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -169,12 +160,6 @@
     </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="VolumeDatabase.cs" />
-    <Compile Include="Components\FilesSearchCriteriaPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Components\FilesSearchCriteriaPanel.Designer.cs">
-      <DependentUpon>FilesSearchCriteriaPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Components\SearchEventArgs.cs" />
     <Compile Include="CompressedFile.cs" />
     <Compile Include="DatabaseItemComparer.cs" />
@@ -262,13 +247,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\ExpanderLabel.resx">
       <DependentUpon>ExpanderLabel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\FilesSearchCriteriaPanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FilesSearchCriteriaPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\filters.resx">
-      <DependentUpon>filters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgAbout.pl.resx">
       <SubType>Designer</SubType>

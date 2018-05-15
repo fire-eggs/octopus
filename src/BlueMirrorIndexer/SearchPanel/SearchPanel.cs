@@ -12,7 +12,6 @@ using Igorary.Utils.Utils.Extensions;
 
 // ReSharper disable InconsistentNaming
 
-
 namespace BlueMirrorIndexer.SearchPanel
 {
     public partial class SearchPanel : UserControl
@@ -183,29 +182,15 @@ namespace BlueMirrorIndexer.SearchPanel
             updateStrip();
         }
 
-        private void lvSearchResults_DoubleClick(object sender, EventArgs e)
-        {
-            cmItemPropertiesFromSearch_Click(sender, e);
-        }
-
-        private void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
+        public void cmItemPropertiesFromSearch_Click(object sender, EventArgs e)
         {
             ItemInDatabase item = getSelectedItemInSearch();
             if (item == null)
                 return;
-
-            // TODO notify mainform instead
-
-            bool result = item.EditPropertiesDlg();
-            if (result)
-            {
-                // TODO
-                //fileOperations.Modified = true;
-                //UpdateLogicalElements();
-            }
+            FrmMain.Instance.showItemProperties(item);
         }
 
-        private ItemInDatabase getSelectedItemInSearch()
+        internal ItemInDatabase getSelectedItemInSearch()
         {
             if (lvSearchResults.SelectedIndices.Count != 1) 
                 return null;
@@ -250,7 +235,7 @@ namespace BlueMirrorIndexer.SearchPanel
             ShowSearchResults();
         }
 
-        private void updateStrip()
+        internal void updateStrip()
         {
             int count = 0;
             long sum = 0;
@@ -272,14 +257,12 @@ namespace BlueMirrorIndexer.SearchPanel
                     if (iid is FileInDatabase)
                         sum += (iid as FileInDatabase).Length;
             }
-
-            // TODO notify main form
-            // send selected, count, sum
+            FrmMain.Instance.UpdateStatusBar(selected, count, sum);
         }
 
         private void UpdateCommands()
         {
-            // TODO notify main form
+            FrmMain.Instance.UpdateCommands();
         }
 
         private void pmSearchList_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -360,7 +343,7 @@ namespace BlueMirrorIndexer.SearchPanel
                 return;
             int index = lvSearchResults.SelectedIndices[0];
             ItemInDatabase itemInDatabase = searchResultList[index];
-            // TODO findInTree(itemInDatabase);
+            FrmMain.Instance.findInTree(itemInDatabase);
         }
 
         private void showInWindowsExplorerToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -369,7 +352,7 @@ namespace BlueMirrorIndexer.SearchPanel
                 return;
             int index = lvSearchResults.SelectedIndices[0];
             ItemInDatabase itemInDatabase = searchResultList[index];
-            // TODO showInExplorer(itemInDatabase);
+            FrmMain.Instance.ShowInExplorer(itemInDatabase);
         }
 
         private void SearchPanel_Load(object sender, EventArgs e)

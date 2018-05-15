@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -19,7 +18,6 @@ namespace BlueMirrorIndexer
 {
     public partial class FrmMain : Form
     {
-
         public static FrmMain Instance;
 
         public FrmMain() {
@@ -168,8 +166,7 @@ namespace BlueMirrorIndexer
                     if (lvFolderElements.Focused)
                         cmItemPropertiesFromFolders_Click(sender, e);
                     else
-                        if (lvSearchResults.Focused)
-                            cmItemPropertiesFromSearch_Click(sender, e);
+                            searchPane.cmItemPropertiesFromSearch_Click(sender, e);
         }
 
         private void cmDelete_Click(object sender, EventArgs e) {
@@ -202,7 +199,7 @@ namespace BlueMirrorIndexer
             FolderInDatabase selectedFolder = getSelectedFolder();
             FileInDatabase selectedFile = getSelectedFile();
             CompressedFile selectedCompressedFile = getSelectedCompressedFile();
-            ItemInDatabase selectedItemInSearch = getSelectedItemInSearch();
+            ItemInDatabase selectedItemInSearch = searchPane.getSelectedItemInSearch();
             ItemInDatabase selectedElementInFolders = getSelectedElementInFolder();
             if (selectedDisc != null) {
                 cmDeleteTreeItemPopup.Text = Resources.DeleteVolume;
@@ -228,9 +225,16 @@ namespace BlueMirrorIndexer
 
             cmItemPropertiesFromList.Enabled = selectedFile != null;
             cmDeleteListItemPopup.Enabled = filesSelected;
-            btnProperties.Enabled = cmPropertiesFrm.Enabled = (tvDatabaseFolderTree.Focused && ((selectedDisc != null) || (selectedFolder != null))) || (lvDatabaseItems.Focused && (selectedFile != null)) || (lvFolderElements.Focused && (selectedElementInFolders != null)) || (lvSearchResults.Focused && (selectedItemInSearch != null));
+            // TODO search results hack
+            btnProperties.Enabled = cmPropertiesFrm.Enabled = (tvDatabaseFolderTree.Focused && ((selectedDisc != null) || 
+                                                              (selectedFolder != null))) || 
+                                                              (lvDatabaseItems.Focused && (selectedFile != null)) || 
+                                                              (lvFolderElements.Focused && (selectedElementInFolders != null)) ||
+                                                              (searchPane.lvSearchResults.Focused && (selectedItemInSearch != null));
 
-            btnFindInDatabase.Enabled = cmFindInDatabaseFrm.Enabled = (lvFolderElements.Focused && (selectedElementInFolders != null)) || (lvSearchResults.Focused && (selectedItemInSearch != null));
+            // TODO search results hack
+            btnFindInDatabase.Enabled = cmFindInDatabaseFrm.Enabled = (lvFolderElements.Focused && (selectedElementInFolders != null)) ||
+                                                                      (searchPane.lvSearchResults.Focused && (selectedItemInSearch != null));
 
             btnDelete.Enabled = cmDeleteFrm.Enabled = (tvDatabaseFolderTree.Focused && ((selectedDisc != null) || (selectedFolder != null))) || (lvDatabaseItems.Focused && filesSelected);
 
@@ -313,8 +317,9 @@ namespace BlueMirrorIndexer
                         sbSize.Text = "";
                     }
             }
-            else if (tcMain.SelectedTab == tpSearch) {
-                updateStripSearch();
+            else if (tcMain.SelectedTab == tpSearch)
+            {
+                searchPane.updateStrip(); // TODO hack
             }
         }
 
@@ -325,9 +330,6 @@ namespace BlueMirrorIndexer
         public static uint QueryCancelAutoPlay = 0;
         private void FrmMain_Load(object sender, EventArgs e)
         {
-
-            Bonk(); // TODO
-
             updateVolumeButtons();
 
             lvDatabaseItems.ColumnOrderArray = Settings.Default.DatabaseItemsColumnOrder;
@@ -476,6 +478,12 @@ namespace BlueMirrorIndexer
 
         #endregion
 
+        private void cmFindInDatabase_Click(object sender, EventArgs e)
+        {
+            var res = searchPane.getSelectedItemInSearch();
+            if (res != null)
+                findInTree(res);
+        }
 
         void closeOpenedProgressDialog() {
             if (openProgressDialog != null) {
@@ -703,7 +711,7 @@ namespace BlueMirrorIndexer
 
         #region Show properties
 
-        private bool showItemProperties(ItemInDatabase itemInDatabase)
+        internal bool showItemProperties(ItemInDatabase itemInDatabase)
         {
             if (itemInDatabase == null)
                 return false;
@@ -718,9 +726,6 @@ namespace BlueMirrorIndexer
         #endregion
 
         #endregion
-
-
-        bool duringSelectAll = false;
 
         public void findInTree(ItemInDatabase itemInDatabase) {
             List<ItemInDatabase> pathList = new List<ItemInDatabase>();
@@ -1214,10 +1219,6 @@ namespace BlueMirrorIndexer
             startDragging(e, tvDatabaseFolderTree);
         }
 
-        private void lvSearchResults_MouseMove(object sender, MouseEventArgs e) {
-            startDragging(e, lvSearchResults);
-        }
-
         private void lvLogicalFolderItems_MouseMove(object sender, MouseEventArgs e) {
             startDragging(e, lvFolderElements);
         }
@@ -1382,7 +1383,7 @@ namespace BlueMirrorIndexer
         }
 
         private void cmFindInDatabaseFrm_Click(object sender, EventArgs e) {
-            if (lvSearchResults.Focused)
+            if (searchPane.lvSearchResults.Focused) // TODO Hack
                 cmFindInDatabase_Click(sender, e);
             else
                 if (lvFolderElements.Focused)
@@ -1505,18 +1506,17 @@ namespace BlueMirrorIndexer
         {
             // Invoke windows explorer on the item.
             // N.B. assumes menu is disabled when more than one item selected
-            ItemInDatabase fid;
-            if (tcMain.SelectedTab == tpSearch)
-                fid = getSelectedItemInSearch();
-            else
-                fid = getSelectedFile();
-
+            ItemInDatabase fid = getSelectedFile();
             if (fid == null)
             {
                 showInWindowsExplorerToolStripMenuItem1_Click(null, null);
                 return;
             }
+            ShowInExplorer(fid);
+        }
 
+        public void ShowInExplorer(ItemInDatabase fid)
+        {
             // TODO KBR if item is a disc, fullname is empty. it should be set to name.
             var p = string.IsNullOrEmpty(fid.FullName) ? fid.Name : fid.FullName;
             InvokeExplorer(p);
@@ -1544,11 +1544,6 @@ namespace BlueMirrorIndexer
             }
         }
 
-        private void showInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cmExplorer_Click(sender, e);
-        }
-
         private void showInWindowsExplorerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             // tree volume/folder
@@ -1557,16 +1552,13 @@ namespace BlueMirrorIndexer
                 InvokeExplorer(string.IsNullOrEmpty(iid.FullName) ? iid.Name : iid.FullName);
         }
 
-        private void showInWindowsExplorerToolStripMenuItem2_Click(object sender, EventArgs e)
+        public void UpdateStatusBar(bool selected, int count, long sum)
         {
-            // search menu
-            cmExplorer_Click(sender, e);
-        }
+            sbFiles.Text = (selected ? Resources.SelectedFiles : Resources.Files) + ": " + count;
+            sbSize.Text = Resources.Size + ": " + sum.ToKB();
 
-        //private void filesSearchCriteriaPanel_Load(object sender, EventArgs e)
-        //{
-        //    filters1.SearchBtnClicked += filesSearchCriteriaPanel_SearchBtnClicked;
-        //}
+            // TODO no files?
+        }
     }
 
     class AbortException : Exception
