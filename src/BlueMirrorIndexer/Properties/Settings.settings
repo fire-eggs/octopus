@@ -50,5 +50,8 @@
     <Setting Name="SearchResultsSplitterPos" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
+    <Setting Name="DatabaseItemsSplitterPos" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

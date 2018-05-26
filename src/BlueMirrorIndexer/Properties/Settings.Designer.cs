@@ -208,5 +208,17 @@ namespace BlueMirrorIndexer.Properties {
                 this["SearchResultsSplitterPos"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int DatabaseItemsSplitterPos {
+            get {
+                return ((int)(this["DatabaseItemsSplitterPos"]));
+            }
+            set {
+                this["DatabaseItemsSplitterPos"] = value;
+            }
+        }
     }
 }

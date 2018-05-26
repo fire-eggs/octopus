@@ -76,8 +76,6 @@ namespace BlueMirrorIndexer.SearchPanel
         {
             Settings.Default.SearchResultsColumnOrder = lvSearchResults.ColumnOrderArray;
             Settings.Default.SearchResultsColumnWidth = lvSearchResults.ColumnWidthArray;
-
-            // TODO save splitter position
             Settings.Default.SearchResultsSplitterPos = splitContainer1.SplitterDistance;
         }
 

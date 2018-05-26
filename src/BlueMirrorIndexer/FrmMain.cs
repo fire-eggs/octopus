@@ -338,6 +338,9 @@ namespace BlueMirrorIndexer
             lvFolderElements.ColumnOrderArray = Settings.Default.FolderElementsColumnOrder;
             lvFolderElements.ColumnWidthArray = Settings.Default.FolderElementsColumnWidth;
 
+            if (Settings.Default.DatabaseItemsSplitterPos > 0)
+                scDatabase.SplitterDistance = Settings.Default.DatabaseItemsSplitterPos;
+
             searchPane.LoadSearchSettings();
 
             startRefreshDiscs();
@@ -409,6 +412,8 @@ namespace BlueMirrorIndexer
 
                 Settings.Default.DatabaseItemsColumnWidth = lvDatabaseItems.ColumnWidthArray;
                 Settings.Default.FolderElementsColumnWidth = lvFolderElements.ColumnWidthArray;
+
+                Settings.Default.DatabaseItemsSplitterPos = scDatabase.SplitterDistance;
 
                 Settings.Default.LastOpenedFile = fileOperations.CurrentFilePath;
 
