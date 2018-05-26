@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Igorary.Forms;
-using Igorary.Utils.Extensions;
 using Igorary.Utils.Utils.Extensions;
 
 namespace BlueMirrorIndexer
@@ -62,12 +62,24 @@ namespace BlueMirrorIndexer
             }
         }
 
+        private static readonly Dictionary<string,int> iconIndex = new Dictionary<string, int>();
+        private int getFileIconIndex(string name, string ext)
+        {
+            int dex;
+            if (iconIndex.TryGetValue(ext, out dex))
+                return dex;
+
+            dex = Win32.GetFileIconIndex(name, Win32.FileIconSize.Small);
+            iconIndex[ext] = dex;
+            return dex;
+        }
+
         // KBR TODO duplicated code?
         public override ListViewItem ToListViewItem() {
             ListViewItem lvi = new ListViewItem();
             lvi.Text = Name;
             lvi.Tag = this;
-            lvi.ImageIndex = Win32.GetFileIconIndex(Name, Win32.FileIconSize.Small);
+            lvi.ImageIndex = getFileIconIndex(Name, Extension);
             lvi.SubItems.Add(Length.ToKB());
             lvi.SubItems.Add(CreationTime.ToString("g"));
             lvi.SubItems.Add(LastWriteTime.ToString("g"));

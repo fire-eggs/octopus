@@ -256,11 +256,15 @@ namespace BlueMirrorIndexer
                     Cursor c = Cursor.Current;
                     Cursor.Current = Cursors.WaitCursor;
                     lvDatabaseItems.BeginUpdate();
+                    List<ListViewItem> newLVI = new List<ListViewItem>(fid.FileCount);
                     try {
-                        foreach (FileInDatabase fileid in fid.Files) {
+                        foreach (FileInDatabase fileid in fid.Files) 
+                        {
                             ListViewItem lvi = fileid.ToListViewItem();
-                            lvDatabaseItems.Items.Add(lvi);
+                            newLVI.Add(lvi);
                         }
+                        lvDatabaseItems.Items.AddRange(newLVI.ToArray());
+                        newLVI = null;
                         Win32.UpdateSystemImageList(lvDatabaseItems.SmallImageList, Win32.FileIconSize.Small, false, Resources.delete);
                     }
                     finally {
