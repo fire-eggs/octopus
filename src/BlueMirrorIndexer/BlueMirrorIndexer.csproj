@@ -95,12 +95,14 @@
     <Compile Include="Components\Charter.Designer.cs">
       <DependentUpon>Charter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\CRC32.cs" />
     <Compile Include="Components\ExpanderLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Components\ExpanderLabel.Designer.cs">
       <DependentUpon>ExpanderLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\SafeProxy.cs" />
     <Compile Include="FolderImpl.cs" />
     <Compile Include="Components\LogicalFoldersTreeView.cs">
       <SubType>Component</SubType>

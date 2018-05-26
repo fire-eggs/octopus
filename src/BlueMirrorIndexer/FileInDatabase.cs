@@ -52,7 +52,9 @@ namespace BlueMirrorIndexer
             return base.GetCsvLine() + "," + Length;
         }
 
-        public ulong Hash { get; set; }
+        //public ulong Hash { get; set; }
+
+        public uint CRC { get; set; }
 
         public string NameLengthKey {
             get {
@@ -76,8 +78,8 @@ namespace BlueMirrorIndexer
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());
-            if(Hash != 0)
-                lvi.SubItems.Add(Hash.ToString("X"));
+            if(CRC != 0)
+                lvi.SubItems.Add(CRC.ToString("X8"));
             else
                 lvi.SubItems.Add(string.Empty);
             return lvi;

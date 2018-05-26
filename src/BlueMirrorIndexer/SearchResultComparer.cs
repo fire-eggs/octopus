@@ -15,9 +15,9 @@ namespace BlueMirrorIndexer
             this.ascending = ascending;
         }
 
-        private ulong crc(ItemInDatabase itemInDatabase) {
+        private static ulong CRC(ItemInDatabase itemInDatabase) {
             if (itemInDatabase is FileInDatabase)
-                return (itemInDatabase as FileInDatabase).Hash;
+                return (itemInDatabase as FileInDatabase).CRC;
             return 0;
         }
 
@@ -36,7 +36,7 @@ namespace BlueMirrorIndexer
                 case 6: res = x.Extension.CompareTo(y.Extension); break;
                 case 7: res = x.GetVolumeUserName().CompareTo(y.GetVolumeUserName()); break;
                 case 8: res = x.GetPath().CompareTo(y.GetPath()); break;
-                case 9: res = crc(x).CompareTo(crc(y)); break;
+                case 9: res = CRC(x).CompareTo(CRC(y)); break;
                 case 5: res = x.Keywords.CompareTo(y.Keywords); break; // TODO KBR WTF? how is this column 5???
                 default: res = 0; break;
             }

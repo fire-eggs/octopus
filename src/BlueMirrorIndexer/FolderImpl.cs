@@ -92,7 +92,7 @@ namespace BlueMirrorIndexer
                     && ((sizeFrom == null) || ((file.Length >= sizeFrom) && (file.Length <= sizeTo)))
                     && (keywordMatcher.IsMatch(file.Keywords))) {
 
-                    if (file.Hash == 0)
+                    if (file.CRC == 0)
                         listNoCrc.Add(file);
                     else
                         listCrc.Add(file);

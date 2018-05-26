@@ -15,8 +15,8 @@ namespace BlueMirrorIndexer
 
         public int Compare(FileInDatabase x, FileInDatabase y) {
             if (_crcComparing)
-                return x.Hash.CompareTo(y.Hash);
-            return String.Compare(x.NameLengthKey, y.NameLengthKey, System.StringComparison.Ordinal);
+                return x.CRC.CompareTo(y.CRC);
+            return String.Compare(x.NameLengthKey, y.NameLengthKey, StringComparison.Ordinal);
         }
 
         #endregion

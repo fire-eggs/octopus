@@ -154,7 +154,8 @@ namespace BlueMirrorIndexer
                     FileInDatabase file = new FileInDatabase(searchInFolder);
                     if (rarEntry.FileAttributes > 0)
                         file.Attributes = (FileAttributes)rarEntry.FileAttributes;
-                    file.Hash = (ulong) rarEntry.FileCRC;
+                    //file.Hash = (ulong) rarEntry.FileCRC;
+                    file.CRC = (uint)rarEntry.FileCRC;
                     file.CreationTime = rarEntry.FileTime;
                     file.Name = pathParts[i];
                     file.Length = rarEntry.UnpackedSize;
@@ -177,7 +178,10 @@ namespace BlueMirrorIndexer
                     FileInDatabase file = new FileInDatabase(searchInFolder);
                     file.Description = zipEntry.Comment;
                     if (zipEntry.HasCrc)
-                        file.Hash = (ulong) zipEntry.Crc;
+                    {
+                        //file.Hash = (ulong) zipEntry.Crc;
+                        file.CRC = (uint)zipEntry.Crc;
+                    }
                     file.CreationTime = zipEntry.DateTime;
                     //if (zipEntry.ExternalFileAttributes < 1)
                     //    file.Attributes = FileAttributes.Normal;
@@ -317,8 +321,8 @@ namespace BlueMirrorIndexer
 
             lvi.SubItems.Add(GetVolumeUserName());
             lvi.SubItems.Add(GetPath());
-            if (Hash != 0)
-                lvi.SubItems.Add(Hash.ToString("X"));
+            if (CRC != 0)
+                lvi.SubItems.Add(CRC.ToString("X8"));
             else
                 lvi.SubItems.Add(string.Empty);
             return lvi;

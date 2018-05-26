@@ -9,10 +9,10 @@ namespace BlueMirrorIndexer
         public DlgFileProperties(FileInDatabase fileInDatabase)
             : base(fileInDatabase) {
             InitializeComponent();
-            if (fileInDatabase.Hash != 0)
-                llCrc.Text = fileInDatabase.Hash.ToString("X");
+            if (fileInDatabase.CRC != 0)
+                llCrc.Text = fileInDatabase.CRC.ToString("X8");
             else
-                llCrc.Text = "(not computed)";
+                llCrc.Text = "";
             llFileSize.Text = fileInDatabase.Length.ToKBAndB();
             llFileDescription.Text = string.IsNullOrEmpty(fileInDatabase.FileDescription) ? "(empty)" : fileInDatabase.FileDescription;
             llFileVersion.Text = string.IsNullOrEmpty(fileInDatabase.FileVersion) ? "(empty)" : fileInDatabase.FileVersion;

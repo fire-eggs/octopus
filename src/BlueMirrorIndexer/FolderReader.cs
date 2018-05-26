@@ -9,13 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using BlueMirrorIndexer.Components;
 using Igorary.Forms;
 
 // ReSharper disable InconsistentNaming
 
 // TODO KBR folder to replace
 // TODO KBR why is 'ComputeCRC' in default settings rather than some per-volume tracking?
-// TODO KBR CRC was used for compatibility with ZIP files!
 
 namespace BlueMirrorIndexer
 {
@@ -37,6 +37,12 @@ namespace BlueMirrorIndexer
         private readonly DlgReadingProgress _dlgReadingProgress;
         private FolderInDatabase _folderToReplace;
 
+        private MD5CryptoServiceProvider _md5;
+
+        static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        private const int BUFFER_SIZE = 32 * 1024 * 1024;
+        private readonly byte[] _buffer; // CRC read buffer
+
         public FolderReader(List<string> excludedItems, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace)
         {
             _excludedItems = excludedItems;
@@ -49,6 +55,7 @@ namespace BlueMirrorIndexer
             if (Properties.Settings.Default.ComputeCrc)
             {
                 _md5 = new MD5CryptoServiceProvider();
+                _buffer = new byte[BUFFER_SIZE];
             }
         }
 
@@ -96,13 +103,6 @@ namespace BlueMirrorIndexer
             }
         }
 
-        static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
-
-        private MD5CryptoServiceProvider _md5;
-
-        // Arbitrary threshold: don't calculate hash for files larger than 250M
-        private const uint M250 = 250*1024*1024;
-
         internal FileInDatabase ProcessCompressed(FolderInDatabase owner, string fullpath)
         {
             FileInDatabase newFile;
@@ -130,7 +130,6 @@ namespace BlueMirrorIndexer
 
         internal long ProcessFile(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
         {
-            //var newFile = new FileInDatabase(owner);
             var newFile = ProcessCompressed(owner, fullpath);
             ProcessCommon(newFile, findData, fullpath);
 
@@ -141,20 +140,25 @@ namespace BlueMirrorIndexer
             highSize += (uint)findData.nFileSizeLow;
             newFile.Length = highSize;
 
-            if (Properties.Settings.Default.ComputeCrc &&
-                highSize < M250)
+            if (Properties.Settings.Default.ComputeCrc)
             {
+                uint crc = 0;
                 try
                 {
-                    var buf = File.ReadAllBytes(fullpath);
-                    var hash = _md5.ComputeHash(buf);
-                    UInt64 hash2 = BitConverter.ToUInt64(hash, 0);
-                    newFile.Hash = hash2;
+                    using (FileStream fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        int bytes_read;
+                        while ((bytes_read = fs.Read(_buffer, 0, BUFFER_SIZE)) > 0)
+                        {
+                            crc = CRC32.Append(crc, _buffer, 0, bytes_read);
+                        }
+                    }
                 }
                 catch (Exception)
                 {
                     // File might be locked
                 }
+                newFile.CRC = crc;
             }
 
             ((IFolder)owner).AddToFiles(newFile);

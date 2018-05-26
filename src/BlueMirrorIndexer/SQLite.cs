@@ -285,7 +285,7 @@ namespace BlueMirrorIndexer
                 _writeFileCmd.Parameters.AddWithValue("@wtime", afile.LastWriteTime.ToUniversalTime().Ticks);
                 _writeFileCmd.Parameters.AddWithValue("@keyw", afile.Keywords);
                 _writeFileCmd.Parameters.AddWithValue("@desc", afile.Description);
-                _writeFileCmd.Parameters.AddWithValue("@hash", afile.Hash.ToString());
+                _writeFileCmd.Parameters.AddWithValue("@hash", afile.CRC.ToString());
                 _writeFileCmd.ExecuteNonQuery();
 
                 cmd.CommandText = "select last_insert_rowid()";
@@ -598,8 +598,10 @@ namespace BlueMirrorIndexer
 
             string tmp = rdr.GetString(12); // SQLite doesn't support unsigned
             if (tmp != "0")
-                afile.Hash = UInt64.Parse(tmp);
-
+            {
+                //afile.Hash = UInt64.Parse(tmp);
+                afile.CRC = UInt32.Parse(tmp);
+            }
             return afile;
         }
 
