@@ -14,6 +14,11 @@ namespace BlueMirrorIndexer.SearchFilters
 
             updateControls();
             checkBox1_CheckedChanged(null,null);
+
+            // Insure the date picker set to midnight, otherwise before/after comparison later makes incorrect matches
+            var today = DateTime.Now;
+            dateTimePicker1.Value = new DateTime(today.Year,today.Month,today.Day);
+            dateTimePicker2.Value = new DateTime(today.Year, today.Month, today.Day);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
