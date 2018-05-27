@@ -125,8 +125,8 @@ namespace BlueMirrorIndexer
         public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo, SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes, KeywordMatcher tagMatcher, List<ItemInDatabase> list)
         {
             // TODO have the filters return yes/no pass?
-
             // TODO owner
+
             foreach (var file in files)
             {
                 if (dateType != SearchEventArgs.SearchDateType.None)
@@ -134,16 +134,28 @@ namespace BlueMirrorIndexer
                     // TODO modified date
                     switch (dateType)
                     {
-                        case SearchEventArgs.SearchDateType.Before:
+                        case SearchEventArgs.SearchDateType.CreateBefore:
                             if (file.CreationTime >= dateFrom)
                                 continue;
                             break;
-                        case SearchEventArgs.SearchDateType.After:
+                        case SearchEventArgs.SearchDateType.CreateAfter:
                             if (file.CreationTime <= dateFrom)
                                 continue;
                             break;
-                        case SearchEventArgs.SearchDateType.Between:
+                        case SearchEventArgs.SearchDateType.CreateBetween:
                             if (file.CreationTime < dateFrom || file.CreationTime > dateTo)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchDateType.ModBefore:
+                            if (file.LastWriteTime >= dateFrom)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchDateType.ModAfter:
+                            if (file.LastWriteTime <= dateFrom)
+                                continue;
+                            break;
+                        case SearchEventArgs.SearchDateType.ModBetween:
+                            if (file.LastWriteTime < dateFrom || file.CreationTime > dateTo)
                                 continue;
                             break;
                     }

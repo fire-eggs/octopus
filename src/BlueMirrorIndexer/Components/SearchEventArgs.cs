@@ -7,10 +7,13 @@ namespace BlueMirrorIndexer.Components
     {
         public enum SearchDateType
         {
-            Between,
-            Before,
-            After,
-            None
+            None,
+            CreateBetween,
+            CreateBefore,
+            CreateAfter,
+            ModBetween,
+            ModBefore,
+            ModAfter,
         }
 
         public enum SearchSizeRange

@@ -1,6 +1,8 @@
 ﻿using System;
 using BlueMirrorIndexer.Components;
 
+// TODO I18N: use of english strings for combobox selection tests
+
 namespace BlueMirrorIndexer.SearchFilters
 {
     public partial class DatePanel : BasePanel, IFilterPanel
@@ -12,7 +14,7 @@ namespace BlueMirrorIndexer.SearchFilters
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
 
-            updateControls();
+            UpdateControls();
             checkBox1_CheckedChanged(null,null);
 
             // Insure the date picker set to midnight, otherwise before/after comparison later makes incorrect matches
@@ -26,7 +28,7 @@ namespace BlueMirrorIndexer.SearchFilters
             Raise();
         }
 
-        private void updateControls()
+        private void UpdateControls()
         {
             switch ((string)comboBox2.SelectedItem)
             {
@@ -43,7 +45,7 @@ namespace BlueMirrorIndexer.SearchFilters
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateControls();
+            UpdateControls();
             Raise();
         }
 
@@ -52,7 +54,7 @@ namespace BlueMirrorIndexer.SearchFilters
             var enabled = checkBox1.Checked;
             comboBox1.Enabled = comboBox2.Enabled = enabled;
             dateTimePicker1.Enabled = enabled;
-            updateControls();
+            UpdateControls();
             Raise();
         }
 
@@ -77,9 +79,41 @@ namespace BlueMirrorIndexer.SearchFilters
                 return;
             }
 
-            SearchEventArgs.SearchDateType res;
-            Enum.TryParse((string) comboBox2.SelectedItem, out res);
-            sea.DateType = res;
+            if ((string)comboBox1.SelectedItem == "Created Date")
+            {
+                switch ((string) comboBox2.SelectedItem)
+                {
+                    case "Before":
+                        sea.DateType = SearchEventArgs.SearchDateType.CreateBefore;
+                        break;
+                    case "After":
+                        sea.DateType = SearchEventArgs.SearchDateType.CreateAfter;
+                        break;
+                    case "Between":
+                        sea.DateType = SearchEventArgs.SearchDateType.CreateBetween;
+                        break;
+                }
+            }
+            else if ((string)comboBox1.SelectedItem == "Modified Date")
+            {
+                switch ((string)comboBox2.SelectedItem)
+                {
+                    case "Before":
+                        sea.DateType = SearchEventArgs.SearchDateType.ModBefore;
+                        break;
+                    case "After":
+                        sea.DateType = SearchEventArgs.SearchDateType.ModAfter;
+                        break;
+                    case "Between":
+                        sea.DateType = SearchEventArgs.SearchDateType.ModBetween;
+                        break;
+                }
+            }
+            else
+            {
+                sea.DateType = SearchEventArgs.SearchDateType.None;
+                return;
+            }
 
             sea.DateFrom = dateTimePicker1.Value;
             sea.DateTo = dateTimePicker2.Enabled ? dateTimePicker2.Value : (DateTime?)null;

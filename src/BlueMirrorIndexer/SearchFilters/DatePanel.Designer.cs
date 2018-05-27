@@ -121,7 +121,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.checkBox1);
             this.Name = "DatePanel";
-            this.Size = new System.Drawing.Size(1270, 507);
+            this.Size = new System.Drawing.Size(1481, 605);
             this.ResumeLayout(false);
             this.PerformLayout();
 
