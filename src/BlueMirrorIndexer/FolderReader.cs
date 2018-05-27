@@ -37,7 +37,7 @@ namespace BlueMirrorIndexer
         private readonly DlgReadingProgress _dlgReadingProgress;
         private FolderInDatabase _folderToReplace;
 
-        private MD5CryptoServiceProvider _md5;
+        //private MD5CryptoServiceProvider _md5;
 
         static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         private const int BUFFER_SIZE = 32 * 1024 * 1024;
@@ -54,7 +54,7 @@ namespace BlueMirrorIndexer
 
             if (Properties.Settings.Default.ComputeCrc)
             {
-                _md5 = new MD5CryptoServiceProvider();
+                //_md5 = new MD5CryptoServiceProvider();
                 _buffer = new byte[BUFFER_SIZE];
             }
         }

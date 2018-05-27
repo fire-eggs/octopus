@@ -2,19 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using BlueMirrorIndexer.Components;
+
+// TODO have the filters return yes/no pass
 
 namespace BlueMirrorIndexer
 {
     [Serializable]
     public class FolderImpl
     {
-        readonly ItemInDatabase owner;
-        readonly int imageIndex;
+        readonly ItemInDatabase _owner;
+        readonly int _imageIndex;
         public FolderImpl(ItemInDatabase owner, int imageIndex) {
-            this.owner = owner;
-            this.imageIndex = imageIndex;
+            this._owner = owner;
+            this._imageIndex = imageIndex;
         }
 
         #region Files
@@ -104,10 +105,10 @@ namespace BlueMirrorIndexer
 
         public void InsertFilesToList(Regex regex, DateTime? dateFrom, DateTime? dateTo, long? sizeFrom, long? sizeTo, KeywordMatcher keywordMatcher, List<ItemInDatabase> list) {
 
-            if (!(owner is CompressedFile) && regex.IsMatch(owner.Name)
-                    && ((dateFrom == null) || ((owner.CreationTime >= dateFrom) && (owner.CreationTime <= dateTo)))
-                    && (keywordMatcher.IsMatch(owner.Keywords))) {
-                list.Add(owner);
+            if (!(_owner is CompressedFile) && regex.IsMatch(_owner.Name)
+                    && ((dateFrom == null) || ((_owner.CreationTime >= dateFrom) && (_owner.CreationTime <= dateTo)))
+                    && (keywordMatcher.IsMatch(_owner.Keywords))) {
+                list.Add(_owner);
             }
 
             foreach (FileInDatabase file in files)
@@ -124,14 +125,10 @@ namespace BlueMirrorIndexer
 
         public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo, SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes, KeywordMatcher tagMatcher, List<ItemInDatabase> list)
         {
-            // TODO have the filters return yes/no pass?
-            // TODO owner
-
             foreach (var file in files)
             {
                 if (dateType != SearchEventArgs.SearchDateType.None)
                 {
-                    // TODO modified date
                     switch (dateType)
                     {
                         case SearchEventArgs.SearchDateType.CreateBefore:
@@ -208,17 +205,17 @@ namespace BlueMirrorIndexer
 
         public void CopyToNode(TreeNode treeNode)
         {
-            string name = owner.Name;
+            string name = _owner.Name;
             ulong size;
-            if (owner is CompressedFile)
-                size = (ulong) owner.Length;
+            if (_owner is CompressedFile)
+                size = (ulong) _owner.Length;
             else
-                size = (owner as FolderInDatabase).TotalSizeUsed;
+                size = (_owner as FolderInDatabase).TotalSizeUsed;
 
             treeNode.Text = string.Format("{0} ({1})", name, FormatNice(size));
-            treeNode.Tag = owner;
-            treeNode.ImageIndex = imageIndex;
-            treeNode.SelectedImageIndex = imageIndex;
+            treeNode.Tag = _owner;
+            treeNode.ImageIndex = _imageIndex;
+            treeNode.SelectedImageIndex = _imageIndex;
             foreach (IFolder fid in Folders) {
                 TreeNode tn = new TreeNode();
                 fid.CopyToNode(tn);
