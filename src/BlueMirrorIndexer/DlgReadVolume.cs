@@ -5,7 +5,6 @@ using System.IO;
 using System.Windows.Forms;
 using Igorary.Forms;
 using Igorary.Forms.Forms;
-using Igorary.Utils.Extensions;
 using Igorary.Utils.Utils.Extensions;
 
 namespace BlueMirrorIndexer
@@ -43,7 +42,6 @@ namespace BlueMirrorIndexer
                 dlg.tbKeywords.Text = string.Empty;
                 dlg.tbPhysicalLocation.Text = string.Empty;
                 dlg.cbAutoEject.Checked = Properties.Settings.Default.AutoEject;
-                dlg.cbReadFileVersion.Checked = Properties.Settings.Default.ReadFileInfo;
                 dlg.llSerialNumber.Text = Win32.GetVolumeSerialNumber(drive);
                 dlg.cbComputeCrc.Checked = Properties.Settings.Default.ComputeCrc;
                 dlg.cbAutosaveAfterReading.Checked = Properties.Settings.Default.AutosaveAfterReading;
@@ -68,7 +66,6 @@ namespace BlueMirrorIndexer
                 discInDatabase.PhysicalLocation = dlg.tbPhysicalLocation.Text;
                 logicalFolders = dlg.ucItemFolderClassification.LogicalFolders;
                 Properties.Settings.Default.AutoEject = dlg.cbAutoEject.Checked;
-                Properties.Settings.Default.ReadFileInfo = dlg.cbReadFileVersion.Checked;
                 Properties.Settings.Default.ComputeCrc = dlg.cbComputeCrc.Checked;
                 Properties.Settings.Default.AutosaveAfterReading = dlg.cbAutosaveAfterReading.Checked;
                 Properties.Settings.Default.BrowseInsideCompressed = dlg.cbBrowseZippedFiles.Checked;

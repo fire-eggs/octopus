@@ -27,7 +27,6 @@ namespace BlueMirrorIndexer
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cbReadFileVersion = new System.Windows.Forms.CheckBox();
             this.cbBrowseZippedFiles = new System.Windows.Forms.CheckBox();
             this.cbComputeCrc = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -88,32 +87,20 @@ namespace BlueMirrorIndexer
             // groupBox3
             // 
             this.groupBox3.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox3.Controls.Add(this.cbReadFileVersion);
             this.groupBox3.Controls.Add(this.cbBrowseZippedFiles);
             this.groupBox3.Controls.Add(this.cbComputeCrc);
             this.groupBox3.Location = new System.Drawing.Point(11, 193);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(198, 89);
+            this.groupBox3.Size = new System.Drawing.Size(198, 71);
             this.groupBox3.TabIndex = 15;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Scanning options";
-            // 
-            // cbReadFileVersion
-            // 
-            this.cbReadFileVersion.AutoSize = true;
-            this.cbReadFileVersion.BackColor = System.Drawing.Color.Transparent;
-            this.cbReadFileVersion.Location = new System.Drawing.Point(8, 19);
-            this.cbReadFileVersion.Name = "cbReadFileVersion";
-            this.cbReadFileVersion.Size = new System.Drawing.Size(105, 17);
-            this.cbReadFileVersion.TabIndex = 0;
-            this.cbReadFileVersion.Text = "Read file version";
-            this.cbReadFileVersion.UseVisualStyleBackColor = false;
             // 
             // cbBrowseZippedFiles
             // 
             this.cbBrowseZippedFiles.AutoSize = true;
             this.cbBrowseZippedFiles.BackColor = System.Drawing.Color.Transparent;
-            this.cbBrowseZippedFiles.Location = new System.Drawing.Point(8, 42);
+            this.cbBrowseZippedFiles.Location = new System.Drawing.Point(6, 19);
             this.cbBrowseZippedFiles.Name = "cbBrowseZippedFiles";
             this.cbBrowseZippedFiles.Size = new System.Drawing.Size(116, 17);
             this.cbBrowseZippedFiles.TabIndex = 1;
@@ -124,7 +111,7 @@ namespace BlueMirrorIndexer
             // 
             this.cbComputeCrc.AutoSize = true;
             this.cbComputeCrc.BackColor = System.Drawing.Color.Transparent;
-            this.cbComputeCrc.Location = new System.Drawing.Point(8, 65);
+            this.cbComputeCrc.Location = new System.Drawing.Point(6, 42);
             this.cbComputeCrc.Name = "cbComputeCrc";
             this.cbComputeCrc.Size = new System.Drawing.Size(93, 17);
             this.cbComputeCrc.TabIndex = 2;
@@ -133,14 +120,14 @@ namespace BlueMirrorIndexer
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
             this.groupBox2.Controls.Add(this.cbAutosaveAfterReading);
             this.groupBox2.Controls.Add(this.cbAutoEject);
             this.groupBox2.Location = new System.Drawing.Point(215, 193);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(196, 89);
+            this.groupBox2.Size = new System.Drawing.Size(196, 71);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "After Reading";
@@ -169,8 +156,8 @@ namespace BlueMirrorIndexer
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.llLastDrive);
@@ -335,8 +322,8 @@ namespace BlueMirrorIndexer
             // 
             // tbUserLabel
             // 
-            this.tbUserLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbUserLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbUserLabel.Location = new System.Drawing.Point(86, 7);
             this.tbUserLabel.Name = "tbUserLabel";
             this.tbUserLabel.Size = new System.Drawing.Size(325, 20);
@@ -437,9 +424,9 @@ namespace BlueMirrorIndexer
             // 
             // ucItemFolderClassification
             // 
-            this.ucItemFolderClassification.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ucItemFolderClassification.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ucItemFolderClassification.BackColor = System.Drawing.Color.Transparent;
             this.ucItemFolderClassification.Location = new System.Drawing.Point(8, 57);
             this.ucItemFolderClassification.LogicalFolders = new BlueMirrorIndexer.LogicalFolder[0];
@@ -471,8 +458,8 @@ namespace BlueMirrorIndexer
             // 
             // tbKeywords
             // 
-            this.tbKeywords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbKeywords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbKeywords.Location = new System.Drawing.Point(106, 7);
             this.tbKeywords.Name = "tbKeywords";
             this.tbKeywords.Size = new System.Drawing.Size(276, 20);
@@ -480,8 +467,8 @@ namespace BlueMirrorIndexer
             // 
             // tbPhysicalLocation
             // 
-            this.tbPhysicalLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPhysicalLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbPhysicalLocation.Location = new System.Drawing.Point(106, 31);
             this.tbPhysicalLocation.Name = "tbPhysicalLocation";
             this.tbPhysicalLocation.Size = new System.Drawing.Size(276, 20);
@@ -642,7 +629,6 @@ namespace BlueMirrorIndexer
         private System.Windows.Forms.CheckBox cbAutoEject;
         private System.Windows.Forms.CheckBox cbBrowseZippedFiles;
         private System.Windows.Forms.CheckBox cbComputeCrc;
-        private System.Windows.Forms.CheckBox cbReadFileVersion;
         private System.Windows.Forms.GroupBox groupBox3;
         protected UcItemFolderClassification ucItemFolderClassification;
         private System.Windows.Forms.Label label4;
