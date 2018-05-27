@@ -129,8 +129,6 @@ namespace BlueMirrorIndexer
             // TODO owner
             foreach (var file in files)
             {
-                if (!fileMaskRegex.IsMatch(file.Name))
-                    continue;
                 if (dateType != SearchEventArgs.SearchDateType.None)
                 {
                     // TODO modified date
@@ -168,6 +166,9 @@ namespace BlueMirrorIndexer
                             break;
                     }
                 }
+
+                if (!fileMaskRegex.IsMatch(file.Name)) // Test filename after faster filters
+                    continue;
 
                 // Passed all filters! 
                 if (tagMatcher.IsMatch(file.Keywords))
