@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinFmt.cs" />
     <Compile Include="Components\Charter.cs">
       <SubType>UserControl</SubType>
     </Compile>

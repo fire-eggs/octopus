@@ -1449,8 +1449,9 @@ namespace BlueMirrorIndexer
             Cursor oldCursor = Cursor;
             Cursor = Cursors.WaitCursor;
             try {
-                // TODO KBR write to SQLite
-                SQLite.WriteToDb(Database);
+                //SQLite.WriteToDb(Database);
+
+                BinFmt.WriteToBin(Database);
             }
             finally {
                 Cursor = oldCursor;
@@ -1484,8 +1485,8 @@ namespace BlueMirrorIndexer
             Cursor = Cursors.WaitCursor;
             try
             {
-                VolumeDatabase cid = SQLite.ReadFromDb(filePath);
-                return cid;
+                //VolumeDatabase cid = SQLite.ReadFromDb(filePath);
+                return BinFmt.ReadFromBin();
             }
             finally
             {

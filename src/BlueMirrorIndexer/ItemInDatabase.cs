@@ -152,9 +152,11 @@ namespace BlueMirrorIndexer {
 
         public abstract ListViewItem ToListViewItem();
 
+        // TODO Kill this!
 	    public string FileVersion { get; set; }
 
-	    public string FileDescription { get; set; }
+        // TODO Kill this!
+        public string FileDescription { get; set; }
 
 	    protected long _length;
         public long Length { get { return _length; } set { _length = value; } }

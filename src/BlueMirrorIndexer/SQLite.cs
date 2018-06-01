@@ -378,6 +378,9 @@ namespace BlueMirrorIndexer
         #region Data Read
         public static VolumeDatabase ReadFromDb(string dbpath)
         {
+            var sl = new SQLite();
+            sl.logit("ReadFromDb", true);
+
             // TODO KBR allow user to name file, location
 
             string dbName = "Indexer.db";
@@ -403,6 +406,8 @@ namespace BlueMirrorIndexer
             // TODO KBR exception, e.g. not a valid db file
 
             SQLiteConnection.ClearAllPools();
+
+            sl.logit("ReadFromDb-Done");
             return mem;
         }
 
