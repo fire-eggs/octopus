@@ -276,12 +276,20 @@ namespace BlueMirrorIndexer
             updateStrip();
         }
 
-        private void updateTree() {
+        private void updateTree()
+        {
+            // TODO need utility logit
+            var bf = new BinFmt();
+            bf.logit("updateTree", true);
+
             tvDatabaseFolderTree.BeginUpdate();
-            try {
-                tvDatabaseFolderTree.Nodes.Clear();
-                using (new HourGlass()) {
-                    foreach (DiscInDatabase fid in Database.GetDiscs()) {
+            tvDatabaseFolderTree.Nodes.Clear();
+            using (new HourGlass()) 
+            {
+                try 
+                {
+                    foreach (DiscInDatabase fid in Database.GetDiscs()) 
+                    {
                         TreeNode tn = new TreeNode();
                         fid.CopyToNode(tn);
                         tn.ImageIndex = 0;
@@ -289,10 +297,13 @@ namespace BlueMirrorIndexer
                         tvDatabaseFolderTree.Nodes.Add(tn);
                     }
                 }
+                finally 
+                {
+                    tvDatabaseFolderTree.EndUpdate();
+                }
             }
-            finally {
-                tvDatabaseFolderTree.EndUpdate();
-            }
+            bf.logit("updateTree-done");
+
             updateList();
             updateVolumesInSearchCriterias();
         }
@@ -347,7 +358,6 @@ namespace BlueMirrorIndexer
 
             searchPane.LoadSearchSettings();
 
-            startRefreshDiscs();
             QueryCancelAutoPlay = Win32.RegisterWindowMessage("QueryCancelAutoPlay");
             ilTree.ColorDepth = ColorDepth.Depth32Bit; // nic nie daje na razie
             ilTree.Images.Add(Win32.GetFileIconAsImage("test.zip", Win32.FileIconSize.Small));
@@ -355,6 +365,8 @@ namespace BlueMirrorIndexer
             Application.DoEvents();
             string lastOpenedFile = Settings.Default.LastOpenedFile;
             fileOperations.OpenFile(lastOpenedFile);
+
+            startRefreshDiscs();
         }
 
         private void updateVolumeButtons() {
