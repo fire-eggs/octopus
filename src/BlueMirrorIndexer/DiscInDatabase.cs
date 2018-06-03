@@ -13,7 +13,7 @@ namespace BlueMirrorIndexer
 	public class DiscInDatabase : FolderInDatabase, IComparable<DiscInDatabase>
     {
         // for SQLite load
-        public DiscInDatabase(int dbid)
+        public DiscInDatabase(uint dbid)
             : base(dbid, null)
         {
             Scanned = DateTime.Now;

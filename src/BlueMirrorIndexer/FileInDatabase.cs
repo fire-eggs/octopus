@@ -11,10 +11,6 @@ namespace BlueMirrorIndexer
     [Serializable]
 	public class FileInDatabase : ItemInDatabase {
 
-        public FileInDatabase()
-        {
-        }
-
         public FileInDatabase(IFolder parent, string ext) : base(parent, ext)
         {
             // for sqlite load
@@ -24,10 +20,10 @@ namespace BlueMirrorIndexer
 			: base(parent) {
 		}
 
-        public FileInDatabase(int dbid, string name, string ext, string fullname, 
-            FileAttributes attrib, long len, string keyw)
+        public FileInDatabase(uint dbid, string name, string ext, string fullname, 
+            FileAttributes attrib, long len, string keyw) : base()
         {
-            _dbId = dbid;
+            DbId = dbid;
             _name = name;
             _extension = ext;
             _fullName = fullname;

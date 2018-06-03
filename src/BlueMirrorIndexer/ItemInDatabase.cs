@@ -8,16 +8,9 @@ namespace BlueMirrorIndexer {
 	[Serializable]
     public abstract class ItemInDatabase
     {
-	    public int DbId
-	    {
-	        get { return _dbId; }
-	        set { _dbId = value; }
-	    } // For SQLite restore
+	    public uint DbId { get; set; }
 
-	    public ItemInDatabase()
-	    {
-	        
-	    }
+        public ItemInDatabase() { }
 
 	    public ItemInDatabase(IFolder parent, string ext)
 	    {
@@ -169,7 +162,6 @@ namespace BlueMirrorIndexer {
 
 	    private List<LogicalFolder> logicalFolders; // = new List<LogicalFolder>();
 	    protected string _name;
-	    protected int _dbId;
 	    protected string _extension;
 	    protected FileAttributes _attributes;
 	    protected string _fullName;
