@@ -390,7 +390,7 @@ namespace BlueMirrorIndexer
         public void InsertFilesToList(Regex fileMaskRegex, SearchEventArgs.SearchDateType dateType, DateTime? dateFrom, DateTime? dateTo,
             SearchEventArgs.SearchSizeRange sizeType, long sizeFromBytes, long sizeToBytes, KeywordMatcher tagMatcher, List<ItemInDatabase> list)
         {
-            throw new NotImplementedException();
+            folderImpl.InsertFilesToList(fileMaskRegex, dateType, dateFrom, dateTo, sizeType, sizeFromBytes, sizeToBytes, tagMatcher, list);
         }
 
         public void UpdateStats()
