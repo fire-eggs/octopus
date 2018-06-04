@@ -102,7 +102,9 @@ namespace BlueMirrorIndexer
                 }
                 foreach (FileInDatabase file in folderImpl.Files) {
                     FileInDatabase fileToReplace = compressedFileToReplace.findFile(file.Name);
-                    if (fileToReplace != null) {
+                    if (fileToReplace != null)
+                    {
+                        file.Description = fileToReplace.Description;
                         file.Keywords = fileToReplace.Keywords;
                         foreach (LogicalFolder logicalFolder in fileToReplace.LogicalFolders)
                             logicalFolder.AddItem(file);

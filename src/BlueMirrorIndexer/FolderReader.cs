@@ -5,12 +5,11 @@
  * 
  */
 
+using BlueMirrorIndexer.Components;
+using Igorary.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using BlueMirrorIndexer.Components;
-using Igorary.Forms;
 
 // ReSharper disable InconsistentNaming
 
@@ -35,31 +34,28 @@ namespace BlueMirrorIndexer
         private long _runningFileSize;
         private readonly List<string> _excludedItems;
         private readonly DlgReadingProgress _dlgReadingProgress;
-        private FolderInDatabase _folderToReplace;
-
-        //private MD5CryptoServiceProvider _md5;
+        private FolderInDatabase _discToReplace;
 
         static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         private const int BUFFER_SIZE = 32 * 1024 * 1024;
         private readonly byte[] _buffer; // CRC read buffer
 
-        public FolderReader(List<string> excludedItems, DlgReadingProgress dlgReadingProgress, FolderInDatabase folderToReplace)
+        public FolderReader(List<string> excludedItems, DlgReadingProgress dlgReadingProgress, FolderInDatabase discToReplace)
         {
             _excludedItems = excludedItems;
             _dlgReadingProgress = dlgReadingProgress;
-            _folderToReplace = folderToReplace;
+            _discToReplace = discToReplace;
 
             _runningFileCount = 0;
             _runningFileSize = 0;
 
             if (Properties.Settings.Default.ComputeCrc)
             {
-                //_md5 = new MD5CryptoServiceProvider();
                 _buffer = new byte[BUFFER_SIZE];
             }
         }
 
-        public void ReadFromFolder(string folder, FolderInDatabase owner)
+        public void ReadFromFolder(string folder, FolderInDatabase owner, FolderInDatabase originalFolder)
         {
             IntPtr findHandle = INVALID_HANDLE_VALUE;
             try
@@ -80,14 +76,13 @@ namespace BlueMirrorIndexer
                         continue;
 
                     // KBR TODO folder to replace
-
                     if ((findData.dwFileAttributes & FileAttributes.Directory) != 0)
                     {
-                        ProcessFolder(owner, findData, fullpath);
+                        ProcessFolder(owner, findData, fullpath, originalFolder);
                     }
                     else
                     {
-                        long len = ProcessFile(owner, findData, fullpath);
+                        long len = ProcessFile(owner, findData, fullpath, originalFolder);
                         _runningFileCount++;
                         _runningFileSize += len;
                         if (_runningFileCount % 5 == 1)
@@ -103,21 +98,21 @@ namespace BlueMirrorIndexer
             }
         }
 
-        internal FileInDatabase ProcessCompressed(FolderInDatabase owner, string fullpath)
+        internal FileInDatabase ProcessCompressed(FolderInDatabase owner, string fullpath, string filename, FolderInDatabase originalOwner)
         {
             FileInDatabase newFile;
             if (Properties.Settings.Default.BrowseInsideCompressed && (CompressedFile.IsCompressedFile(fullpath)))
             {
+                var folderToReplace = findOriginalCompressed(originalOwner, filename);
                 newFile = new CompressedFile(owner);
                 CompressedFile cf = newFile as CompressedFile;
                 try
                 {
-                    cf.BrowseFiles(fullpath, null); //fileToReplace as CompressedFile);
+                    cf.BrowseFiles(fullpath, folderToReplace);
                 }
                 catch (Exception ex)
                 {
-                    // TODO KBR how to replicate this?
-                    //cf.Comments = ex.Message;
+                    cf.Description = ex.Message;
                 }
                 ((IFolder)owner).AddToFolders(cf);
             }
@@ -128,10 +123,12 @@ namespace BlueMirrorIndexer
             return newFile;
         }
 
-        internal long ProcessFile(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
+        internal long ProcessFile(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath, FolderInDatabase originalFolder)
         {
-            var newFile = ProcessCompressed(owner, fullpath);
-            ProcessCommon(newFile, findData, fullpath);
+            var newFile = ProcessCompressed(owner, fullpath, findData.cFileName, originalFolder);
+
+            var originalFile = findOriginalFile(originalFolder, findData.cFileName);
+            ProcessCommon(newFile, findData, fullpath, originalFile);
 
             newFile.IsReadOnly = (findData.dwFileAttributes & FileAttributes.ReadOnly) != 0;
 
@@ -165,17 +162,19 @@ namespace BlueMirrorIndexer
             return newFile.Length;
         }
 
-        internal void ProcessFolder(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath)
+        internal void ProcessFolder(FolderInDatabase owner, Win32.WIN32_FIND_DATAW findData, string fullpath, FolderInDatabase originalOwner)
         {
             FolderInDatabase newFolder = new FolderInDatabase(owner);
 
-            ProcessCommon(newFolder, findData, fullpath);
+            var originalFolder = findOriginalFolder(originalOwner, findData.cFileName);
+
+            ProcessCommon(newFolder, findData, fullpath, originalFolder);
             ((IFolder)owner).AddToFolders(newFolder);
 
-            ReadFromFolder(fullpath, newFolder);
+            ReadFromFolder(fullpath, newFolder, originalFolder);
         }
 
-        private static void ProcessCommon(ItemInDatabase item, Win32.WIN32_FIND_DATAW findData, string fullpath)
+        private static void ProcessCommon(ItemInDatabase item, Win32.WIN32_FIND_DATAW findData, string fullpath, ItemInDatabase originalItem)
         {
             item.Name = findData.cFileName;
             item.Attributes = findData.dwFileAttributes;
@@ -192,6 +191,39 @@ namespace BlueMirrorIndexer
             item.CreationTime = findData.ftCreationTime.ToDateTime();
             item.LastAccessTime = findData.ftLastAccessTime.ToDateTime();
             item.LastWriteTime = findData.ftLastWriteTime.ToDateTime();
+
+            // Preserve user entered data if re-reading
+            if (originalItem == null)
+                return;
+            item.Description = originalItem.Description;
+            item.Keywords = originalItem.Keywords;
+            foreach (LogicalFolder logicalFolder in originalItem.LogicalFolders)
+                logicalFolder.AddItem(item);
+        }
+
+        private static FolderInDatabase findOriginalFolder(FolderInDatabase original, string foldername)
+        {
+            if (original == null)
+                return null;
+            return original.findFolder(foldername);
+        }
+        private static FileInDatabase findOriginalFile(FolderInDatabase original, string foldername)
+        {
+            if (original == null)
+                return null;
+            return original.findFile(foldername);
+        }
+
+        private static CompressedFile findOriginalCompressed(FolderInDatabase original, string filename)
+        {
+            var folds = (original as IFolder).Folders;
+            var fname = filename.ToLower();
+            foreach (var folder in folds)
+            {
+                if (folder.Name == fname)
+                    return folder as CompressedFile;
+            }
+            return null;
         }
     }
 }

@@ -126,7 +126,7 @@ namespace BlueMirrorIndexer
         internal void ReadFromDrive(string drive, List<string> excludedElements, DlgReadingProgress dlgReadingProgress, DiscInDatabase discToReplace)
         {
             var FR = new FolderReader(excludedElements, dlgReadingProgress, discToReplace);
-            FR.ReadFromFolder(drive, this);
+            FR.ReadFromFolder(drive, this, discToReplace);
 
             DriveInfo di = new DriveInfo(drive);
             DriveFormat = di.DriveFormat;

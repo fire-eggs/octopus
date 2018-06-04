@@ -43,11 +43,11 @@ namespace BlueMirrorIndexer {
         }
 
 
-        private FileInDatabase findFile(string fileName) {
+	    internal FileInDatabase findFile(string fileName) {
             return folderImpl.FindFile(fileName);
         }
 
-        private FolderInDatabase findFolder(string folderName) {
+	    internal FolderInDatabase findFolder(string folderName) {
             return folderImpl.FindFolder(folderName);
         }
 
@@ -80,6 +80,7 @@ namespace BlueMirrorIndexer {
         internal void CopyAdditionalInfo(FolderInDatabase folderToReplace) {
             CopyFolderInfo(folderImpl, folderToReplace);
             Keywords = folderToReplace.Keywords;
+            Description = folderToReplace.Description;
             foreach (LogicalFolder logicalFolder in folderToReplace.LogicalFolders)
                 logicalFolder.AddItem(this);
         }
@@ -101,6 +102,7 @@ namespace BlueMirrorIndexer {
 	            if (fileToReplace != null)
 	            {
 	                file.Keywords = fileToReplace.Keywords;
+	                file.Description = fileToReplace.Description;
 	                foreach (LogicalFolder logicalFolder in fileToReplace.LogicalFolders)
 	                    logicalFolder.AddItem(file);
 	            }
