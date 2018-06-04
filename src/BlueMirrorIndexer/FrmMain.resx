@@ -776,7 +776,7 @@
     <value>133, 60</value>
   </metadata>
   <data name="openFileDialog.Filter" xml:space="preserve">
-    <value>Octopus.Covalition file|*.occov|Blue Mirror CD/DVD Indexer|*.bmin</value>
+    <value>Blue Mirror CD/DVD Indexer|*.bmin</value>
   </data>
   <data name="openFileDialog.Title" xml:space="preserve">
     <value>Open File</value>
@@ -785,7 +785,7 @@
     <value>553, 60</value>
   </metadata>
   <data name="saveFileDialog.Filter" xml:space="preserve">
-    <value>Octopus.Covalition file|*.occov</value>
+    <value>Blue Mirror CD/DVD Indexer|*.bmin</value>
   </data>
   <data name="saveFileDialog.Title" xml:space="preserve">
     <value>Save File As</value>

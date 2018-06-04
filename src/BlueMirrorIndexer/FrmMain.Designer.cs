@@ -724,12 +724,12 @@ namespace BlueMirrorIndexer
             // 
             // openFileDialog
             // 
-            this.openFileDialog.DefaultExt = "occov";
+            this.openFileDialog.DefaultExt = "bmin";
             resources.ApplyResources(this.openFileDialog, "openFileDialog");
             // 
             // saveFileDialog
             // 
-            this.saveFileDialog.DefaultExt = "occov";
+            this.saveFileDialog.DefaultExt = "bmin";
             resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
             // 
             // scMain

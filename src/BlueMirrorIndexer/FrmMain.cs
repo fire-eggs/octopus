@@ -822,9 +822,9 @@ namespace BlueMirrorIndexer
         #endregion
 
         private void cmSave_Click(object sender, EventArgs e) {
-            // TODO KBR  fileOperations.Save();
-            serialize(null);
-            fileOperations.Modified = false; // TODO KBR hack
+            fileOperations.Save();
+            //serialize(null);
+            //fileOperations.Modified = false; // TODO KBR hack
         }
 
         private void cmSaveAs_Click(object sender, EventArgs e) {
@@ -1463,7 +1463,7 @@ namespace BlueMirrorIndexer
             try {
                 //SQLite.WriteToDb(Database);
 
-                BinFmt.WriteToBin(Database);
+                BinFmt.WriteToBin(filePath, Database);
             }
             finally {
                 Cursor = oldCursor;
@@ -1498,7 +1498,7 @@ namespace BlueMirrorIndexer
             try
             {
                 //VolumeDatabase cid = SQLite.ReadFromDb(filePath);
-                return BinFmt.ReadFromBin();
+                return BinFmt.ReadFromBin(filePath);
             }
             finally
             {

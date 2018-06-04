@@ -32,11 +32,11 @@ namespace BlueMirrorIndexer
 
         private const int COMPRESSED_FLAG = 0x1000000;
 
-        public static VolumeDatabase ReadFromBin()
+        public static VolumeDatabase ReadFromBin(string binFile)
         {
             var bf = new BinFmt();
             bf.logit("ReadFromBin", true);
-            string binFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Indexer.bin");
+            //string binFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Indexer.bin");
             if (!File.Exists(binFile))
                 return null;
 
@@ -52,12 +52,12 @@ namespace BlueMirrorIndexer
             return mem;
         }
 
-        public static void WriteToBin(VolumeDatabase mem)
+        public static void WriteToBin(string binFile, VolumeDatabase mem)
         {
             var bf = new BinFmt();
             bf.logit("WriteToBin",true);
 
-            string binFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Indexer.bin");
+            //string binFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Indexer.bin");
             if (File.Exists(binFile))
             {
                 File.Delete(binFile);
