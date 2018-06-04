@@ -1,6 +1,11 @@
-﻿using System;
+﻿/* 
+ * MIT License. See license.txt for details.
+ * 
+ * Copyright © 2018 by github.com/fire-eggs.
+ * 
+ */
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 // TODO seriously consider markers around parts (discs,folders,files,lfolds)
@@ -24,6 +29,8 @@ namespace BlueMirrorIndexer
                 sw.WriteLine("{0}|{1}", msg, delta);
             }
         }
+
+        private const int COMPRESSED_FLAG = 0x1000000;
 
         public static VolumeDatabase ReadFromBin()
         {
@@ -136,7 +143,7 @@ namespace BlueMirrorIndexer
                 w.Write(afile.LastAccessTime.ToUniversalTime().Ticks);
                 w.Write(afile.LastWriteTime.ToUniversalTime().Ticks);
                 w.Write(afile.Keywords);
-                w.Write(afile.Description);
+                w.Write(afile.Description ?? ""); // Null for within compressed files
                 w.Write(afile.CRC);
             }
         }
@@ -158,12 +165,18 @@ namespace BlueMirrorIndexer
                 w.Write(afile.Name);
                 w.Write(afile.Extension);
                 w.Write(afile.FullName);
-                w.Write((int)afile.Attributes); // TODO compressed file hack
+
+                // A Q&D hack: mark a 'compressed file' folder with a special Attribute value. Must be removed on read!!!
+                int attrib = (int)afile.Attributes;
+                if (afold is CompressedFile)
+                    attrib |= COMPRESSED_FLAG;
+
+                w.Write(attrib);
                 w.Write(afile.CreationTime.ToUniversalTime().Ticks);
                 w.Write(afile.LastAccessTime.ToUniversalTime().Ticks);
                 w.Write(afile.LastWriteTime.ToUniversalTime().Ticks);
                 w.Write(afile.Keywords);
-                w.Write(afile.Description);
+                w.Write(afile.Description ?? ""); // Null within compressed
 
                 WriteFiles(w, afold.Files);
                 WriteFolders(w, afold.Folders);
@@ -298,14 +311,22 @@ namespace BlueMirrorIndexer
             for (uint dex = 0; dex < totFolds; dex++)
             {
                 uint dbId = r.ReadUInt32();
+                var name = r.ReadString();
+                var ext = r.ReadString();
+                var full = r.ReadString();
+                var attrib = r.ReadInt32();
 
                 // TODO COMPRESSED_FLAG hack: should write attributes first
-                ItemInDatabase afile = new FolderInDatabase(dbId, did);
+                ItemInDatabase afile;
+                if ((attrib & COMPRESSED_FLAG) != 0)
+                    afile = new CompressedFile(dbId,did);
+                else
+                    afile = new FolderInDatabase(dbId, did);
 
-                afile.Name = r.ReadString();
-                afile.Extension = r.ReadString();
-                afile.FullName = r.ReadString();
-                afile.Attributes = (FileAttributes) r.ReadInt32();
+                afile.Name = name;
+                afile.Extension = ext;
+                afile.FullName = full;
+                afile.Attributes = (FileAttributes) (attrib & ~COMPRESSED_FLAG);
                 var ticks = r.ReadInt64();
                 afile.CreationTime = new DateTime(ticks);
                 ticks = r.ReadInt64();
@@ -378,7 +399,7 @@ namespace BlueMirrorIndexer
             int itemCount = r.ReadInt32();
             for (int j = 0; j < itemCount; j++)
             {
-                var dbid = r.ReadUInt32(); // TODO find ItemInDatabase and connect
+                var dbid = r.ReadUInt32();
                 AddToLFoldMap(dbid, lf);
             }
 
