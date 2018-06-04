@@ -1,7 +1,14 @@
 ﻿V3.0.0.1-Alpha
 
-* Save database using SQLite
+* Save database using binary format for extreme speed improvement
 * Add "Show in Windows Explorer"
-* Use MD5 hash instead of CRC32
 * Remove "Import from V1"
-* Remove File Description/Version (applied only to .EXE/.DLL files)
+* Remove File Description/Version. These were relevant only to .EXE/.DLL files.
+* Update unrar.dll for latest security fixes. See CVE-2012-6706, CVE-2017-12938,
+  CVE-2017-12940, CVE-2017-12941, CVE-2017-12942.
+* Significant rework of Search GUI:
+	i. Vertical, collapsible panel.
+	ii. Additional search options: size less-than, size greater-than; date
+	    before, date after; modified date; keywords Any/All/None.
+
+
